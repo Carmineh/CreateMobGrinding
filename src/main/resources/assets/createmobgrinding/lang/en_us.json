@@ -16,5 +16,6 @@
   "jei.createmobgrinding.spawner_conversion": "Spawner Conversion",
   "config.jade.plugin_createmobgrinding.spawner_provider": "Rotational Mob Spawner Info",
   "config.jade.plugin_createmobgrinding.grinder_provider": "Rotational Mob Grinder Info",
-  "enchantment.createmobgrinding.beheading": "Beheading"
+  "enchantment.createmobgrinding.beheading": "Beheading",
+  "tooltip.createmobgrinding.stress_impact": "Kinetic Stress Impact"
 }

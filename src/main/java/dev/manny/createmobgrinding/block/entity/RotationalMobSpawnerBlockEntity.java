@@ -95,20 +95,6 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
     }
 
     @Override
-    public boolean addToGoggleTooltip(java.util.List<net.minecraft.network.chat.Component> tooltip, boolean isPlayerSneaking) {
-        super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-        
-        float stress = calculateStressApplied();
-        tooltip.add(net.minecraft.network.chat.Component.empty());
-        tooltip.add(net.minecraft.network.chat.Component.literal("    ").append(net.minecraft.network.chat.Component.translatable("gui.create.tooltip.stressImpact")).withStyle(net.minecraft.ChatFormatting.GRAY));
-        tooltip.add(net.minecraft.network.chat.Component.literal("      " + String.format("%.1f", stress) + "su ")
-            .withStyle(net.minecraft.ChatFormatting.AQUA)
-            .append(net.minecraft.network.chat.Component.literal("(Tier " + getTier() + ")").withStyle(net.minecraft.ChatFormatting.DARK_GRAY)));
-            
-        return true;
-    }
-
-    @Override
     public void tick() {
         super.tick();
 
@@ -182,6 +168,13 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+        
+        float stress = calculateStressApplied();
+        tooltip.add(Component.empty());
+        tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.stress_impact")).withStyle(net.minecraft.ChatFormatting.GRAY));
+        tooltip.add(Component.literal("      " + String.format("%.1f", stress) + "x ")
+            .withStyle(net.minecraft.ChatFormatting.AQUA)
+            .append(Component.literal("(Tier " + getTier() + ")").withStyle(net.minecraft.ChatFormatting.DARK_GRAY)));
         
         ItemStack chunk = inventory.getStackInSlot(0);
         if (chunk.isEmpty()) {

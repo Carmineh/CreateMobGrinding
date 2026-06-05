@@ -13,7 +13,7 @@ public class CommonConfig {
         builder.push("spawner");
         spawnerBaseProgress = builder
                 .comment("Base progress points required for a spawn. Will be multiplied by mob tier.")
-                .defineInRange("spawnerBaseProgress", 5000.0, 1.0, Double.MAX_VALUE);
+                .defineInRange("spawnerBaseProgress", 2000.0, 1.0, Double.MAX_VALUE);
                 
         spawnerBlacklist = builder
                 .comment("List of entity types that cannot be spawned. (e.g. minecraft:warden)")
