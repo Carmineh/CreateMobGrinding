@@ -88,10 +88,24 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
 
     @Override
     public float calculateStressApplied() {
-        float baseImpact = super.calculateStressApplied();
+        float baseImpact = 32.0f; // Base impact for spawner
         float calculated = baseImpact * getTier();
         this.lastStressApplied = calculated;
         return calculated;
+    }
+
+    @Override
+    public boolean addToGoggleTooltip(java.util.List<net.minecraft.network.chat.Component> tooltip, boolean isPlayerSneaking) {
+        super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+        
+        float stress = calculateStressApplied();
+        tooltip.add(net.minecraft.network.chat.Component.empty());
+        tooltip.add(net.minecraft.network.chat.Component.literal("    ").append(net.minecraft.network.chat.Component.translatable("gui.create.tooltip.stressImpact")).withStyle(net.minecraft.ChatFormatting.GRAY));
+        tooltip.add(net.minecraft.network.chat.Component.literal("      " + String.format("%.1f", stress) + "su ")
+            .withStyle(net.minecraft.ChatFormatting.AQUA)
+            .append(net.minecraft.network.chat.Component.literal("(Tier " + getTier() + ")").withStyle(net.minecraft.ChatFormatting.DARK_GRAY)));
+            
+        return true;
     }
 
     @Override
@@ -139,12 +153,16 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
             int r = level.random.nextInt(8);
             
             double x = worldPosition.getX() + dx[r] + 0.5D;
-            double y = worldPosition.getY() + level.random.nextInt(3) - 1;
+            double y = worldPosition.getY() + 1.0D; // Spawna sempre sopra il blocco
             double z = worldPosition.getZ() + dz[r] + 0.5D;
 
             Entity entity = type.create(serverLevel);
             if (entity instanceof Mob mob) {
                 mob.moveTo(x, y, z, level.random.nextFloat() * 360F, 0.0F);
+                if (!serverLevel.noCollision(mob)) {
+                    mob.discard(); // Annulla lo spawn se è compenetrato
+                    return;
+                }
                 mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(worldPosition), MobSpawnType.SPAWNER, null);
                 serverLevel.addFreshEntityWithPassengers(entity);
                 serverLevel.levelEvent(2004, worldPosition, 0); // Spawn particles

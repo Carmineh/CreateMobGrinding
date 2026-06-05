@@ -26,6 +26,11 @@ public class RotationalMobSpawnerBlock extends DirectionalKineticBlock implement
     }
 
     @Override
+    public boolean hideStressImpact() {
+        return true;
+    }
+
+    @Override
     public Class<RotationalMobSpawnerBlockEntity> getBlockEntityClass() {
         return RotationalMobSpawnerBlockEntity.class;
     }

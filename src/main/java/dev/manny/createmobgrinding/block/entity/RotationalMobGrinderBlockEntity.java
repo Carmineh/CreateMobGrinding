@@ -93,7 +93,8 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
 
     @Override
     public float calculateStressApplied() {
-        float impact = super.calculateStressApplied();
+        float impact = 16.0f; // Base impact for grinder
+        // Aggiungi impatto per gli incantesimi
         ItemEnchantments enchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         if (!enchants.isEmpty()) {
             int totalLevels = enchants.keySet().stream().mapToInt(enchants::getLevel).sum();
