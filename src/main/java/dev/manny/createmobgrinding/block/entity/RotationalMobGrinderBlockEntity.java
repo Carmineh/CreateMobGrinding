@@ -26,7 +26,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
     private ItemStack internalWeapon = new ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
     private ItemStack installedBlade = new ItemStack(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get());
     private float attackTimer = 0;
-    private static final float ATTACK_THRESHOLD = 10000f;
+    private static final float ATTACK_THRESHOLD = 2000f; // Attacca in 0.39s a 256 RPM
 
     public RotationalMobGrinderBlockEntity(BlockPos pos, BlockState state) {
         super(dev.manny.createmobgrinding.registry.ModBlockEntities.ROTATIONAL_MOB_GRINDER.get(), pos, state);
@@ -104,10 +104,10 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
 
     @Override
     public float calculateStressApplied() {
-        float impact = 16.0f; // Base impact for Iron blade
-        if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) impact = 32.0f;
-        else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) impact = 64.0f;
-        else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) impact = 128.0f;
+        float impact = 8.0f; // Base impact for Iron blade
+        if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) impact = 16.0f;
+        else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) impact = 32.0f;
+        else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) impact = 64.0f;
 
         // Aggiungi impatto per gli incantesimi di utility
         ItemEnchantments enchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
@@ -161,11 +161,11 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         int fireAspect = enchants.getLevel(registry.getHolderOrThrow(net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT));
 
         for (LivingEntity target : targets) {
-            float baseDamage = 2.0f;
+            float baseDamage = 5.0f; // Buff danno base
             float multiplier = 1.0f;
             if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) multiplier = 2.0f;
-            else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) multiplier = 3.0f;
-            else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) multiplier = 5.0f;
+            else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) multiplier = 4.0f;
+            else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) multiplier = 8.0f;
             
             float damage = baseDamage * multiplier;
             
