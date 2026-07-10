@@ -5,6 +5,7 @@
   "item.createmobgrinding.mob_spawner_chunk": "Mob Spawner Chunk",
   "item.createmobgrinding.blank_spawner_chunk": "Blank Spawner Chunk",
   "item.createmobgrinding.unfinished_spawner_chunk": "Incomplete Spawner Chunk",
+  "item.createmobgrinding.broken_spawner_chunk": "Scrap Spawner Chunk",
   "item.createmobgrinding.rotational_mob_spawner": "Rotational Mob Spawner",
   "item.createmobgrinding.rotational_mob_grinder": "Rotational Mob Grinder",
   "tooltip.createmobgrinding.mob_chunk.entity_type": "Entity: %s",

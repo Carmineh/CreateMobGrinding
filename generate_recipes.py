@@ -60,7 +60,7 @@ for mob_id, data in mobs.items():
     if success_chance < 100.0:
         results_array.append({
           "chance": 100.0 - success_chance,
-          "id": "createmobgrinding:unfinished_spawner_chunk"
+          "id": "createmobgrinding:broken_spawner_chunk"
         })
         
     recipe = {

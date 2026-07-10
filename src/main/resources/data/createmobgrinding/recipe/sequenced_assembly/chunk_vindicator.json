@@ -14,7 +14,7 @@
     },
     {
       "chance": 50.0,
-      "id": "createmobgrinding:unfinished_spawner_chunk"
+      "id": "createmobgrinding:broken_spawner_chunk"
     }
   ],
   "sequence": [
