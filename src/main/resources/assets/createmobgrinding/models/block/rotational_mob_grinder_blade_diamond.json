@@ -8,7 +8,7 @@
 		"0": "createmobgrinding:block/brass_casing",
 		"1": "createmobgrinding:block/axis",
 		"2": "createmobgrinding:block/axis_top",
-		"3": "createmobgrinding:block/blade_iron",
+		"3": "createmobgrinding:block/blade_diamond",
 		"particle": "createmobgrinding:block/brass_casing"
 	},
 	"elements": [
