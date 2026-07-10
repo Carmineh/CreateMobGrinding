@@ -1,24 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " S ",
-    "WCW",
-    " S "
+    " A ",
+    "ABA"
   ],
   "key": {
-    "C": {
-      "item": "create:brass_casing"
-    },
-    "W": {
-      "item": "create:crushing_wheel"
-    },
-    "S": {
-      "item": "minecraft:iron_sword"
-    }
+    "A": { "item": "createmobgrinding:iron_grinder_blade" },
+    "B": { "item": "create:brass_casing" }
   },
   "result": {
-    "id": "createmobgrinding:rotational_mob_grinder",
-    "count": 1
-  },
-  "category": "misc"
+    "id": "createmobgrinding:rotational_mob_grinder"
+  }
 }
