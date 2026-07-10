@@ -35,5 +35,9 @@
   "item_attributes.createmobgrinding.has_spawner_dna": "Has Spawner DNA",
   "item_attributes.createmobgrinding.has_spawner_dna.inverted": "No Spawner DNA",
   "item_attributes.createmobgrinding.is_spawner_chunk": "Is a Spawner Chunk",
-  "item_attributes.createmobgrinding.is_spawner_chunk.inverted": "Not a Spawner Chunk"
+  "item_attributes.createmobgrinding.is_spawner_chunk.inverted": "Not a Spawner Chunk",
+  "item_attributes.createmobgrinding.is_blank_spawner_chunk": "Is a Blank Spawner Chunk",
+  "item_attributes.createmobgrinding.is_blank_spawner_chunk.inverted": "Not a Blank Spawner Chunk",
+  "item_attributes.createmobgrinding.is_broken_spawner_chunk": "Is a Scrap Spawner Chunk",
+  "item_attributes.createmobgrinding.is_broken_spawner_chunk.inverted": "Not a Scrap Spawner Chunk"
 }

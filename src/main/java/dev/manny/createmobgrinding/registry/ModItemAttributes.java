@@ -24,6 +24,16 @@ public class ModItemAttributes {
             stack.is(ModItems.MOB_SPAWNER_CHUNK.get())
         ));
 
+    public static final Supplier<ItemAttributeType> IS_BLANK_SPAWNER_CHUNK = 
+        ITEM_ATTRIBUTES.register("is_blank_spawner_chunk", () -> singleton("is_blank_spawner_chunk", stack -> 
+            stack.is(ModItems.BLANK_SPAWNER_CHUNK.get())
+        ));
+
+    public static final Supplier<ItemAttributeType> IS_BROKEN_SPAWNER_CHUNK = 
+        ITEM_ATTRIBUTES.register("is_broken_spawner_chunk", () -> singleton("is_broken_spawner_chunk", stack -> 
+            stack.is(ModItems.BROKEN_SPAWNER_CHUNK.get())
+        ));
+
     private static ItemAttributeType singleton(String id, Predicate<ItemStack> predicate) {
         return new SingletonItemAttribute.Type(type -> new SingletonItemAttribute(type, (stack, level) -> predicate.test(stack), "createmobgrinding." + id));
     }
