@@ -1,6 +1,7 @@
 package dev.manny.createmobgrinding;
 
 import com.mojang.logging.LogUtils;
+import dev.manny.createmobgrinding.item.crafting.ModIngredientTypes;
 import dev.manny.createmobgrinding.registry.ModBlockEntities;
 import dev.manny.createmobgrinding.registry.ModBlocks;
 import dev.manny.createmobgrinding.registry.ModCreativeTabs;
@@ -22,12 +23,6 @@ public class CreateMobGrinding {
         ModItems.ITEMS.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
-
-        modEventBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) -> {
-            net.neoforged.neoforge.registries.NeoForgeRegistries.INGREDIENT_TYPES.keySet().forEach(key -> {
-                LOGGER.info("REGISTERED INGREDIENT TYPE: " + key.toString());
-            });
-        });
+        ModIngredientTypes.register(modEventBus);
     }
 }
-

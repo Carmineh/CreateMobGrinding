@@ -78,10 +78,8 @@ for mob_id, data in mobs.items():
               "item": "createmobgrinding:unfinished_spawner_chunk"
             },
             {
-              "item": "createmobgrinding:filled_soul_extractor",
-              "nbt": {
-                "createmobgrinding:spawner_entity": f"minecraft:{mob_id}"
-              }
+              "type": "createmobgrinding:strict_syringe",
+              "entity": f"minecraft:{mob_id}"
             }
           ],
           "results": [
