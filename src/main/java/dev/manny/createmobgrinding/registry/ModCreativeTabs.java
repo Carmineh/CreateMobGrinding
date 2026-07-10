@@ -32,7 +32,9 @@ public class ModCreativeTabs {
                         output.accept(ModItems.BASIC_SOUL_EXTRACTOR.get());
                         output.accept(ModItems.ADVANCED_SOUL_EXTRACTOR.get());
                         output.accept(ModItems.ELITE_SOUL_EXTRACTOR.get());
-                        output.accept(ModItems.FILLED_SOUL_EXTRACTOR.get());
+                        output.accept(ModItems.BASIC_FILLED_SOUL_EXTRACTOR.get());
+                        output.accept(ModItems.ADVANCED_FILLED_SOUL_EXTRACTOR.get());
+                        output.accept(ModItems.ELITE_FILLED_SOUL_EXTRACTOR.get());
                     })
                     .build());
 }
