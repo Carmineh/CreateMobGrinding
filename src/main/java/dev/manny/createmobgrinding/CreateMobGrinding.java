@@ -22,6 +22,12 @@ public class CreateMobGrinding {
         ModItems.ITEMS.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
+
+        modEventBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) -> {
+            net.neoforged.neoforge.registries.NeoForgeRegistries.INGREDIENT_TYPES.keySet().forEach(key -> {
+                LOGGER.info("REGISTERED INGREDIENT TYPE: " + key.toString());
+            });
+        });
     }
 }
 

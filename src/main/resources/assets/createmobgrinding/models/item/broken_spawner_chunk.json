@@ -1,1 +1,6 @@
-{ "parent": "item/generated", "textures": { "layer0": "createmobgrinding:item/broken_spawner_chunk" } }
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "createmobgrinding:item/blank_spawner_chunk"
+  }
+}
