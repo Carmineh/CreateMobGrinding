@@ -23,9 +23,18 @@ public class RotationalMobGrinderRenderer extends KineticBlockEntityRenderer<Rot
     protected void renderSafe(RotationalMobGrinderBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 
 
-        // Fetch our custom blade model registered in ModClientEvents
+        String modelName = "block/rotational_mob_grinder_blade";
+        net.minecraft.world.item.ItemStack blade = be.getInstalledBlade();
+        if (blade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) {
+            modelName = "block/rotational_mob_grinder_blade_brass";
+        } else if (blade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) {
+            modelName = "block/rotational_mob_grinder_blade_diamond";
+        } else if (blade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) {
+            modelName = "block/rotational_mob_grinder_blade_netherite";
+        }
+
         BakedModel bladeModel = Minecraft.getInstance().getModelManager().getModel(
-            new net.minecraft.client.resources.model.ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "block/rotational_mob_grinder_blade"), "standalone")
+            new net.minecraft.client.resources.model.ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, modelName), "standalone")
         );
 
         ms.pushPose();

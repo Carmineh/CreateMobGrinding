@@ -25,7 +25,10 @@
           "item": "createmobgrinding:unfinished_spawner_chunk"
         },
         {
-          "item": "minecraft:spider_eye"
+          "item": "createmobgrinding:filled_soul_extractor",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:spider"
+          }
         }
       ],
       "results": [

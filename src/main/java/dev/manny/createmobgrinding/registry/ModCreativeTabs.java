@@ -22,6 +22,16 @@ public class ModCreativeTabs {
                         output.accept(ModItems.MOB_SPAWNER_CHUNK.get());
                         output.accept(ModItems.ROTATIONAL_MOB_SPAWNER.get());
                         output.accept(ModItems.ROTATIONAL_MOB_GRINDER.get());
+                        
+                        output.accept(ModItems.IRON_GRINDER_BLADE.get());
+                        output.accept(ModItems.BRASS_GRINDER_BLADE.get());
+                        output.accept(ModItems.DIAMOND_GRINDER_BLADE.get());
+                        output.accept(ModItems.NETHERITE_GRINDER_BLADE.get());
+                        
+                        output.accept(ModItems.BASIC_SOUL_EXTRACTOR.get());
+                        output.accept(ModItems.ADVANCED_SOUL_EXTRACTOR.get());
+                        output.accept(ModItems.ELITE_SOUL_EXTRACTOR.get());
+                        output.accept(ModItems.FILLED_SOUL_EXTRACTOR.get());
                     })
                     .build());
 }

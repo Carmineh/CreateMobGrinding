@@ -21,7 +21,10 @@
           "item": "createmobgrinding:unfinished_spawner_chunk"
         },
         {
-          "item": "minecraft:mutton"
+          "item": "createmobgrinding:filled_soul_extractor",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:sheep"
+          }
         }
       ],
       "results": [

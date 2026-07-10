@@ -25,7 +25,10 @@
           "item": "createmobgrinding:unfinished_spawner_chunk"
         },
         {
-          "item": "minecraft:wither_skeleton_skull"
+          "item": "createmobgrinding:filled_soul_extractor",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:wither_skeleton"
+          }
         }
       ],
       "results": [

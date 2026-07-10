@@ -25,7 +25,10 @@
           "item": "createmobgrinding:unfinished_spawner_chunk"
         },
         {
-          "item": "minecraft:gunpowder"
+          "item": "createmobgrinding:filled_soul_extractor",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:creeper"
+          }
         }
       ],
       "results": [

@@ -24,6 +24,7 @@ import net.minecraft.network.chat.Component;
 public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
 
     private ItemStack internalWeapon = new ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
+    private ItemStack installedBlade = new ItemStack(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get());
     private float attackTimer = 0;
     private static final float ATTACK_THRESHOLD = 10000f;
 
@@ -33,6 +34,16 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
 
     public ItemStack getInternalWeapon() {
         return internalWeapon;
+    }
+
+    public ItemStack getInstalledBlade() {
+        return installedBlade;
+    }
+
+    public void setInstalledBlade(ItemStack blade) {
+        this.installedBlade = blade.copy();
+        setChanged();
+        sendData();
     }
 
     public boolean applyEnchantedBook(ItemStack book) {
@@ -149,7 +160,14 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         int fireAspect = enchants.getLevel(registry.getHolderOrThrow(net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT));
 
         for (LivingEntity target : targets) {
-            float damage = 2.0f; // Danno base nerfato (era 7.0f)
+            float baseDamage = 2.0f;
+            float multiplier = 1.0f;
+            if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) multiplier = 2.0f;
+            else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) multiplier = 3.0f;
+            else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) multiplier = 5.0f;
+            
+            float damage = baseDamage * multiplier;
+            
             if (sharpness > 0) damage += 0.5f + 0.5f * sharpness;
             if (smite > 0 && target.getType().is(net.minecraft.tags.EntityTypeTags.UNDEAD)) damage += 2.5f * smite;
             if (bane > 0 && target.getType().is(net.minecraft.tags.EntityTypeTags.ARTHROPOD)) damage += 2.5f * bane;
@@ -180,8 +198,11 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
     @Override
     protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(compound, registries, clientPacket);
-        if (compound.contains("Weapon")) {
-            internalWeapon = ItemStack.parseOptional(registries, compound.getCompound("Weapon"));
+        if (compound.contains("InternalWeapon")) {
+            internalWeapon = ItemStack.parseOptional(registries, compound.getCompound("InternalWeapon"));
+        }
+        if (compound.contains("InstalledBlade")) {
+            installedBlade = ItemStack.parseOptional(registries, compound.getCompound("InstalledBlade"));
         }
         attackTimer = compound.getFloat("AttackTimer");
     }
@@ -189,7 +210,8 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
     @Override
     protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
         super.write(compound, registries, clientPacket);
-        compound.put("Weapon", internalWeapon.saveOptional(registries));
+        compound.put("InternalWeapon", internalWeapon.saveOptional(registries));
+        compound.put("InstalledBlade", installedBlade.saveOptional(registries));
         compound.putFloat("AttackTimer", attackTimer);
     }
 }
