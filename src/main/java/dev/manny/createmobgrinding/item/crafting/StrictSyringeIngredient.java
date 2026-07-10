@@ -24,16 +24,27 @@ public class StrictSyringeIngredient implements ICustomIngredient {
     @Override
     public boolean test(ItemStack stack) {
         if (stack == null || stack.isEmpty()) return false;
-        if (!stack.is(ModItems.FILLED_SOUL_EXTRACTOR.get())) return false;
+        if (!stack.is(ModItems.BASIC_FILLED_SOUL_EXTRACTOR.get()) && 
+            !stack.is(ModItems.ADVANCED_FILLED_SOUL_EXTRACTOR.get()) && 
+            !stack.is(ModItems.ELITE_FILLED_SOUL_EXTRACTOR.get())) {
+            return false;
+        }
         ResourceLocation stored = stack.get(ModDataComponents.SPAWNER_ENTITY.get());
         return entityId.equals(stored);
     }
 
     @Override
     public Stream<ItemStack> getItems() {
-        ItemStack stack = new ItemStack(ModItems.FILLED_SOUL_EXTRACTOR.get());
-        stack.set(ModDataComponents.SPAWNER_ENTITY.get(), entityId);
-        return Stream.of(stack);
+        ItemStack basic = new ItemStack(ModItems.BASIC_FILLED_SOUL_EXTRACTOR.get());
+        basic.set(ModDataComponents.SPAWNER_ENTITY.get(), entityId);
+        
+        ItemStack adv = new ItemStack(ModItems.ADVANCED_FILLED_SOUL_EXTRACTOR.get());
+        adv.set(ModDataComponents.SPAWNER_ENTITY.get(), entityId);
+        
+        ItemStack elite = new ItemStack(ModItems.ELITE_FILLED_SOUL_EXTRACTOR.get());
+        elite.set(ModDataComponents.SPAWNER_ENTITY.get(), entityId);
+        
+        return Stream.of(basic, adv, elite);
     }
 
     @Override

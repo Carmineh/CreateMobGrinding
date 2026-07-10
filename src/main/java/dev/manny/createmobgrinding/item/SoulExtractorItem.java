@@ -55,7 +55,11 @@ public class SoulExtractorItem extends Item {
         }
 
         // Give filled extractor
-        ItemStack filled = new ItemStack(ModItems.FILLED_SOUL_EXTRACTOR.get());
+        Item filledItem = ModItems.BASIC_FILLED_SOUL_EXTRACTOR.get();
+        if (this.maxTier == 4) filledItem = ModItems.ADVANCED_FILLED_SOUL_EXTRACTOR.get();
+        else if (this.maxTier == 5) filledItem = ModItems.ELITE_FILLED_SOUL_EXTRACTOR.get();
+        
+        ItemStack filled = new ItemStack(filledItem);
         filled.set(ModDataComponents.SPAWNER_ENTITY.get(), entityType);
         
         if (!player.getInventory().add(filled)) {

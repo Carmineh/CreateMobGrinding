@@ -28,5 +28,7 @@
   "item.createmobgrinding.basic_soul_extractor": "Basic Soul Extractor",
   "item.createmobgrinding.advanced_soul_extractor": "Advanced Soul Extractor",
   "item.createmobgrinding.elite_soul_extractor": "Elite Soul Extractor",
-  "item.createmobgrinding.filled_soul_extractor": "Filled Soul Extractor"
+  "item.createmobgrinding.basic_filled_soul_extractor": "Filled Basic Extractor",
+  "item.createmobgrinding.advanced_filled_soul_extractor": "Filled Advanced Extractor",
+  "item.createmobgrinding.elite_filled_soul_extractor": "Filled Elite Extractor"
 }

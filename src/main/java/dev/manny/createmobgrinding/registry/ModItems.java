@@ -45,7 +45,11 @@ public class ModItems {
     public static final Supplier<Item> ELITE_SOUL_EXTRACTOR = ITEMS.register("elite_soul_extractor", 
         () -> new dev.manny.createmobgrinding.item.SoulExtractorItem(new Item.Properties().stacksTo(1), 5));
 
-    public static final Supplier<Item> FILLED_SOUL_EXTRACTOR = ITEMS.register("filled_soul_extractor", 
+    public static final Supplier<Item> BASIC_FILLED_SOUL_EXTRACTOR = ITEMS.register("basic_filled_soul_extractor", 
+        () -> new dev.manny.createmobgrinding.item.FilledSoulExtractorItem(new Item.Properties().durability(5)));
+    public static final Supplier<Item> ADVANCED_FILLED_SOUL_EXTRACTOR = ITEMS.register("advanced_filled_soul_extractor", 
+        () -> new dev.manny.createmobgrinding.item.FilledSoulExtractorItem(new Item.Properties().durability(5)));
+    public static final Supplier<Item> ELITE_FILLED_SOUL_EXTRACTOR = ITEMS.register("elite_filled_soul_extractor", 
         () -> new dev.manny.createmobgrinding.item.FilledSoulExtractorItem(new Item.Properties().durability(5)));
 }
 
