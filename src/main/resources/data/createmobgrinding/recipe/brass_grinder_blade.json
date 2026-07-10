@@ -1,12 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " A ",
+    "AAA",
     "ABA",
-    " A "
+    "AAA"
   ],
   "key": {
-    "A": { "item": "minecraft:golden_sword" },
+    "A": { "item": "create:brass_ingot" },
     "B": { "item": "createmobgrinding:iron_grinder_blade" }
   },
   "result": {

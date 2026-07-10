@@ -1,12 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " A ",
+    "AAA",
     "ABA",
-    " A "
+    "AAA"
   ],
   "key": {
-    "A": { "item": "minecraft:diamond_sword" },
+    "A": { "item": "minecraft:diamond" },
     "B": { "item": "createmobgrinding:brass_grinder_blade" }
   },
   "result": {

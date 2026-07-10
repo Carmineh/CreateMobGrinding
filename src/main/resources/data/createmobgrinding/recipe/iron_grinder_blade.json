@@ -1,12 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " A ",
+    "AAA",
     "ABA",
-    " A "
+    "AAA"
   ],
   "key": {
-    "A": { "item": "minecraft:iron_sword" },
+    "A": { "item": "minecraft:iron_ingot" },
     "B": { "item": "create:propeller" }
   },
   "result": {

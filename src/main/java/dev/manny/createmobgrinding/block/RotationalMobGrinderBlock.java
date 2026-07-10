@@ -105,7 +105,7 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
                     net.minecraft.world.level.block.Block.popResource(level, pos, book);
                 }
                 net.minecraft.world.item.ItemStack blade = grinderBE.getInstalledBlade();
-                if (!blade.isEmpty()) {
+                if (!blade.isEmpty() && !blade.is(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get())) {
                     net.minecraft.world.level.block.Block.popResource(level, pos, blade.copy());
                 }
             }

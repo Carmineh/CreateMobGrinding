@@ -1,12 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " A ",
+    "AAA",
     "ABA",
-    " A "
+    "AAA"
   ],
   "key": {
-    "A": { "item": "minecraft:netherite_sword" },
+    "A": { "item": "minecraft:netherite_ingot" },
     "B": { "item": "createmobgrinding:diamond_grinder_blade" }
   },
   "result": {
