@@ -25,6 +25,7 @@
           "item": "createmobgrinding:unfinished_spawner_chunk"
         },
         {
+          "type": "neoforge:components",
           "item": "createmobgrinding:filled_soul_extractor",
           "components": {
             "createmobgrinding:spawner_entity": "minecraft:evoker"
@@ -33,7 +34,10 @@
       ],
       "results": [
         {
-          "id": "createmobgrinding:unfinished_spawner_chunk"
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:evoker"
+          }
         }
       ]
     },
@@ -49,7 +53,10 @@
       ],
       "results": [
         {
-          "id": "createmobgrinding:unfinished_spawner_chunk"
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:evoker"
+          }
         }
       ]
     },
@@ -62,12 +69,18 @@
       ],
       "results": [
         {
-          "id": "createmobgrinding:unfinished_spawner_chunk"
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:evoker"
+          }
         }
       ]
     }
   ],
   "transitional_item": {
-    "id": "createmobgrinding:unfinished_spawner_chunk"
+    "id": "createmobgrinding:unfinished_spawner_chunk",
+    "components": {
+      "createmobgrinding:spawner_entity": "minecraft:evoker"
+    }
   }
 }

@@ -78,6 +78,7 @@ for mob_id, data in mobs.items():
               "item": "createmobgrinding:unfinished_spawner_chunk"
             },
             {
+              "type": "neoforge:components",
               "item": "createmobgrinding:filled_soul_extractor",
               "components": {
                 "createmobgrinding:spawner_entity": f"minecraft:{mob_id}"
@@ -86,7 +87,10 @@ for mob_id, data in mobs.items():
           ],
           "results": [
             {
-              "id": "createmobgrinding:unfinished_spawner_chunk"
+              "id": "createmobgrinding:unfinished_spawner_chunk",
+              "components": {
+                "createmobgrinding:spawner_entity": f"minecraft:{mob_id}"
+              }
             }
           ]
         },
@@ -102,7 +106,10 @@ for mob_id, data in mobs.items():
           ],
           "results": [
             {
-              "id": "createmobgrinding:unfinished_spawner_chunk"
+              "id": "createmobgrinding:unfinished_spawner_chunk",
+              "components": {
+                "createmobgrinding:spawner_entity": f"minecraft:{mob_id}"
+              }
             }
           ]
         },
@@ -115,13 +122,19 @@ for mob_id, data in mobs.items():
           ],
           "results": [
             {
-              "id": "createmobgrinding:unfinished_spawner_chunk"
+              "id": "createmobgrinding:unfinished_spawner_chunk",
+              "components": {
+                "createmobgrinding:spawner_entity": f"minecraft:{mob_id}"
+              }
             }
           ]
         }
       ],
       "transitional_item": {
-        "id": "createmobgrinding:unfinished_spawner_chunk"
+        "id": "createmobgrinding:unfinished_spawner_chunk",
+        "components": {
+          "createmobgrinding:spawner_entity": f"minecraft:{mob_id}"
+        }
       }
     }
     
