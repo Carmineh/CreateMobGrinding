@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Git-Hash: ac0c444d9828da3453ae8cc65338e8de063286fb
+

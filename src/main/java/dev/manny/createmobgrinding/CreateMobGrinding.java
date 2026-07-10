@@ -6,6 +6,7 @@ import dev.manny.createmobgrinding.registry.ModBlockEntities;
 import dev.manny.createmobgrinding.registry.ModBlocks;
 import dev.manny.createmobgrinding.registry.ModCreativeTabs;
 import dev.manny.createmobgrinding.registry.ModDataComponents;
+import dev.manny.createmobgrinding.registry.ModItemAttributes;
 import dev.manny.createmobgrinding.registry.ModItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -24,5 +25,6 @@ public class CreateMobGrinding {
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModIngredientTypes.register(modEventBus);
+        ModItemAttributes.ITEM_ATTRIBUTES.register(modEventBus);
     }
 }

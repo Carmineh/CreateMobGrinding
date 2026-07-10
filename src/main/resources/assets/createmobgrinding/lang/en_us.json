@@ -30,5 +30,10 @@
   "item.createmobgrinding.elite_soul_extractor": "Elite Soul Extractor",
   "item.createmobgrinding.basic_filled_soul_extractor": "Filled Basic Extractor",
   "item.createmobgrinding.advanced_filled_soul_extractor": "Filled Advanced Extractor",
-  "item.createmobgrinding.elite_filled_soul_extractor": "Filled Elite Extractor"
+  "item.createmobgrinding.elite_filled_soul_extractor": "Filled Elite Extractor",
+  
+  "item_attributes.createmobgrinding.has_spawner_dna": "Has Spawner DNA",
+  "item_attributes.createmobgrinding.has_spawner_dna.inverted": "No Spawner DNA",
+  "item_attributes.createmobgrinding.is_spawner_chunk": "Is a Spawner Chunk",
+  "item_attributes.createmobgrinding.is_spawner_chunk.inverted": "Not a Spawner Chunk"
 }
