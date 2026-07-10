@@ -44,6 +44,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         this.installedBlade = blade.copy();
         setChanged();
         sendData();
+        if (hasNetwork()) getOrCreateNetwork().updateNetwork();
     }
 
     public boolean applyEnchantedBook(ItemStack book) {
@@ -58,8 +59,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         
         for (var ench : bookEnchants.keySet()) {
             net.minecraft.resources.ResourceLocation loc = ench.unwrapKey().get().location();
-            if (loc.equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("sharpness")) ||
-                loc.equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("looting")) ||
+            if (loc.equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("looting")) ||
                 loc.equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("fire_aspect")) ||
                 loc.equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(dev.manny.createmobgrinding.CreateMobGrinding.MOD_ID, "beheading"))) {
                 
@@ -104,8 +104,12 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
 
     @Override
     public float calculateStressApplied() {
-        float impact = 16.0f; // Base impact for grinder
-        // Aggiungi impatto per gli incantesimi
+        float impact = 16.0f; // Base impact for Iron blade
+        if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) impact = 32.0f;
+        else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) impact = 64.0f;
+        else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) impact = 128.0f;
+
+        // Aggiungi impatto per gli incantesimi di utility
         ItemEnchantments enchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         if (!enchants.isEmpty()) {
             int totalLevels = enchants.keySet().stream().mapToInt(enchants::getLevel).sum();
@@ -154,9 +158,6 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         ItemEnchantments enchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         net.minecraft.core.Registry<net.minecraft.world.item.enchantment.Enchantment> registry = serverLevel.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT);
         
-        int sharpness = enchants.getLevel(registry.getHolderOrThrow(net.minecraft.world.item.enchantment.Enchantments.SHARPNESS));
-        int smite = enchants.getLevel(registry.getHolderOrThrow(net.minecraft.world.item.enchantment.Enchantments.SMITE));
-        int bane = enchants.getLevel(registry.getHolderOrThrow(net.minecraft.world.item.enchantment.Enchantments.BANE_OF_ARTHROPODS));
         int fireAspect = enchants.getLevel(registry.getHolderOrThrow(net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT));
 
         for (LivingEntity target : targets) {
@@ -167,10 +168,6 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
             else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) multiplier = 5.0f;
             
             float damage = baseDamage * multiplier;
-            
-            if (sharpness > 0) damage += 0.5f + 0.5f * sharpness;
-            if (smite > 0 && target.getType().is(net.minecraft.tags.EntityTypeTags.UNDEAD)) damage += 2.5f * smite;
-            if (bane > 0 && target.getType().is(net.minecraft.tags.EntityTypeTags.ARTHROPOD)) damage += 2.5f * bane;
             
             if (fireAspect > 0) {
                 target.igniteForSeconds(fireAspect * 4); // igniteForSeconds in 1.21
