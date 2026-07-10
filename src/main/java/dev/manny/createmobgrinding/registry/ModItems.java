@@ -43,6 +43,6 @@ public class ModItems {
         () -> new dev.manny.createmobgrinding.item.SoulExtractorItem(new Item.Properties().stacksTo(1), 5));
 
     public static final Supplier<Item> FILLED_SOUL_EXTRACTOR = ITEMS.register("filled_soul_extractor", 
-        () -> new dev.manny.createmobgrinding.item.FilledSoulExtractorItem(new Item.Properties().stacksTo(1)));
+        () -> new dev.manny.createmobgrinding.item.FilledSoulExtractorItem(new Item.Properties().durability(5)));
 }
 

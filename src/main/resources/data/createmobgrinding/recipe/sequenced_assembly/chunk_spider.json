@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "createmobgrinding:blank_spawner_chunk"
   },
-  "loops": 1,
+  "loops": 5,
   "results": [
     {
       "chance": 90.0,
