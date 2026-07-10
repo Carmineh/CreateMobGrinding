@@ -1,0 +1,13 @@
+{
+  "type": "create:sandpaper_polishing",
+  "ingredients": [
+    {
+      "item": "createmobgrinding:broken_spawner_chunk"
+    }
+  ],
+  "results": [
+    {
+      "id": "createmobgrinding:blank_spawner_chunk"
+    }
+  ]
+}
