@@ -79,7 +79,7 @@ for mob_id, data in mobs.items():
             },
             {
               "type": "neoforge:components",
-              "item": "createmobgrinding:filled_soul_extractor",
+              "items": "createmobgrinding:filled_soul_extractor",
               "components": {
                 "createmobgrinding:spawner_entity": f"minecraft:{mob_id}"
               }
