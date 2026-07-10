@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  D",
+    " G ",
+    "N  "
+  ],
+  "key": {
+    "D": { "item": "minecraft:diamond" },
+    "G": { "item": "minecraft:glass_bottle" },
+    "N": { "item": "minecraft:iron_nugget" }
+  },
+  "result": {
+    "id": "createmobgrinding:advanced_soul_extractor",
+    "count": 1
+  }
+}

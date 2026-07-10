@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  I",
+    " G ",
+    "N  "
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "G": { "item": "minecraft:glass_bottle" },
+    "N": { "item": "minecraft:iron_nugget" }
+  },
+  "result": {
+    "id": "createmobgrinding:basic_soul_extractor",
+    "count": 1
+  }
+}

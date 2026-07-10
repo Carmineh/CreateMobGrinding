@@ -68,7 +68,7 @@ for mob_id, data in mobs.items():
       "ingredient": {
         "item": "createmobgrinding:blank_spawner_chunk"
       },
-      "loops": 5,
+      "loops": 1,
       "results": results_array,
       "sequence": [
         {

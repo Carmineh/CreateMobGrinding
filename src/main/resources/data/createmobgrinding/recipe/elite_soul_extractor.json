@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  H",
+    " G ",
+    "N  "
+  ],
+  "key": {
+    "H": { "item": "minecraft:netherite_ingot" },
+    "G": { "item": "minecraft:glass_bottle" },
+    "N": { "item": "minecraft:iron_nugget" }
+  },
+  "result": {
+    "id": "createmobgrinding:elite_soul_extractor",
+    "count": 1
+  }
+}
