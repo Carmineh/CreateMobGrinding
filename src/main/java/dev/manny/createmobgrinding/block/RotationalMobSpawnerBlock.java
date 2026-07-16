@@ -47,22 +47,25 @@ public class RotationalMobSpawnerBlock extends DirectionalKineticBlock implement
                 net.minecraft.world.level.block.entity.BlockEntity be = level.getBlockEntity(pos);
                 if (be instanceof RotationalMobSpawnerBlockEntity spawnerBE) {
                     net.minecraft.world.item.ItemStack current = spawnerBE.inventory.getStackInSlot(0);
-                    if (current.isEmpty()) {
-                        net.minecraft.resources.ResourceLocation entityLoc = stack.get(dev.manny.createmobgrinding.registry.ModDataComponents.SPAWNER_ENTITY.get());
-                        if (entityLoc != null) {
-                            java.util.List<? extends String> blacklist = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBlacklist.get();
-                            if (blacklist.contains(entityLoc.toString())) {
-                                player.displayClientMessage(net.minecraft.network.chat.Component.literal("Mob Blacklisted").withStyle(net.minecraft.ChatFormatting.RED), true);
-                                return net.minecraft.world.ItemInteractionResult.SUCCESS;
-                            }
-                        }
 
-                        spawnerBE.inventory.setStackInSlot(0, stack.copyWithCount(1));
-                        if (!player.isCreative()) {
-                            stack.shrink(1);
+                    net.minecraft.resources.ResourceLocation entityLoc = stack.get(dev.manny.createmobgrinding.registry.ModDataComponents.SPAWNER_ENTITY.get());
+                    if (entityLoc != null) {
+                        java.util.List<? extends String> blacklist = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBlacklist.get();
+                        if (blacklist.contains(entityLoc.toString())) {
+                            player.displayClientMessage(net.minecraft.network.chat.Component.literal("Mob Blacklisted").withStyle(net.minecraft.ChatFormatting.RED), true);
+                            return net.minecraft.world.ItemInteractionResult.SUCCESS;
                         }
-                        return net.minecraft.world.ItemInteractionResult.SUCCESS;
                     }
+
+                    if (!current.isEmpty()) {
+                        net.minecraft.world.level.block.Block.popResource(level, pos.above(), current.copy());
+                    }
+
+                    spawnerBE.inventory.setStackInSlot(0, stack.copyWithCount(1));
+                    if (!player.isCreative()) {
+                        stack.shrink(1);
+                    }
+                    return net.minecraft.world.ItemInteractionResult.SUCCESS;
                 }
             }
             return net.minecraft.world.ItemInteractionResult.SUCCESS;

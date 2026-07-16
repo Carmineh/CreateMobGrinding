@@ -62,7 +62,8 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
                     if (stack.is(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get()) ||
                         stack.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get()) ||
                         stack.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get()) ||
-                        stack.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) {
+                        stack.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get()) ||
+                        stack.is(dev.manny.createmobgrinding.registry.ModItems.CREATIVE_GRINDER_BLADE.get())) {
                         
                         net.minecraft.world.item.ItemStack currentBlade = grinderBE.getInstalledBlade();
                         if (!currentBlade.isEmpty() && !currentBlade.is(stack.getItem())) {

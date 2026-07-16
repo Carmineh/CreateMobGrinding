@@ -31,6 +31,8 @@ public class RotationalMobGrinderRenderer extends KineticBlockEntityRenderer<Rot
             modelName = "block/rotational_mob_grinder_blade_diamond";
         } else if (blade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) {
             modelName = "block/rotational_mob_grinder_blade_netherite";
+        } else if (blade.is(dev.manny.createmobgrinding.registry.ModItems.CREATIVE_GRINDER_BLADE.get())) {
+            modelName = "block/rotational_mob_grinder_blade_creative";
         }
 
         BakedModel bladeModel = Minecraft.getInstance().getModelManager().getModel(

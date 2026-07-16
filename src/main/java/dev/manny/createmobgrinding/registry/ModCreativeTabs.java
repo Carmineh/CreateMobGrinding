@@ -28,6 +28,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.BRASS_GRINDER_BLADE.get());
                         output.accept(ModItems.DIAMOND_GRINDER_BLADE.get());
                         output.accept(ModItems.NETHERITE_GRINDER_BLADE.get());
+                        output.accept(ModItems.CREATIVE_GRINDER_BLADE.get());
                         
                         output.accept(ModItems.BASIC_SOUL_EXTRACTOR.get());
                         output.accept(ModItems.ADVANCED_SOUL_EXTRACTOR.get());

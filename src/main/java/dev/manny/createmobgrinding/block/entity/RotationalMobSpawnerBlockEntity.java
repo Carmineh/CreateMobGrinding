@@ -33,7 +33,18 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
         }
     };
 
+    public final ItemStackHandler upgrades = new ItemStackHandler(4) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+            if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    };
+
     private float spawnProgress = 0;
+    public boolean disabledByRedstone = false;
+    public float visualSpin = 0f;
+    public float oVisualSpin = 0f;
 
     // Client-side rendering cache
     private Entity renderEntity = null;
@@ -89,16 +100,68 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
     @Override
     public float calculateStressApplied() {
         float baseImpact = 32.0f; // Base impact for spawner
-        float calculated = baseImpact * getTier();
+        float calculated = switch (getTier()) {
+            case 1 -> baseImpact * 1.0f;  // 32 SU
+            case 2 -> baseImpact * 1.5f;  // 48 SU
+            case 3 -> baseImpact * 2.0f;  // 64 SU
+            case 4 -> baseImpact * 6.0f;  // 192 SU (Bello grande)
+            case 5 -> baseImpact * 12.0f; // 384 SU (Bello grande)
+            default -> baseImpact;
+        };
         this.lastStressApplied = calculated;
         return calculated;
+    }
+
+    public double getSpawnThreshold() {
+        double base = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBaseProgress.get();
+        return switch (getTier()) {
+            case 1 -> base * 0.5;   // Tanti mob (1000)
+            case 2 -> base * 0.75;  // (1500)
+            case 3 -> base * 1.0;   // (2000)
+            case 4 -> base * 2.5;   // Più lento ma non troppo (5000)
+            case 5 -> base * 3.5;   // (7000)
+            default -> base;
+        };
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (level == null || level.isClientSide) return;
+        if (level != null && level.isClientSide) {
+            oVisualSpin = visualSpin;
+            if (!disabledByRedstone) {
+                float speed = Math.abs(getSpeed());
+                if (speed > 0) {
+                    visualSpin += (speed / 10f);
+                } else {
+                    visualSpin += 2.0f; // Idle spin
+                }
+            }
+            return;
+        }
+
+        if (level == null) return;
+        
+        // Redstone Control
+        boolean powered = level.hasNeighborSignal(worldPosition);
+        if (!powered) {
+            for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+                net.minecraft.world.level.block.state.BlockState state = level.getBlockState(worldPosition.relative(dir));
+                if (state.getBlock() instanceof net.minecraft.world.level.block.RedstoneTorchBlock) {
+                    powered = true;
+                    break;
+                }
+            }
+        }
+        
+        if (powered != this.disabledByRedstone) {
+            this.disabledByRedstone = powered;
+            setChanged();
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+
+        if (this.disabledByRedstone) return;
 
         float speed = Math.abs(getSpeed());
         if (speed == 0) return;
@@ -114,7 +177,7 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
 
         spawnProgress += speed;
 
-        double threshold = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBaseProgress.get() * getTier();
+        double threshold = getSpawnThreshold();
 
         if (spawnProgress >= threshold) {
             spawnProgress -= threshold;
@@ -162,7 +225,11 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
         if (compound.contains("Inventory")) {
             inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
         }
+        if (compound.contains("Upgrades")) {
+            upgrades.deserializeNBT(registries, compound.getCompound("Upgrades"));
+        }
         spawnProgress = compound.getFloat("SpawnProgress");
+        disabledByRedstone = compound.getBoolean("DisabledByRedstone");
     }
 
     @Override
@@ -190,7 +257,7 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                 }
 
                 tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.mob_chunk.entity_type", Component.translatable(net.minecraft.Util.makeDescriptionId("entity", entityLoc)))).withStyle(net.minecraft.ChatFormatting.GRAY));
-                double threshold = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBaseProgress.get() * getTier();
+                double threshold = getSpawnThreshold();
                 int percentage = (int) ((spawnProgress / threshold) * 100);
                 tooltip.add(Component.literal("    ").append(Component.translatable("jade.createmobgrinding.spawner.progress", percentage)).withStyle(net.minecraft.ChatFormatting.YELLOW));
                 return true;
@@ -205,7 +272,9 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
     protected void write(CompoundTag compound, HolderLookup.Provider provider, boolean clientPacket) {
         super.write(compound, provider, clientPacket);
         compound.put("Inventory", inventory.serializeNBT(provider));
+        compound.put("Upgrades", upgrades.serializeNBT(provider));
         compound.putFloat("SpawnProgress", spawnProgress);
-        compound.putFloat("MaxSpawnProgress", (float)(dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBaseProgress.get() * getTier()));
+        compound.putBoolean("DisabledByRedstone", disabledByRedstone);
+        compound.putFloat("MaxSpawnProgress", (float)getSpawnThreshold());
     }
 }

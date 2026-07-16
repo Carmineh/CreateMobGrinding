@@ -25,17 +25,9 @@ public class RotationalMobSpawnerRenderer extends KineticBlockEntityRenderer<Rot
             ms.pushPose();
             ms.translate(0.5D, 0.5D, 0.5D); // Center of the block
             
-            float speed = Math.abs(be.getSpeed());
-            float angle;
-            if (speed > 0) {
-                // Spin based on game time scaled by kinetic speed
-                angle = (be.getLevel().getGameTime() + partialTicks) * (speed / 10f); 
-            } else {
-                // Slow idle spin
-                angle = (be.getLevel().getGameTime() + partialTicks) * 2.0f; 
-            }
+            float angle = net.minecraft.util.Mth.lerp(partialTicks, be.oVisualSpin, be.visualSpin);
             
-            ms.mulPose(Axis.YP.rotationDegrees(angle));
+            ms.mulPose(com.mojang.math.Axis.YP.rotationDegrees(angle));
             
             // Scale
             float scale = 0.4375F; // Vanilla spawner scale

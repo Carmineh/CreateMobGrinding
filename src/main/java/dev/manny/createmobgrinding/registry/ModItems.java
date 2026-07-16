@@ -34,8 +34,16 @@ public class ModItems {
         () -> new Item(new Item.Properties()));
     public static final Supplier<Item> DIAMOND_GRINDER_BLADE = ITEMS.register("diamond_grinder_blade", 
         () -> new Item(new Item.Properties()));
-    public static final Supplier<Item> NETHERITE_GRINDER_BLADE = ITEMS.register("netherite_grinder_blade", 
-        () -> new Item(new Item.Properties().fireResistant()));
+    public static final Supplier<Item> NETHERITE_GRINDER_BLADE = ITEMS.register("netherite_grinder_blade",
+            () -> new Item(new Item.Properties().fireResistant()));
+
+    public static final Supplier<Item> CREATIVE_GRINDER_BLADE = ITEMS.register("creative_grinder_blade",
+            () -> new Item(new Item.Properties()) {
+                @Override
+                public boolean isFoil(net.minecraft.world.item.ItemStack stack) {
+                    return true;
+                }
+            });
 
     // Soul Extractors
     public static final Supplier<Item> BASIC_SOUL_EXTRACTOR = ITEMS.register("basic_soul_extractor", 
