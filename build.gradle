@@ -180,7 +180,7 @@ publishMods {
     type = STABLE
     modLoaders.add("neoforge")
 
-    // Curseforge block removed due to missing Author Token
+    curseforge { accessToken = providers.environmentVariable("CURSEFORGE_TOKEN"); projectId = "1557641"; minecraftVersions.add(minecraft_version) }
 
     modrinth {
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
@@ -188,4 +188,5 @@ publishMods {
         minecraftVersions.add(minecraft_version)
     }
 }
+
 
