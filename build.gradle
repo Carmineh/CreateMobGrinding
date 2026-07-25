@@ -180,12 +180,16 @@ publishMods {
     type = STABLE
     modLoaders.add("neoforge")
 
-    curseforge { accessToken = providers.environmentVariable("CURSEFORGE_TOKEN"); projectId = "1557641"; minecraftVersions.add(minecraft_version) }
+    curseforge { accessToken = providers.environmentVariable("CURSEFORGE_TOKEN"); projectId = "1557641"; minecraftVersions.add(minecraft_version)
+        clientRequired = true
+        serverRequired = true }
 
     modrinth {
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
         projectId = "XwIkHYnz"
         minecraftVersions.add(minecraft_version)
+        clientRequired = true
+        serverRequired = true
     }
 }
 
