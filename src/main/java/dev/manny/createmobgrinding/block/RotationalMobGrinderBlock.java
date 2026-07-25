@@ -67,7 +67,7 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
                         
                         net.minecraft.world.item.ItemStack currentBlade = grinderBE.getInstalledBlade();
                         if (!currentBlade.isEmpty() && !currentBlade.is(stack.getItem())) {
-                            net.minecraft.world.level.block.Block.popResource(level, pos.above(), currentBlade.copy());
+                            net.neoforged.neoforge.items.ItemHandlerHelper.giveItemToPlayer(player, currentBlade.copy());
                         }
                         
                         net.minecraft.world.item.ItemStack newBlade = stack.copy();

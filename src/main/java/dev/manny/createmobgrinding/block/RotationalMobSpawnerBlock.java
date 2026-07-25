@@ -1,6 +1,6 @@
 package dev.manny.createmobgrinding.block;
 
-import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
+import com.simibubi.create.content.kinetics.base.KineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import dev.manny.createmobgrinding.block.entity.RotationalMobSpawnerBlockEntity;
 import dev.manny.createmobgrinding.registry.ModBlockEntities;
@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.LevelReader;
 
-public class RotationalMobSpawnerBlock extends DirectionalKineticBlock implements IBE<RotationalMobSpawnerBlockEntity> {
+public class RotationalMobSpawnerBlock extends KineticBlock implements IBE<RotationalMobSpawnerBlockEntity> {
 
     public RotationalMobSpawnerBlock(Properties properties) {
         super(properties);
@@ -22,7 +22,7 @@ public class RotationalMobSpawnerBlock extends DirectionalKineticBlock implement
 
     @Override
     public boolean hasShaftTowards(LevelReader world, net.minecraft.core.BlockPos pos, BlockState state, Direction face) {
-        return face == Direction.DOWN;
+        return face == Direction.DOWN || face == Direction.UP;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class RotationalMobSpawnerBlock extends DirectionalKineticBlock implement
                     }
 
                     if (!current.isEmpty()) {
-                        net.minecraft.world.level.block.Block.popResource(level, pos.above(), current.copy());
+                        net.neoforged.neoforge.items.ItemHandlerHelper.giveItemToPlayer(player, current.copy());
                     }
 
                     spawnerBE.inventory.setStackInSlot(0, stack.copyWithCount(1));
@@ -66,6 +66,32 @@ public class RotationalMobSpawnerBlock extends DirectionalKineticBlock implement
                         stack.shrink(1);
                     }
                     return net.minecraft.world.ItemInteractionResult.SUCCESS;
+                }
+            }
+            return net.minecraft.world.ItemInteractionResult.SUCCESS;
+        } else if (stack.is(dev.manny.createmobgrinding.registry.ModItems.SPAWNER_UPGRADE_NO_AI.get()) ||
+                   stack.is(dev.manny.createmobgrinding.registry.ModItems.SPAWNER_UPGRADE_NO_CONDITIONS.get())) {
+            if (!level.isClientSide) {
+                net.minecraft.world.level.block.entity.BlockEntity be = level.getBlockEntity(pos);
+                if (be instanceof RotationalMobSpawnerBlockEntity spawnerBE) {
+                    boolean alreadyPresent = false;
+                    int firstEmpty = -1;
+                    for (int i = 0; i < spawnerBE.upgrades.getSlots(); i++) {
+                        net.minecraft.world.item.ItemStack current = spawnerBE.upgrades.getStackInSlot(i);
+                        if (current.is(stack.getItem())) {
+                            alreadyPresent = true;
+                            break;
+                        }
+                        if (current.isEmpty() && firstEmpty == -1) {
+                            firstEmpty = i;
+                        }
+                    }
+                    if (!alreadyPresent && firstEmpty != -1) {
+                        spawnerBE.upgrades.setStackInSlot(firstEmpty, stack.copyWithCount(1));
+                        if (!player.isCreative()) {
+                            stack.shrink(1);
+                        }
+                    }
                 }
             }
             return net.minecraft.world.ItemInteractionResult.SUCCESS;
@@ -81,10 +107,21 @@ public class RotationalMobSpawnerBlock extends DirectionalKineticBlock implement
                 net.minecraft.world.item.ItemStack chunk = spawnerBE.inventory.getStackInSlot(0);
                 if (!chunk.isEmpty()) {
                     if (!context.getLevel().isClientSide) {
-                        net.minecraft.world.level.block.Block.popResource(context.getLevel(), context.getClickedPos(), chunk);
+                        net.neoforged.neoforge.items.ItemHandlerHelper.giveItemToPlayer(context.getPlayer(), chunk.copy());
                         spawnerBE.inventory.setStackInSlot(0, net.minecraft.world.item.ItemStack.EMPTY);
                     }
                     return net.minecraft.world.InteractionResult.SUCCESS;
+                } else {
+                    for (int i = spawnerBE.upgrades.getSlots() - 1; i >= 0; i--) {
+                        net.minecraft.world.item.ItemStack upgrade = spawnerBE.upgrades.getStackInSlot(i);
+                        if (!upgrade.isEmpty()) {
+                            if (!context.getLevel().isClientSide) {
+                                net.neoforged.neoforge.items.ItemHandlerHelper.giveItemToPlayer(context.getPlayer(), upgrade.copy());
+                                spawnerBE.upgrades.setStackInSlot(i, net.minecraft.world.item.ItemStack.EMPTY);
+                            }
+                            return net.minecraft.world.InteractionResult.SUCCESS;
+                        }
+                    }
                 }
             }
         }
@@ -110,6 +147,12 @@ public class RotationalMobSpawnerBlock extends DirectionalKineticBlock implement
                 net.minecraft.world.item.ItemStack chunk = spawnerBE.inventory.getStackInSlot(0);
                 if (!chunk.isEmpty()) {
                     net.minecraft.world.level.block.Block.popResource(level, pos, chunk);
+                }
+                for (int i = 0; i < spawnerBE.upgrades.getSlots(); i++) {
+                    net.minecraft.world.item.ItemStack upgrade = spawnerBE.upgrades.getStackInSlot(i);
+                    if (!upgrade.isEmpty()) {
+                        net.minecraft.world.level.block.Block.popResource(level, pos, upgrade);
+                    }
                 }
             }
             super.onRemove(state, level, pos, newState, isMoving);

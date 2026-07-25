@@ -38,12 +38,18 @@ public class ModItems {
             () -> new Item(new Item.Properties().fireResistant()));
 
     public static final Supplier<Item> CREATIVE_GRINDER_BLADE = ITEMS.register("creative_grinder_blade",
-            () -> new Item(new Item.Properties()) {
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)) {
                 @Override
                 public boolean isFoil(net.minecraft.world.item.ItemStack stack) {
                     return true;
                 }
             });
+
+    // Spawner Upgrades
+    public static final Supplier<Item> SPAWNER_UPGRADE_NO_AI = ITEMS.register("spawner_upgrade_no_ai", 
+        () -> new Item(new Item.Properties()));
+    public static final Supplier<Item> SPAWNER_UPGRADE_NO_CONDITIONS = ITEMS.register("spawner_upgrade_no_conditions", 
+        () -> new Item(new Item.Properties()));
 
     // Soul Extractors
     public static final Supplier<Item> BASIC_SOUL_EXTRACTOR = ITEMS.register("basic_soul_extractor", 

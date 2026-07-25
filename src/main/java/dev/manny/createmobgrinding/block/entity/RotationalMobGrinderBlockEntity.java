@@ -102,6 +102,22 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         return book;
     }
 
+    private ItemEnchantments getCombinedEnchantments() {
+        ItemEnchantments internal = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        ItemEnchantments blade = installedBlade.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        
+        if (blade.isEmpty()) return internal;
+        if (internal.isEmpty()) return blade;
+        
+        ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(internal);
+        for (var ench : blade.keySet()) {
+            int current = mutable.getLevel(ench);
+            int added = blade.getLevel(ench);
+            mutable.set(ench, Math.max(current, added));
+        }
+        return mutable.toImmutable();
+    }
+
     @Override
     public float calculateStressApplied() {
         float impact = 8.0f; // Base impact for Iron blade
@@ -110,7 +126,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) impact = 64.0f;
 
         // Aggiungi impatto per gli incantesimi di utility
-        ItemEnchantments enchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        ItemEnchantments enchants = getCombinedEnchantments();
         if (!enchants.isEmpty()) {
             int totalLevels = enchants.keySet().stream().mapToInt(enchants::getLevel).sum();
             impact += totalLevels * 4.0f; // Aumenta lo stress in base agli incantesimi
@@ -153,15 +169,19 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
 
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft(serverLevel);
         fakePlayer.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
-        fakePlayer.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, internalWeapon);
 
-        ItemEnchantments enchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        ItemEnchantments enchants = getCombinedEnchantments();
+        ItemStack weaponToUse = internalWeapon.copy();
+        net.minecraft.world.item.enchantment.EnchantmentHelper.setEnchantments(weaponToUse, enchants);
+
+        fakePlayer.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, weaponToUse);
+
         net.minecraft.core.Registry<net.minecraft.world.item.enchantment.Enchantment> registry = serverLevel.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT);
         
         int fireAspect = enchants.getLevel(registry.getHolderOrThrow(net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT));
 
         for (LivingEntity target : targets) {
-            float baseDamage = 5.0f; // Buff danno base
+            float baseDamage = 2.0f; // Ridotto per bilanciamento
             float multiplier = 1.0f;
             if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) multiplier = 2.0f;
             else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) multiplier = 4.0f;
@@ -182,7 +202,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         super.addToGoggleTooltip(tooltip, isPlayerSneaking);
         
-        ItemEnchantments enchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        ItemEnchantments enchants = getCombinedEnchantments();
         if (enchants.isEmpty()) {
             tooltip.add(Component.literal("    ").append(Component.translatable("jade.createmobgrinding.grinder.no_enchants")).withStyle(net.minecraft.ChatFormatting.GRAY));
         } else {

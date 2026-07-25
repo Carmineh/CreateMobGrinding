@@ -13,6 +13,7 @@
   "jade.createmobgrinding.grinder.shift_for_enchants": "Shift to see enchantments",
   "jade.createmobgrinding.grinder.no_enchants": "No Enchantments",
   "tooltip.createmobgrinding.spawner.no_chunk": "Missing Mob Spawner Chunk",
+  "tooltip.createmobgrinding.spawner.upgrades": "Installed Upgrades:",
   "jei.createmobgrinding.spawner_extraction": "Chunk Extraction",
   "jei.createmobgrinding.spawner_conversion": "Spawner Conversion",
   "config.jade.plugin_createmobgrinding.spawner_provider": "Rotational Mob Spawner Info",
@@ -25,6 +26,9 @@
   "item.createmobgrinding.diamond_grinder_blade": "Diamond Grinder Blade",
   "item.createmobgrinding.netherite_grinder_blade": "Netherite Grinder Blade",
   "item.createmobgrinding.creative_grinder_blade": "Creative Grinder Blade",
+  
+  "item.createmobgrinding.spawner_upgrade_no_ai": "No-AI Upgrade",
+  "item.createmobgrinding.spawner_upgrade_no_conditions": "No Conditions Upgrade",
   
   "item.createmobgrinding.basic_soul_extractor": "Basic Soul Extractor",
   "item.createmobgrinding.advanced_soul_extractor": "Advanced Soul Extractor",
@@ -40,5 +44,44 @@
   "create.item_attributes.createmobgrinding.is_blank_spawner_chunk": "Is a Blank Spawner Chunk",
   "create.item_attributes.createmobgrinding.is_blank_spawner_chunk.inverted": "Not a Blank Spawner Chunk",
   "create.item_attributes.createmobgrinding.is_broken_spawner_chunk": "Is a Scrap Spawner Chunk",
-  "create.item_attributes.createmobgrinding.is_broken_spawner_chunk.inverted": "Not a Scrap Spawner Chunk"
+  "create.item_attributes.createmobgrinding.is_broken_spawner_chunk.inverted": "Not a Scrap Spawner Chunk",
+  
+  "advancement.createmobgrinding.root.title": "Create: Mob Grinding",
+  "advancement.createmobgrinding.root.desc": "Automate mob farming with rotational power!",
+  "advancement.createmobgrinding.craft_grinder.title": "First Blood",
+  "advancement.createmobgrinding.craft_grinder.desc": "Craft your first Rotational Mob Grinder",
+  "advancement.createmobgrinding.craft_spawner_hand.title": "The Spark of Life",
+  "advancement.createmobgrinding.craft_spawner_hand.desc": "Craft a Rotational Mob Spawner by hand",
+  "advancement.createmobgrinding.craft_spawner_casing.title": "Kinetic Spawning",
+  "advancement.createmobgrinding.craft_spawner_casing.desc": "Construct a Rotational Mob Spawner using a Brass Casing in-world",
+  "advancement.createmobgrinding.craft_shard.title": "Blank Canvas",
+  "advancement.createmobgrinding.craft_shard.desc": "Craft your first Blank Spawner Chunk",
+  "advancement.createmobgrinding.drop_shard.title": "Liberator",
+  "advancement.createmobgrinding.drop_shard.desc": "Extract a Mob Spawner Chunk by breaking a Spawner",
+  "advancement.createmobgrinding.use_shard.title": "It's Alive!",
+  "advancement.createmobgrinding.use_shard.desc": "Insert a Spawner Chunk into a Rotational Mob Spawner",
+  
+  "createmobgrinding.ponder.spawner_conversion.header": "Upgrading a Vanilla Spawner",
+  "createmobgrinding.ponder.spawner_conversion.text_1": "To create a Rotational Mob Spawner...",
+  "createmobgrinding.ponder.spawner_conversion.text_2": "Right-click it with a Brass Casing.",
+  "createmobgrinding.ponder.spawner_conversion.text_3": "Then insert a Mob Spawner Chunk with the desired soul.",
+  
+  "createmobgrinding.ponder.spawner_powering.header": "Powering the Spawner",
+  "createmobgrinding.ponder.spawner_powering.text_1": "The Rotational Spawner requires kinetic energy to work.",
+  "createmobgrinding.ponder.spawner_powering.text_2": "Provide rotational power to its axis.",
+  "createmobgrinding.ponder.spawner_powering.text_3": "The speed of rotation determines the spawn rate.",
+  
+  "createmobgrinding.ponder.spawner_stacking.header": "Stacking Spawners",
+  "createmobgrinding.ponder.spawner_stacking.text_1": "The internal axis allows you to stack them.",
+  "createmobgrinding.ponder.spawner_stacking.text_2": "Kinetic power is passed through directly to adjacent spawners!",
+  
+  "createmobgrinding.ponder.grinder_blades.header": "Upgrading Grinder Blades",
+  "createmobgrinding.ponder.grinder_blades.text_1": "The Rotational Mob Grinder uses kinetic power to damage entities.",
+  "createmobgrinding.ponder.grinder_blades.text_2": "The Iron Blade is the most basic tier.",
+  "createmobgrinding.ponder.grinder_blades.text_3": "Right-click the Grinder with a new blade to swap it out.",
+  "createmobgrinding.ponder.grinder_blades.text_4": "The Brass Blade deals double the damage.",
+  "createmobgrinding.ponder.grinder_blades.text_5": "The Diamond Blade deals four times the damage.",
+  "createmobgrinding.ponder.grinder_blades.text_6": "The Netherite Blade is the ultimate tier, dealing massive damage!",
+  "createmobgrinding.ponder.grinder_blades.text_7": "You can also apply Enchanted Books directly to the Grinder!",
+  "createmobgrinding.ponder.grinder_blades.text_8": "Valid enchantments: Looting, Fire Aspect, and Beheading."
 }

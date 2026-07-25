@@ -1,0 +1,26 @@
+{
+  "parent": "createmobgrinding:craft_shard",
+  "display": {
+    "icon": {
+      "id": "createmobgrinding:mob_spawner_chunk"
+    },
+    "title": {
+      "translate": "advancement.createmobgrinding.drop_shard.title"
+    },
+    "description": {
+      "translate": "advancement.createmobgrinding.drop_shard.desc"
+    }
+  },
+  "criteria": {
+    "has_mob_chunk": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "createmobgrinding:mob_spawner_chunk"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -30,6 +30,9 @@ public class ModCreativeTabs {
                         output.accept(ModItems.NETHERITE_GRINDER_BLADE.get());
                         output.accept(ModItems.CREATIVE_GRINDER_BLADE.get());
                         
+                        output.accept(ModItems.SPAWNER_UPGRADE_NO_AI.get());
+                        output.accept(ModItems.SPAWNER_UPGRADE_NO_CONDITIONS.get());
+                        
                         output.accept(ModItems.BASIC_SOUL_EXTRACTOR.get());
                         output.accept(ModItems.ADVANCED_SOUL_EXTRACTOR.get());
                         output.accept(ModItems.ELITE_SOUL_EXTRACTOR.get());

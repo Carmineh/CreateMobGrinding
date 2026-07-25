@@ -82,6 +82,18 @@ public class ModEvents {
                                 stack.shrink(1);
                             }
                             level.levelEvent(2001, pos, net.minecraft.world.level.block.Block.getId(Blocks.SPAWNER.defaultBlockState()));
+                            
+                            if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                                net.minecraft.advancements.AdvancementHolder advancement = serverPlayer.server.getAdvancements().get(ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "craft_spawner_casing"));
+                                if (advancement != null) {
+                                    net.minecraft.advancements.AdvancementProgress progress = serverPlayer.getAdvancements().getOrStartProgress(advancement);
+                                    if (!progress.isDone()) {
+                                        for (String criterion : progress.getRemainingCriteria()) {
+                                            serverPlayer.getAdvancements().award(advancement, criterion);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

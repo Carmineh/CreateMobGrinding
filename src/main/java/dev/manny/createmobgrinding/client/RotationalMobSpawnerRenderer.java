@@ -18,7 +18,6 @@ public class RotationalMobSpawnerRenderer extends KineticBlockEntityRenderer<Rot
 
     @Override
     protected void renderSafe(RotationalMobSpawnerBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
         Entity entity = be.getRenderEntity();
         if (entity != null) {

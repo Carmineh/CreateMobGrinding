@@ -7,6 +7,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 @EventBusSubscriber(modid = CreateMobGrinding.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ModClientEvents {
@@ -25,5 +26,9 @@ public class ModClientEvents {
         event.registerBlockEntityRenderer(ModBlockEntities.ROTATIONAL_MOB_SPAWNER.get(), RotationalMobSpawnerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.ROTATIONAL_MOB_GRINDER.get(), RotationalMobGrinderRenderer::new);
     }
-}
 
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        net.createmod.ponder.foundation.PonderIndex.addPlugin(new ModPonders());
+    }
+}

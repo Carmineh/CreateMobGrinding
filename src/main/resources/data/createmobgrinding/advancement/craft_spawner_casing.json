@@ -1,0 +1,19 @@
+{
+  "parent": "createmobgrinding:craft_spawner_hand",
+  "display": {
+    "icon": {
+      "id": "createmobgrinding:rotational_mob_spawner"
+    },
+    "title": {
+      "translate": "advancement.createmobgrinding.craft_spawner_casing.title"
+    },
+    "description": {
+      "translate": "advancement.createmobgrinding.craft_spawner_casing.desc"
+    }
+  },
+  "criteria": {
+    "manual": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

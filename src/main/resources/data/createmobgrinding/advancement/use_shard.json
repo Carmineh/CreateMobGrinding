@@ -1,0 +1,30 @@
+{
+  "parent": "createmobgrinding:drop_shard",
+  "display": {
+    "icon": {
+      "id": "createmobgrinding:rotational_mob_spawner"
+    },
+    "title": {
+      "translate": "advancement.createmobgrinding.use_shard.title"
+    },
+    "description": {
+      "translate": "advancement.createmobgrinding.use_shard.desc"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "use_shard": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": {
+          "block": {
+            "blocks": "createmobgrinding:rotational_mob_spawner"
+          }
+        },
+        "item": {
+          "items": "createmobgrinding:mob_spawner_chunk"
+        }
+      }
+    }
+  }
+}

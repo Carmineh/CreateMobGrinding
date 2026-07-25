@@ -1,11 +1,6 @@
 {
   "variants": {
-    "facing=north": { "model": "createmobgrinding:block/rotational_mob_spawner" },
-    "facing=south": { "model": "createmobgrinding:block/rotational_mob_spawner", "y": 180 },
-    "facing=west":  { "model": "createmobgrinding:block/rotational_mob_spawner", "y": 270 },
-    "facing=east":  { "model": "createmobgrinding:block/rotational_mob_spawner", "y": 90 },
-    "facing=down":  { "model": "createmobgrinding:block/rotational_mob_spawner", "x": 90 },
-    "facing=up":    { "model": "createmobgrinding:block/rotational_mob_spawner", "x": 270 }
+    "": { "model": "createmobgrinding:block/rotational_mob_spawner" }
   }
 }
 

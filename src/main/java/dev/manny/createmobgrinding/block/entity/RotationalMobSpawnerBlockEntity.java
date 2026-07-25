@@ -134,8 +134,6 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                 float speed = Math.abs(getSpeed());
                 if (speed > 0) {
                     visualSpin += (speed / 10f);
-                } else {
-                    visualSpin += 2.0f; // Idle spin
                 }
             }
             return;
@@ -207,11 +205,41 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
 
             Entity entity = type.create(serverLevel);
             if (entity instanceof Mob mob) {
+                boolean noAi = false;
+                boolean noConditions = false;
+
+                for (int i = 0; i < upgrades.getSlots(); i++) {
+                    net.minecraft.world.item.ItemStack upgrade = upgrades.getStackInSlot(i);
+                    if (upgrade.is(dev.manny.createmobgrinding.registry.ModItems.SPAWNER_UPGRADE_NO_AI.get())) noAi = true;
+                    if (upgrade.is(dev.manny.createmobgrinding.registry.ModItems.SPAWNER_UPGRADE_NO_CONDITIONS.get())) noConditions = true;
+                }
+
+                if (!noConditions) {
+                    net.minecraft.core.BlockPos spawnPos = net.minecraft.core.BlockPos.containing(x, y, z);
+                    if (entity instanceof net.minecraft.world.entity.monster.Monster) {
+                        if (serverLevel.getMaxLocalRawBrightness(spawnPos) > 7) {
+                            entity.discard();
+                            return; // Troppa luce per i mostri
+                        }
+                    } else if (entity instanceof net.minecraft.world.entity.animal.Animal) {
+                        if (serverLevel.getMaxLocalRawBrightness(spawnPos) < 9) {
+                            entity.discard();
+                            return; // Troppo buio per gli animali
+                        }
+                    }
+                }
+
                 mob.moveTo(x, y, z, level.random.nextFloat() * 360F, 0.0F);
-                if (!serverLevel.noCollision(mob)) {
-                    mob.discard(); // Annulla lo spawn se è compenetrato
+                if (!noConditions && !serverLevel.noCollision(mob)) {
+                    mob.discard(); // Annulla lo spawn se compenetrato
                     return;
                 }
+                
+                if (noAi) {
+                    mob.goalSelector.removeAllGoals(g -> true);
+                    mob.targetSelector.removeAllGoals(g -> true);
+                }
+                
                 mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(worldPosition), MobSpawnType.SPAWNER, null);
                 serverLevel.addFreshEntityWithPassengers(entity);
                 serverLevel.levelEvent(2004, worldPosition, 0); // Spawn particles
@@ -246,26 +274,67 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
         ItemStack chunk = inventory.getStackInSlot(0);
         if (chunk.isEmpty()) {
             tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.no_chunk")).withStyle(net.minecraft.ChatFormatting.RED));
-            return true;
         } else {
             ResourceLocation entityLoc = chunk.get(dev.manny.createmobgrinding.registry.ModDataComponents.SPAWNER_ENTITY.get());
             if (entityLoc != null) {
                 java.util.List<? extends String> blacklist = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBlacklist.get();
                 if (blacklist.contains(entityLoc.toString())) {
                     tooltip.add(Component.literal("    ").append(Component.literal("Entity: BLACKLISTED").withStyle(net.minecraft.ChatFormatting.DARK_RED, net.minecraft.ChatFormatting.BOLD)));
-                    return true;
-                }
+                } else {
+                    tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.mob_chunk.entity_type", Component.translatable(net.minecraft.Util.makeDescriptionId("entity", entityLoc)))).withStyle(net.minecraft.ChatFormatting.GRAY));
+                    
+                    boolean noConditions = false;
+                    for (int i = 0; i < upgrades.getSlots(); i++) {
+                        net.minecraft.world.item.ItemStack upgrade = upgrades.getStackInSlot(i);
+                        if (!upgrade.isEmpty() && upgrade.is(dev.manny.createmobgrinding.registry.ModItems.SPAWNER_UPGRADE_NO_CONDITIONS.get())) {
+                            noConditions = true;
+                            break;
+                        }
+                    }
 
-                tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.mob_chunk.entity_type", Component.translatable(net.minecraft.Util.makeDescriptionId("entity", entityLoc)))).withStyle(net.minecraft.ChatFormatting.GRAY));
-                double threshold = getSpawnThreshold();
-                int percentage = (int) ((spawnProgress / threshold) * 100);
-                tooltip.add(Component.literal("    ").append(Component.translatable("jade.createmobgrinding.spawner.progress", percentage)).withStyle(net.minecraft.ChatFormatting.YELLOW));
-                return true;
+                    if (!noConditions) {
+                        net.minecraft.world.entity.EntityType<?> type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(entityLoc);
+                        if (type != null) {
+                            net.minecraft.core.BlockPos spawnPos = worldPosition.above();
+                            if (type.getCategory() == net.minecraft.world.entity.MobCategory.MONSTER) {
+                                if (level.getMaxLocalRawBrightness(spawnPos) > 7) {
+                                    tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.error.too_much_light")).withStyle(net.minecraft.ChatFormatting.RED));
+                                }
+                            } else if (type.getCategory() == net.minecraft.world.entity.MobCategory.CREATURE) {
+                                if (level.getMaxLocalRawBrightness(spawnPos) < 9) {
+                                    tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.error.too_dark")).withStyle(net.minecraft.ChatFormatting.RED));
+                                }
+                            }
+                        }
+                    }
+
+                    double threshold = getSpawnThreshold();
+                    int percentage = (int) ((spawnProgress / threshold) * 100);
+                    tooltip.add(Component.literal("    ").append(Component.translatable("jade.createmobgrinding.spawner.progress", percentage)).withStyle(net.minecraft.ChatFormatting.YELLOW));
+                }
             } else {
                 tooltip.add(Component.literal("    ").append(Component.literal("Invalid/Empty Chunk")).withStyle(net.minecraft.ChatFormatting.RED));
-                return true;
             }
         }
+
+        boolean hasUpgrades = false;
+        for (int i = 0; i < upgrades.getSlots(); i++) {
+            if (!upgrades.getStackInSlot(i).isEmpty()) {
+                hasUpgrades = true;
+                break;
+            }
+        }
+        if (hasUpgrades) {
+            tooltip.add(Component.empty());
+            tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.upgrades")).withStyle(net.minecraft.ChatFormatting.GRAY));
+            for (int i = 0; i < upgrades.getSlots(); i++) {
+                net.minecraft.world.item.ItemStack upgrade = upgrades.getStackInSlot(i);
+                if (!upgrade.isEmpty()) {
+                    tooltip.add(Component.literal("      - ").withStyle(net.minecraft.ChatFormatting.DARK_GRAY).append(upgrade.getHoverName().copy().withStyle(net.minecraft.ChatFormatting.GREEN)));
+                }
+            }
+        }
+        return true;
     }
 
     @Override

@@ -1,0 +1,26 @@
+{
+  "parent": "createmobgrinding:root",
+  "display": {
+    "icon": {
+      "id": "createmobgrinding:rotational_mob_grinder"
+    },
+    "title": {
+      "translate": "advancement.createmobgrinding.craft_grinder.title"
+    },
+    "description": {
+      "translate": "advancement.createmobgrinding.craft_grinder.desc"
+    }
+  },
+  "criteria": {
+    "has_grinder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "createmobgrinding:rotational_mob_grinder"
+          }
+        ]
+      }
+    }
+  }
+}

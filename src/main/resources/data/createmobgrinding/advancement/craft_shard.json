@@ -1,0 +1,26 @@
+{
+  "parent": "createmobgrinding:craft_spawner_hand",
+  "display": {
+    "icon": {
+      "id": "createmobgrinding:blank_spawner_chunk"
+    },
+    "title": {
+      "translate": "advancement.createmobgrinding.craft_shard.title"
+    },
+    "description": {
+      "translate": "advancement.createmobgrinding.craft_shard.desc"
+    }
+  },
+  "criteria": {
+    "has_blank_chunk": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "createmobgrinding:blank_spawner_chunk"
+          }
+        ]
+      }
+    }
+  }
+}
