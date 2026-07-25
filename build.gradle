@@ -186,6 +186,7 @@ publishMods {
         minecraftVersions.add(minecraft_version)
         clientRequired = true
         serverRequired = true
+        displayName = "${mod_id}-${mod_version}.jar"
     }
 
     modrinth {
