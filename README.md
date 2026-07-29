@@ -16,10 +16,10 @@ An addon for the **Create** mod that brings a kinetic way to spawn and grind mob
 ## Features
 
 - **Chunk Extraction**: Mine Vanilla Spawners with a Pickaxe to extract a **Mob Spawner Chunk** containing the soul of the mob inside.
-- **Rotational Mob Spawner**: A kinetic machine that consumes Stress Units (SU) to spawn mobs. 
-- **Rotational Mob Grinder**: A spinning blade to automatically eliminate mobs and gather their loot.
+- **Rotational Mob Spawner**: A kinetic machine that consumes Stress Units (SU) to spawn mobs with specific conditions. Upgrade to make the spawner powerful.
+- **Rotational Mob Grinder**: A spinning blade to automatically eliminate mobs and gather their loot. Upgrade the Grinder with tiered blades and enchant.
 - **Dynamic Tiering System**: Mobs are automatically grouped into 5 Tiers. Higher tier mobs require much more SU and time to spawn compared to lower-tier ones!
-- **Highly Configurable**: Define base spawn progress, base grinder damage, and even blacklist destructive mobs (like the Warden or Ender Dragon) in the NeoForge config.
+- **Configurable**: Blacklist destructive mobs (like the Warden or Ender Dragon) in the NeoForge config.
 
 ---
 ## Issues and Bug Reports
