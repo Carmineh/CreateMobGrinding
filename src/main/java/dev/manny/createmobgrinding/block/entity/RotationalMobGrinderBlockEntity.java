@@ -27,6 +27,9 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
     private ItemStack installedBlade = new ItemStack(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get());
     private float attackTimer = 0;
     private static final float ATTACK_THRESHOLD = 2000f; // Attacca in 0.39s a 256 RPM
+    // Il finto attaccante viene tenuto ben sotto il mondo: un creeper che prova a vendicarsi
+    // fallisce il controllo di SwellGoal ("bersaglio entro 3 blocchi") e non si gonfia mai.
+    private static final double FAKE_PLAYER_Y = -500.0;
 
     public RotationalMobGrinderBlockEntity(BlockPos pos, BlockState state) {
         super(dev.manny.createmobgrinding.registry.ModBlockEntities.ROTATIONAL_MOB_GRINDER.get(), pos, state);
@@ -168,7 +171,8 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         if (targets.isEmpty()) return;
 
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft(serverLevel);
-        fakePlayer.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
+        // X/Z restano sulla macina, cosi la direzione del rinculo non cambia.
+        fakePlayer.setPos(worldPosition.getX() + 0.5, FAKE_PLAYER_Y, worldPosition.getZ() + 0.5);
 
         ItemEnchantments enchants = getCombinedEnchantments();
         ItemStack weaponToUse = internalWeapon.copy();
@@ -195,6 +199,18 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
             }
             
             target.hurt(serverLevel.damageSources().playerAttack(fakePlayer), damage);
+
+            // La macina non e un bersaglio valido per la vendetta. HurtByTargetGoal non ha
+            // limite di distanza, quindi senza questo il mob aggancerebbe il finto giocatore
+            // e proverebbe a raggiungerlo uscendo dalla zona di taglio.
+            // lastHurtByPlayer resta intatto: bottino, saccheggio ed esperienza non cambiano.
+            target.setLastHurtByMob(null);
+            if (target instanceof net.minecraft.world.entity.Mob mob) {
+                mob.setTarget(null);
+            }
+            if (target instanceof net.minecraft.world.entity.monster.Creeper creeper) {
+                creeper.setSwellDir(-1);
+            }
         }
     }
 
