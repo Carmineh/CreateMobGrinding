@@ -104,8 +104,8 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
             case 1 -> baseImpact * 1.0f;  // 32 SU
             case 2 -> baseImpact * 1.5f;  // 48 SU
             case 3 -> baseImpact * 2.0f;  // 64 SU
-            case 4 -> baseImpact * 6.0f;  // 192 SU (Bello grande)
-            case 5 -> baseImpact * 12.0f; // 384 SU (Bello grande)
+            case 4 -> baseImpact * 6.0f;  // 192 SU (Quite large)
+            case 5 -> baseImpact * 12.0f; // 384 SU (Quite large)
             default -> baseImpact;
         };
         this.lastStressApplied = calculated;
@@ -115,10 +115,10 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
     public double getSpawnThreshold() {
         double base = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBaseProgress.get();
         return switch (getTier()) {
-            case 1 -> base * 0.5;   // Tanti mob (1000)
+            case 1 -> base * 0.5;   // Many mobs (1000)
             case 2 -> base * 0.75;  // (1500)
             case 3 -> base * 1.0;   // (2000)
-            case 4 -> base * 2.5;   // Più lento ma non troppo (5000)
+            case 4 -> base * 2.5;   // PiÃ¹ lento ma non troppo (5000)
             case 5 -> base * 3.5;   // (7000)
             default -> base;
         };
@@ -200,7 +200,7 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
             int r = level.random.nextInt(8);
             
             double x = worldPosition.getX() + dx[r] + 0.5D;
-            double y = worldPosition.getY() + 1.0D; // Spawna sempre sopra il blocco
+            double y = worldPosition.getY() + 1.0D; // Always spawn above the block
             double z = worldPosition.getZ() + dz[r] + 0.5D;
 
             Entity entity = type.create(serverLevel);
@@ -219,19 +219,19 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                     if (entity instanceof net.minecraft.world.entity.monster.Monster) {
                         if (serverLevel.getMaxLocalRawBrightness(spawnPos) > 7) {
                             entity.discard();
-                            return; // Troppa luce per i mostri
+                            return; // Too bright for monsters
                         }
                     } else if (entity instanceof net.minecraft.world.entity.animal.Animal) {
                         if (serverLevel.getMaxLocalRawBrightness(spawnPos) < 9) {
                             entity.discard();
-                            return; // Troppo buio per gli animali
+                            return; // Too dark for animals
                         }
                     }
                 }
 
                 mob.moveTo(x, y, z, level.random.nextFloat() * 360F, 0.0F);
                 if (!noConditions && !serverLevel.noCollision(mob)) {
-                    mob.discard(); // Annulla lo spawn se compenetrato
+                    mob.discard(); // Cancel spawn if colliding
                     return;
                 }
                 

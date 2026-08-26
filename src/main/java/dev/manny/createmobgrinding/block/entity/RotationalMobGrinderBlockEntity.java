@@ -26,9 +26,9 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
     private ItemStack internalWeapon = new ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
     private ItemStack installedBlade = new ItemStack(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get());
     private float attackTimer = 0;
-    private static final float ATTACK_THRESHOLD = 2000f; // Attacca in 0.39s a 256 RPM
-    // Il finto attaccante viene tenuto ben sotto il mondo: un creeper che prova a vendicarsi
-    // fallisce il controllo di SwellGoal ("bersaglio entro 3 blocchi") e non si gonfia mai.
+    private static final float ATTACK_THRESHOLD = 2000f; // Attacks in 0.39s at 256 RPM
+    // The fake attacker is kept far below the world: a creeper trying to take revenge
+    // fails the SwellGoal check ("target within 3 blocks") and never swells.
     private static final double FAKE_PLAYER_Y = -500.0;
 
     public RotationalMobGrinderBlockEntity(BlockPos pos, BlockState state) {
@@ -128,11 +128,11 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) impact = 32.0f;
         else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) impact = 64.0f;
 
-        // Aggiungi impatto per gli incantesimi di utility
+        // Add impact for utility enchantments
         ItemEnchantments enchants = getCombinedEnchantments();
         if (!enchants.isEmpty()) {
             int totalLevels = enchants.keySet().stream().mapToInt(enchants::getLevel).sum();
-            impact += totalLevels * 4.0f; // Aumenta lo stress in base agli incantesimi
+            impact += totalLevels * 4.0f; // Increase stress based on enchantments
         }
         this.lastStressApplied = impact;
         return impact;
@@ -163,7 +163,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
                 net.minecraft.core.Direction.NORTH;
                 
         BlockPos targetPos = worldPosition.relative(facing);
-        // Nessun inflate, area perfettamente di 1 blocco (1x1x1) sulla lama
+        // No inflate, area is perfectly 1 block (1x1x1) on the blade
         AABB killZone = new AABB(targetPos);
 
         List<LivingEntity> targets = serverLevel.getEntitiesOfClass(LivingEntity.class, killZone, e -> !(e instanceof Player) && e.isAlive());
@@ -171,7 +171,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         if (targets.isEmpty()) return;
 
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft(serverLevel);
-        // X/Z restano sulla macina, cosi la direzione del rinculo non cambia.
+        // X/Z remain on the grinder, so knockback direction doesn't change.
         fakePlayer.setPos(worldPosition.getX() + 0.5, FAKE_PLAYER_Y, worldPosition.getZ() + 0.5);
 
         ItemEnchantments enchants = getCombinedEnchantments();
@@ -185,7 +185,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         int fireAspect = enchants.getLevel(registry.getHolderOrThrow(net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT));
 
         for (LivingEntity target : targets) {
-            float baseDamage = 2.0f; // Ridotto per bilanciamento
+            float baseDamage = 2.0f; // Reduced for balance
             float multiplier = 1.0f;
             if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) multiplier = 2.0f;
             else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) multiplier = 4.0f;
@@ -200,10 +200,10 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
             
             target.hurt(serverLevel.damageSources().playerAttack(fakePlayer), damage);
 
-            // La macina non e un bersaglio valido per la vendetta. HurtByTargetGoal non ha
-            // limite di distanza, quindi senza questo il mob aggancerebbe il finto giocatore
-            // e proverebbe a raggiungerlo uscendo dalla zona di taglio.
-            // lastHurtByPlayer resta intatto: bottino, saccheggio ed esperienza non cambiano.
+            // The grinder is not a valid revenge target. HurtByTargetGoal has no
+            // distance limit, so without this the mob would lock onto the fake player
+            // and try to reach it, walking out of the kill zone.
+            // lastHurtByPlayer remains intact: drops, looting, and XP are unchanged.
             target.setLastHurtByMob(null);
             if (target instanceof net.minecraft.world.entity.Mob mob) {
                 mob.setTarget(null);
