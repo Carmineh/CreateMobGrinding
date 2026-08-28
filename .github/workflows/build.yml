@@ -1,6 +1,10 @@
 name: Build
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ "mc1.21.1/dev" ]
+  pull_request:
+    branches: [ "mc1.21.1/dev" ]
 
 jobs:
   build:
