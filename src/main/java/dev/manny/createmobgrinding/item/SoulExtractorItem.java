@@ -23,12 +23,12 @@ public class SoulExtractorItem extends Item {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
-        if (player.level().isClientSide) return InteractionResult.PASS;
-
         // Check health <= 10%
         float healthPct = interactionTarget.getHealth() / interactionTarget.getMaxHealth();
         if (healthPct > 0.1f) {
-            player.displayClientMessage(Component.literal("Target has too much health to extract!").withStyle(net.minecraft.ChatFormatting.RED), true);
+            if (!player.level().isClientSide) {
+                player.displayClientMessage(Component.literal("Target has too much health to extract!").withStyle(net.minecraft.ChatFormatting.RED), true);
+            }
             return InteractionResult.FAIL;
         }
 
@@ -42,33 +42,48 @@ public class SoulExtractorItem extends Item {
         else if (interactionTarget.getType().is(ModTags.TIER_2)) targetTier = 2;
 
         if (targetTier > this.maxTier) {
-            player.displayClientMessage(Component.literal("This extractor is too weak for this mob!").withStyle(net.minecraft.ChatFormatting.RED), true);
+            if (!player.level().isClientSide) {
+                player.displayClientMessage(Component.literal("This extractor is too weak for this mob!").withStyle(net.minecraft.ChatFormatting.RED), true);
+            }
             return InteractionResult.FAIL;
         }
 
-        // Kill entity
-        interactionTarget.discard(); // Instantly remove without dropping items
+        if (!player.level().isClientSide) {
+            // Kill entity
+            interactionTarget.discard(); // Instantly remove without dropping items
 
-        // Consume extractor
-        if (!player.isCreative()) {
-            stack.shrink(1);
+            // Determine filled extractor
+            Item filledItem = ModItems.BASIC_FILLED_SOUL_EXTRACTOR.get();
+            if (this.maxTier == 4) filledItem = ModItems.ADVANCED_FILLED_SOUL_EXTRACTOR.get();
+            else if (this.maxTier == 5) filledItem = ModItems.ELITE_FILLED_SOUL_EXTRACTOR.get();
+            
+            ItemStack filled = new ItemStack(filledItem);
+            filled.set(ModDataComponents.SPAWNER_ENTITY.get(), entityType);
+
+            // Consume and replace extractor
+            if (!player.isCreative()) {
+                stack.shrink(1);
+            }
+            
+            if (stack.isEmpty()) {
+                // VANILLA BUG WORKAROUND: Player.interactOn will explicitly wipe the hand slot if 'stack' becomes empty.
+                // If we put the filled item in the hand slot, it gets deleted.
+                // We temporarily put a dummy item in the hand so 'add' chooses a different safe slot.
+                player.setItemInHand(usedHand, new ItemStack(net.minecraft.world.item.Items.BEDROCK));
+                if (!player.getInventory().add(filled)) {
+                    player.drop(filled, false);
+                }
+                // The caller will now wipe the BEDROCK from the hand, leaving our filled extractor safe.
+            } else {
+                if (!player.getInventory().add(filled)) {
+                    player.drop(filled, false);
+                }
+            }
+
+            // Play a nice sound
+            player.level().playSound(null, player.blockPosition(), net.minecraft.sounds.SoundEvents.SOUL_ESCAPE.value(), net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 1.0F);
         }
 
-        // Give filled extractor
-        Item filledItem = ModItems.BASIC_FILLED_SOUL_EXTRACTOR.get();
-        if (this.maxTier == 4) filledItem = ModItems.ADVANCED_FILLED_SOUL_EXTRACTOR.get();
-        else if (this.maxTier == 5) filledItem = ModItems.ELITE_FILLED_SOUL_EXTRACTOR.get();
-        
-        ItemStack filled = new ItemStack(filledItem);
-        filled.set(ModDataComponents.SPAWNER_ENTITY.get(), entityType);
-        
-        if (!player.getInventory().add(filled)) {
-            player.drop(filled, false);
-        }
-
-        // Play a nice sound (using standard minecraft event sound)
-        player.level().playSound(null, player.blockPosition(), net.minecraft.sounds.SoundEvents.SOUL_ESCAPE.value(), net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 1.0F);
-
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(player.level().isClientSide);
     }
 }
