@@ -15,6 +15,7 @@ Ideas and planned features for future versions:
   - [ ] **Ars Nouveau:** Native support for Drygmys or spawning magical creatures, with specialized sequenced assembly recipes for their specific loot.
 - [ ] **Advanced Fan:** A filtered fan to blacklist entity types like Item, Player, Mob.
 - [ ] **New Utility Enchants:** For both the Grinder and Weapons (like Capturing for mob eggs, etc...).
+- [ ] **Rotational Spawner Texture Revamp:** Redesign and improve the block model and texture of the Rotational Mob Spawner.
 
 ## Known Bugs
 Issues that have been reported and need fixing:
