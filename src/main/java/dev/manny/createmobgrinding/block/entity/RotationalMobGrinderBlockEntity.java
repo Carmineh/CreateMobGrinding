@@ -173,7 +173,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         
         if (xpBuffer >= 3) {
             int nuggetsToProduce = xpBuffer / 3;
-            ItemStack nuggetStack = new ItemStack(BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("create", "experience_nugget")), nuggetsToProduce);
+            ItemStack nuggetStack = new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("create", "experience_nugget")), nuggetsToProduce);
             ItemStack remainder = net.neoforged.neoforge.items.ItemHandlerHelper.insertItemStacked(vacuumInventory, nuggetStack, false);
             
             int successfullyInserted = nuggetsToProduce - remainder.getCount();

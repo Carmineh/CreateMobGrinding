@@ -46,7 +46,7 @@ public enum GrinderComponentProvider implements IBlockComponentProvider {
                 for (int i = 0; i < grinderBE.upgrades.getSlots(); i++) {
                     ItemStack upgrade = grinderBE.upgrades.getStackInSlot(i);
                     if (!upgrade.isEmpty()) {
-                        tooltip.append(tooltip.getElementHelper().item(upgrade, 0.5f));
+                        tooltip.append(snownee.jade.api.ui.IElementHelper.get().item(upgrade, 0.5f));
                     }
                 }
             }
