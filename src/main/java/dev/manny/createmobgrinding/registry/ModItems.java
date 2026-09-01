@@ -47,9 +47,15 @@ public class ModItems {
 
     // Spawner Upgrades
     public static final Supplier<Item> SPAWNER_UPGRADE_NO_AI = ITEMS.register("spawner_upgrade_no_ai", 
-        () -> new Item(new Item.Properties()));
+            () -> new Item(new Item.Properties().stacksTo(64)));
     public static final Supplier<Item> SPAWNER_UPGRADE_NO_CONDITIONS = ITEMS.register("spawner_upgrade_no_conditions", 
-        () -> new Item(new Item.Properties()));
+            () -> new Item(new Item.Properties().stacksTo(64)));
+            
+    // Grinder Upgrades
+    public static final Supplier<Item> GRINDER_UPGRADE_PROTECTION = ITEMS.register("grinder_upgrade_protection", 
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final Supplier<Item> GRINDER_UPGRADE_VACUUM = ITEMS.register("grinder_upgrade_vacuum", 
+            () -> new Item(new Item.Properties().stacksTo(64)));
 
     // Soul Extractors
     public static final Supplier<Item> BASIC_SOUL_EXTRACTOR = ITEMS.register("basic_soul_extractor", 

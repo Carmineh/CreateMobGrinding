@@ -26,5 +26,13 @@ public class CreateMobGrinding {
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModIngredientTypes.register(modEventBus);
         ModItemAttributes.ITEM_ATTRIBUTES.register(modEventBus);
+        
+        modEventBus.addListener(net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent.class, event -> {
+            event.registerBlockEntity(
+                net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK,
+                ModBlockEntities.ROTATIONAL_MOB_GRINDER.get(),
+                (be, side) -> be.vacuumInventory
+            );
+        });
     }
 }

@@ -1,0 +1,16 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "create:attribute_filter"
+    },
+    {
+      "item": "minecraft:hopper"
+    }
+  ],
+  "results": [
+    {
+      "id": "createmobgrinding:grinder_upgrade_vacuum"
+    }
+  ]
+}

@@ -32,6 +32,24 @@ public enum GrinderComponentProvider implements IBlockComponentProvider {
             } else {
                 tooltip.add(Component.translatable("jade.createmobgrinding.grinder.shift_for_enchants"));
             }
+            
+            boolean hasUpgrades = false;
+            for (int i = 0; i < grinderBE.upgrades.getSlots(); i++) {
+                if (!grinderBE.upgrades.getStackInSlot(i).isEmpty()) {
+                    hasUpgrades = true;
+                    break;
+                }
+            }
+            
+            if (hasUpgrades) {
+                tooltip.add(Component.translatable("tooltip.createmobgrinding.spawner.upgrades"));
+                for (int i = 0; i < grinderBE.upgrades.getSlots(); i++) {
+                    ItemStack upgrade = grinderBE.upgrades.getStackInSlot(i);
+                    if (!upgrade.isEmpty()) {
+                        tooltip.append(tooltip.getElementHelper().item(upgrade, 0.5f));
+                    }
+                }
+            }
         }
     }
 

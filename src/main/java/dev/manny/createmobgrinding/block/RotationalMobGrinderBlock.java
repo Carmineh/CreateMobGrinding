@@ -79,6 +79,42 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
                         }
                         return net.minecraft.world.ItemInteractionResult.SUCCESS;
                     }
+                } else if (stack.is(dev.manny.createmobgrinding.registry.ModItems.GRINDER_UPGRADE_PROTECTION.get()) ||
+                           stack.is(dev.manny.createmobgrinding.registry.ModItems.GRINDER_UPGRADE_VACUUM.get())) {
+                    
+                    for (int i = 0; i < grinderBE.upgrades.getSlots(); i++) {
+                        net.minecraft.world.item.ItemStack current = grinderBE.upgrades.getStackInSlot(i);
+                        if (current.is(stack.getItem())) {
+                            return net.minecraft.world.ItemInteractionResult.FAIL;
+                        }
+                    }
+                    
+                    int firstEmpty = -1;
+                    for (int i = 0; i < grinderBE.upgrades.getSlots(); i++) {
+                        if (grinderBE.upgrades.getStackInSlot(i).isEmpty()) {
+                            firstEmpty = i;
+                            break;
+                        }
+                    }
+                    
+                    if (firstEmpty != -1) {
+                        grinderBE.upgrades.setStackInSlot(firstEmpty, stack.copyWithCount(1));
+                        if (!player.isCreative()) {
+                            stack.shrink(1);
+                        }
+                        return net.minecraft.world.ItemInteractionResult.SUCCESS;
+                    }
+                } else if (stack.isEmpty() && player.isShiftKeyDown()) {
+                    for (int i = grinderBE.upgrades.getSlots() - 1; i >= 0; i--) {
+                        net.minecraft.world.item.ItemStack upgrade = grinderBE.upgrades.getStackInSlot(i);
+                        if (!upgrade.isEmpty()) {
+                            if (!level.isClientSide) {
+                                net.neoforged.neoforge.items.ItemHandlerHelper.giveItemToPlayer(player, upgrade.copy());
+                                grinderBE.upgrades.setStackInSlot(i, net.minecraft.world.item.ItemStack.EMPTY);
+                            }
+                            return net.minecraft.world.ItemInteractionResult.SUCCESS;
+                        }
+                    }
                 }
             }
         }
@@ -108,6 +144,20 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
                 net.minecraft.world.item.ItemStack blade = grinderBE.getInstalledBlade();
                 if (!blade.isEmpty() && !blade.is(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get())) {
                     net.minecraft.world.level.block.Block.popResource(level, pos, blade.copy());
+                }
+                
+                for (int i = 0; i < grinderBE.upgrades.getSlots(); i++) {
+                    net.minecraft.world.item.ItemStack upgrade = grinderBE.upgrades.getStackInSlot(i);
+                    if (!upgrade.isEmpty()) {
+                        net.minecraft.world.level.block.Block.popResource(level, pos, upgrade);
+                    }
+                }
+                
+                for (int i = 0; i < grinderBE.vacuumInventory.getSlots(); i++) {
+                    net.minecraft.world.item.ItemStack vacItem = grinderBE.vacuumInventory.getStackInSlot(i);
+                    if (!vacItem.isEmpty()) {
+                        net.minecraft.world.level.block.Block.popResource(level, pos, vacItem);
+                    }
                 }
             }
             super.onRemove(state, level, pos, newState, isMoving);

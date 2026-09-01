@@ -30,6 +30,25 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
     // The fake attacker is kept far below the world: a creeper trying to take revenge
     // fails the SwellGoal check ("target within 3 blocks") and never swells.
     private static final double FAKE_PLAYER_Y = -500.0;
+    
+    public final net.neoforged.neoforge.items.ItemStackHandler upgrades = new net.neoforged.neoforge.items.ItemStackHandler(4) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+            if (level != null && !level.isClientSide) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+            }
+        }
+    };
+    
+    public final net.neoforged.neoforge.items.ItemStackHandler vacuumInventory = new net.neoforged.neoforge.items.ItemStackHandler(27) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+        }
+    };
+    
+    private int xpBuffer = 0;
 
     public RotationalMobGrinderBlockEntity(BlockPos pos, BlockState state) {
         super(dev.manny.createmobgrinding.registry.ModBlockEntities.ROTATIONAL_MOB_GRINDER.get(), pos, state);
@@ -48,6 +67,24 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         setChanged();
         sendData();
         if (hasNetwork()) getOrCreateNetwork().updateNetwork();
+    }
+    
+    public boolean hasProtectionUpgrade() {
+        for (int i = 0; i < upgrades.getSlots(); i++) {
+            if (upgrades.getStackInSlot(i).is(dev.manny.createmobgrinding.registry.ModItems.GRINDER_UPGRADE_PROTECTION.get())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasVacuumUpgrade() {
+        for (int i = 0; i < upgrades.getSlots(); i++) {
+            if (upgrades.getStackInSlot(i).is(dev.manny.createmobgrinding.registry.ModItems.GRINDER_UPGRADE_VACUUM.get())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean applyEnchantedBook(ItemStack book) {
@@ -146,12 +183,60 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
 
         float speed = Math.abs(getSpeed());
         if (speed == 0) return;
+        
+        if (hasVacuumUpgrade() && level.getGameTime() % 4 == 0) {
+            vacuumItems();
+        }
 
         attackTimer += speed;
 
         if (attackTimer >= ATTACK_THRESHOLD) {
             attackTimer -= ATTACK_THRESHOLD;
             performAttack();
+        }
+    }
+    
+    private void vacuumItems() {
+        ServerLevel serverLevel = (ServerLevel) level;
+        net.minecraft.core.Direction facing = getBlockState().hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING) ? 
+                getBlockState().getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING) : 
+                net.minecraft.core.Direction.NORTH;
+                
+        BlockPos targetPos = worldPosition.relative(facing);
+        // Vacuum area: 3x3 area in front of the blade
+        AABB vacuumZone = new AABB(targetPos).inflate(1.0);
+        
+        // Items
+        List<net.minecraft.world.entity.item.ItemEntity> items = serverLevel.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, vacuumZone, net.minecraft.world.entity.Entity::isAlive);
+        for (net.minecraft.world.entity.item.ItemEntity itemEntity : items) {
+            ItemStack stack = itemEntity.getItem();
+            ItemStack remainder = net.neoforged.neoforge.items.ItemHandlerHelper.insertItemStacked(vacuumInventory, stack, false);
+            if (remainder.isEmpty()) {
+                itemEntity.discard();
+            } else {
+                itemEntity.setItem(remainder);
+            }
+        }
+        
+        // Experience
+        List<net.minecraft.world.entity.ExperienceOrb> orbs = serverLevel.getEntitiesOfClass(net.minecraft.world.entity.ExperienceOrb.class, vacuumZone, net.minecraft.world.entity.Entity::isAlive);
+        for (net.minecraft.world.entity.ExperienceOrb orb : orbs) {
+            xpBuffer += orb.getValue();
+            orb.discard();
+        }
+        
+        if (xpBuffer >= 3) {
+            int nuggetsToProduce = xpBuffer / 3;
+            ItemStack nuggetStack = new ItemStack(BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("create", "experience_nugget")), nuggetsToProduce);
+            ItemStack remainder = net.neoforged.neoforge.items.ItemHandlerHelper.insertItemStacked(vacuumInventory, nuggetStack, false);
+            
+            int successfullyInserted = nuggetsToProduce - remainder.getCount();
+            xpBuffer -= successfullyInserted * 3;
+            
+            // If the inventory is full, we don't consume the xpBuffer completely, it just waits until there's space.
+            if (!remainder.isEmpty()) {
+                // Alternatively, we could spawn the remainder nuggets in the world, but the buffer approach is safer and less laggy.
+            }
         }
     }
 
@@ -166,7 +251,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         // No inflate, area is perfectly 1 block (1x1x1) on the blade
         AABB killZone = new AABB(targetPos);
 
-        List<LivingEntity> targets = serverLevel.getEntitiesOfClass(LivingEntity.class, killZone, e -> !(e instanceof Player) && e.isAlive());
+        List<LivingEntity> targets = serverLevel.getEntitiesOfClass(LivingEntity.class, killZone, net.minecraft.world.entity.Entity::isAlive);
 
         if (targets.isEmpty()) return;
 
@@ -183,8 +268,12 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         net.minecraft.core.Registry<net.minecraft.world.item.enchantment.Enchantment> registry = serverLevel.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT);
         
         int fireAspect = enchants.getLevel(registry.getHolderOrThrow(net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT));
+        
+        boolean hasProtection = hasProtectionUpgrade();
 
         for (LivingEntity target : targets) {
+            if (target instanceof Player && hasProtection) continue;
+            
             float baseDamage = 2.0f; // Reduced for balance
             float multiplier = 1.0f;
             if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) multiplier = 2.0f;
@@ -226,6 +315,26 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
                 tooltip.add(Component.literal("    ").append(Component.translatable(ench.unwrapKey().get().location().toLanguageKey("enchantment")).append(" " + enchants.getLevel(ench))).withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
             });
         }
+        
+        boolean hasUpgrades = false;
+        for (int i = 0; i < upgrades.getSlots(); i++) {
+            if (!upgrades.getStackInSlot(i).isEmpty()) {
+                hasUpgrades = true;
+                break;
+            }
+        }
+        
+        if (hasUpgrades) {
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.upgrades")).withStyle(net.minecraft.ChatFormatting.GRAY));
+            for (int i = 0; i < upgrades.getSlots(); i++) {
+                net.minecraft.world.item.ItemStack upgrade = upgrades.getStackInSlot(i);
+                if (!upgrade.isEmpty()) {
+                    tooltip.add(Component.literal("      - ").withStyle(net.minecraft.ChatFormatting.DARK_GRAY).append(upgrade.getHoverName().copy().withStyle(net.minecraft.ChatFormatting.GREEN)));
+                }
+            }
+        }
+        
         return true;
     }
 
@@ -238,7 +347,14 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         if (compound.contains("InstalledBlade")) {
             installedBlade = ItemStack.parseOptional(registries, compound.getCompound("InstalledBlade"));
         }
+        if (compound.contains("Upgrades")) {
+            upgrades.deserializeNBT(registries, compound.getCompound("Upgrades"));
+        }
+        if (compound.contains("VacuumInventory")) {
+            vacuumInventory.deserializeNBT(registries, compound.getCompound("VacuumInventory"));
+        }
         attackTimer = compound.getFloat("AttackTimer");
+        xpBuffer = compound.getInt("XpBuffer");
     }
 
     @Override
@@ -246,7 +362,10 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         super.write(compound, registries, clientPacket);
         compound.put("InternalWeapon", internalWeapon.saveOptional(registries));
         compound.put("InstalledBlade", installedBlade.saveOptional(registries));
+        compound.put("Upgrades", upgrades.serializeNBT(registries));
+        compound.put("VacuumInventory", vacuumInventory.serializeNBT(registries));
         compound.putFloat("AttackTimer", attackTimer);
+        compound.putInt("XpBuffer", xpBuffer);
     }
 }
 
