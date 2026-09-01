@@ -31,13 +31,6 @@ Please open an issue in the **[Issues Tab](../../issues)**.
 
 ---
 
-## Supported Languages
-🇮🇹 🇺🇸 
-
-If you want to help with translations you can find the files in: `src/main/resources/assets/createmobgrinding/lang/`, copy the base `en_us.json` file and rename it to your language code (e.g., `es_es.json` for Spanish, `fr_fr.json` for French).
-
----
-
 ## Contributions
 
 Want to help develop the mod? We welcome contributions! 
@@ -48,3 +41,12 @@ Want to help develop the mod? We welcome contributions!
 4. Open a **Pull Request** back to this main repository.
 
 If you have your own ideas, feel free to open an Issue tagged with `enhancement` first to discuss it!
+
+---
+
+## Supported Languages
+🇮🇹 🇺🇸 
+
+If you want to help with translations you can find the files in: `src/main/resources/assets/createmobgrinding/lang/`, copy the base `en_us.json` file and rename it to your language code (e.g., `es_es.json` for Spanish, `fr_fr.json` for French).
+
+
