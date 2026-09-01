@@ -71,6 +71,7 @@
   "createmobgrinding.ponder.grinder_blades.text_4": "La Lama in Ottone infligge il doppio dei danni.",
   "createmobgrinding.ponder.grinder_blades.text_5": "La Lama in Diamante infligge il quadruplo dei danni.",
   "createmobgrinding.ponder.grinder_blades.text_6": "La Lama in Netherite è il livello supremo, capace di danni devastanti!",
-  "createmobgrinding.ponder.grinder_blades.text_7": "Puoi anche applicare i Libri Incantati cliccando col destro sul Grinder!",
-  "createmobgrinding.ponder.grinder_blades.text_8": "Incantesimi validi: Saccheggio, Aspetto di Fuoco e Decapitazione."
+  "createmobgrinding.ponder.grinder_blades.text_7": "Le lame possono essere incantate nativamente in un'Incudine o al Tavolo degli Incantesimi!",
+  "createmobgrinding.ponder.grinder_blades.text_8": "Accettano solo incantesimi di utilità, piuttosto che incantesimi di danno.",
+  "death.attack.createmobgrinding.grinder": "%1$s è stato macellato dal grinder"
 }

@@ -1,0 +1,83 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "createmobgrinding:blank_spawner_chunk"
+  },
+  "loops": 5,
+  "results": [
+    {
+      "chance": 80.0,
+      "id": "createmobgrinding:mob_spawner_chunk",
+      "components": {
+        "createmobgrinding:spawner_entity": "minecraft:hoglin"
+      }
+    },
+    {
+      "chance": 20.0,
+      "id": "createmobgrinding:broken_spawner_chunk"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "createmobgrinding:unfinished_spawner_chunk"
+        },
+        {
+          "type": "createmobgrinding:strict_syringe",
+          "entity": "minecraft:hoglin"
+        }
+      ],
+      "results": [
+        {
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:hoglin"
+          }
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "createmobgrinding:unfinished_spawner_chunk"
+        },
+        {
+          "item": "create:experience_nugget"
+        }
+      ],
+      "results": [
+        {
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:hoglin"
+          }
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "createmobgrinding:unfinished_spawner_chunk"
+        }
+      ],
+      "results": [
+        {
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:hoglin"
+          }
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "createmobgrinding:unfinished_spawner_chunk",
+    "components": {
+      "createmobgrinding:spawner_entity": "minecraft:hoglin"
+    }
+  }
+}

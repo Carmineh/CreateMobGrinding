@@ -29,16 +29,16 @@ public class ModItems {
 
     // Grinder Blades
     public static final Supplier<Item> IRON_GRINDER_BLADE = ITEMS.register("iron_grinder_blade", 
-        () -> new Item(new Item.Properties()));
+        () -> new dev.manny.createmobgrinding.item.GrinderBladeItem(new Item.Properties().stacksTo(1), 14));
     public static final Supplier<Item> BRASS_GRINDER_BLADE = ITEMS.register("brass_grinder_blade", 
-        () -> new Item(new Item.Properties()));
+        () -> new dev.manny.createmobgrinding.item.GrinderBladeItem(new Item.Properties().stacksTo(1), 18));
     public static final Supplier<Item> DIAMOND_GRINDER_BLADE = ITEMS.register("diamond_grinder_blade", 
-        () -> new Item(new Item.Properties()));
+        () -> new dev.manny.createmobgrinding.item.GrinderBladeItem(new Item.Properties().stacksTo(1), 10));
     public static final Supplier<Item> NETHERITE_GRINDER_BLADE = ITEMS.register("netherite_grinder_blade",
-            () -> new Item(new Item.Properties().fireResistant()));
+        () -> new dev.manny.createmobgrinding.item.GrinderBladeItem(new Item.Properties().stacksTo(1).fireResistant(), 15));
 
     public static final Supplier<Item> CREATIVE_GRINDER_BLADE = ITEMS.register("creative_grinder_blade",
-            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)) {
+            () -> new dev.manny.createmobgrinding.item.GrinderBladeItem(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC), 50) {
                 @Override
                 public boolean isFoil(net.minecraft.world.item.ItemStack stack) {
                     return true;
@@ -47,9 +47,15 @@ public class ModItems {
 
     // Spawner Upgrades
     public static final Supplier<Item> SPAWNER_UPGRADE_NO_AI = ITEMS.register("spawner_upgrade_no_ai", 
-        () -> new Item(new Item.Properties()));
+            () -> new Item(new Item.Properties().stacksTo(64)));
     public static final Supplier<Item> SPAWNER_UPGRADE_NO_CONDITIONS = ITEMS.register("spawner_upgrade_no_conditions", 
-        () -> new Item(new Item.Properties()));
+            () -> new Item(new Item.Properties().stacksTo(64)));
+            
+    // Grinder Upgrades
+    public static final Supplier<Item> GRINDER_UPGRADE_PROTECTION = ITEMS.register("grinder_upgrade_protection", 
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final Supplier<Item> GRINDER_UPGRADE_VACUUM = ITEMS.register("grinder_upgrade_vacuum", 
+            () -> new Item(new Item.Properties().stacksTo(64)));
 
     // Soul Extractors
     public static final Supplier<Item> BASIC_SOUL_EXTRACTOR = ITEMS.register("basic_soul_extractor", 

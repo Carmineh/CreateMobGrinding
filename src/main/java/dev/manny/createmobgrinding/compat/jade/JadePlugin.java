@@ -19,6 +19,7 @@ public class JadePlugin implements IWailaPlugin {
     public void registerClient(IWailaClientRegistration registration) {
         registration.registerBlockComponent(SpawnerComponentProvider.INSTANCE, RotationalMobSpawnerBlock.class);
         registration.registerBlockComponent(GrinderComponentProvider.INSTANCE, RotationalMobGrinderBlock.class);
+        registration.registerEntityComponent(MobTierComponentProvider.INSTANCE, net.minecraft.world.entity.LivingEntity.class);
     }
 }
 

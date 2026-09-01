@@ -30,6 +30,25 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
     // The fake attacker is kept far below the world: a creeper trying to take revenge
     // fails the SwellGoal check ("target within 3 blocks") and never swells.
     private static final double FAKE_PLAYER_Y = -500.0;
+    
+    public final net.neoforged.neoforge.items.ItemStackHandler upgrades = new net.neoforged.neoforge.items.ItemStackHandler(4) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+            if (level != null && !level.isClientSide) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+            }
+        }
+    };
+    
+    public final net.neoforged.neoforge.items.ItemStackHandler vacuumInventory = new net.neoforged.neoforge.items.ItemStackHandler(27) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+        }
+    };
+    
+    private int xpBuffer = 0;
 
     public RotationalMobGrinderBlockEntity(BlockPos pos, BlockState state) {
         super(dev.manny.createmobgrinding.registry.ModBlockEntities.ROTATIONAL_MOB_GRINDER.get(), pos, state);
@@ -49,61 +68,25 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         sendData();
         if (hasNetwork()) getOrCreateNetwork().updateNetwork();
     }
-
-    public boolean applyEnchantedBook(ItemStack book) {
-        if (!book.is(net.minecraft.world.item.Items.ENCHANTED_BOOK)) return false;
-        
-        ItemEnchantments bookEnchants = book.getOrDefault(net.minecraft.core.component.DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
-        if (bookEnchants.isEmpty()) return false;
-        
-        ItemEnchantments existingEnchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-        ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(existingEnchants);
-        boolean appliedAny = false;
-        
-        for (var ench : bookEnchants.keySet()) {
-            net.minecraft.resources.ResourceLocation loc = ench.unwrapKey().get().location();
-            if (loc.equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("looting")) ||
-                loc.equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("fire_aspect")) ||
-                loc.equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(dev.manny.createmobgrinding.CreateMobGrinding.MOD_ID, "beheading"))) {
-                
-                int current = mutable.getLevel(ench);
-                int added = bookEnchants.getLevel(ench);
-                int vanillaMax = ench.value().getMaxLevel();
-                
-                int newLevel;
-                if (current == added) newLevel = Math.min(vanillaMax, current + 1);
-                else newLevel = Math.min(vanillaMax, Math.max(current, added));
-                
-                if (newLevel > current) {
-                    mutable.set(ench, newLevel);
-                    appliedAny = true;
-                }
+    
+    public boolean hasProtectionUpgrade() {
+        for (int i = 0; i < upgrades.getSlots(); i++) {
+            if (upgrades.getStackInSlot(i).is(dev.manny.createmobgrinding.registry.ModItems.GRINDER_UPGRADE_PROTECTION.get())) {
+                return true;
             }
         }
-        
-        if (!appliedAny) return false;
-        
-        EnchantmentHelper.setEnchantments(internalWeapon, mutable.toImmutable());
-        setChanged();
-        if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-        if (hasNetwork()) getOrCreateNetwork().updateNetwork();
-        return true;
+        return false;
     }
-    
-    public ItemStack extractEnchantments() {
-        ItemEnchantments enchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-        if (enchants.isEmpty()) return ItemStack.EMPTY;
-        
-        ItemStack book = new ItemStack(net.minecraft.world.item.Items.ENCHANTED_BOOK);
-        book.set(net.minecraft.core.component.DataComponents.STORED_ENCHANTMENTS, enchants);
-        
-        internalWeapon = new ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
-        setChanged();
-        if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-        if (hasNetwork()) getOrCreateNetwork().updateNetwork();
-        
-        return book;
+
+    public boolean hasVacuumUpgrade() {
+        for (int i = 0; i < upgrades.getSlots(); i++) {
+            if (upgrades.getStackInSlot(i).is(dev.manny.createmobgrinding.registry.ModItems.GRINDER_UPGRADE_VACUUM.get())) {
+                return true;
+            }
+        }
+        return false;
     }
+
 
     private ItemEnchantments getCombinedEnchantments() {
         ItemEnchantments internal = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
@@ -146,12 +129,64 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
 
         float speed = Math.abs(getSpeed());
         if (speed == 0) return;
+        
+        if (hasVacuumUpgrade() && level.getGameTime() % 4 == 0) {
+            vacuumItems();
+        }
 
         attackTimer += speed;
 
         if (attackTimer >= ATTACK_THRESHOLD) {
             attackTimer -= ATTACK_THRESHOLD;
             performAttack();
+        }
+    }
+    
+    private void vacuumItems() {
+        ServerLevel serverLevel = (ServerLevel) level;
+        net.minecraft.core.Direction facing = getBlockState().hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING) ? 
+                getBlockState().getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING) : 
+                net.minecraft.core.Direction.NORTH;
+                
+        BlockPos targetPos = worldPosition.relative(facing);
+        // Vacuum area: 3x3 plane exactly at the target block (1 block deep)
+        AABB vacuumZone = new AABB(targetPos);
+        double inflateX = facing.getAxis() == net.minecraft.core.Direction.Axis.X ? 0 : 1.0;
+        double inflateY = facing.getAxis() == net.minecraft.core.Direction.Axis.Y ? 0 : 1.0;
+        double inflateZ = facing.getAxis() == net.minecraft.core.Direction.Axis.Z ? 0 : 1.0;
+        vacuumZone = vacuumZone.inflate(inflateX, inflateY, inflateZ);
+        
+        // Items
+        List<net.minecraft.world.entity.item.ItemEntity> items = serverLevel.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, vacuumZone, net.minecraft.world.entity.Entity::isAlive);
+        for (net.minecraft.world.entity.item.ItemEntity itemEntity : items) {
+            ItemStack stack = itemEntity.getItem();
+            ItemStack remainder = net.neoforged.neoforge.items.ItemHandlerHelper.insertItemStacked(vacuumInventory, stack, false);
+            if (remainder.isEmpty()) {
+                itemEntity.discard();
+            } else {
+                itemEntity.setItem(remainder);
+            }
+        }
+        
+        // Experience
+        List<net.minecraft.world.entity.ExperienceOrb> orbs = serverLevel.getEntitiesOfClass(net.minecraft.world.entity.ExperienceOrb.class, vacuumZone, net.minecraft.world.entity.Entity::isAlive);
+        for (net.minecraft.world.entity.ExperienceOrb orb : orbs) {
+            xpBuffer += orb.getValue();
+            orb.discard();
+        }
+        
+        if (xpBuffer >= 3) {
+            int nuggetsToProduce = xpBuffer / 3;
+            ItemStack nuggetStack = new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("create", "experience_nugget")), nuggetsToProduce);
+            ItemStack remainder = net.neoforged.neoforge.items.ItemHandlerHelper.insertItemStacked(vacuumInventory, nuggetStack, false);
+            
+            int successfullyInserted = nuggetsToProduce - remainder.getCount();
+            xpBuffer -= successfullyInserted * 3;
+            
+            // If the inventory is full, we don't consume the xpBuffer completely, it just waits until there's space.
+            if (!remainder.isEmpty()) {
+                // Alternatively, we could spawn the remainder nuggets in the world, but the buffer approach is safer and less laggy.
+            }
         }
     }
 
@@ -166,7 +201,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         // No inflate, area is perfectly 1 block (1x1x1) on the blade
         AABB killZone = new AABB(targetPos);
 
-        List<LivingEntity> targets = serverLevel.getEntitiesOfClass(LivingEntity.class, killZone, e -> !(e instanceof Player) && e.isAlive());
+        List<LivingEntity> targets = serverLevel.getEntitiesOfClass(LivingEntity.class, killZone, net.minecraft.world.entity.Entity::isAlive);
 
         if (targets.isEmpty()) return;
 
@@ -183,8 +218,12 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         net.minecraft.core.Registry<net.minecraft.world.item.enchantment.Enchantment> registry = serverLevel.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT);
         
         int fireAspect = enchants.getLevel(registry.getHolderOrThrow(net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT));
+        
+        boolean hasProtection = hasProtectionUpgrade();
 
         for (LivingEntity target : targets) {
+            if (target instanceof Player && hasProtection) continue;
+            
             float baseDamage = 2.0f; // Reduced for balance
             float multiplier = 1.0f;
             if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) multiplier = 2.0f;
@@ -198,7 +237,13 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
                 target.igniteForSeconds(fireAspect * 4); // igniteForSeconds in 1.21
             }
             
-            target.hurt(serverLevel.damageSources().playerAttack(fakePlayer), damage);
+            // Set the item in main hand to the internal weapon so looting/fire aspect apply
+            fakePlayer.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, internalWeapon);
+            
+            net.minecraft.resources.ResourceKey<net.minecraft.world.damagesource.DamageType> grinderDamageKey = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE, net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(dev.manny.createmobgrinding.CreateMobGrinding.MOD_ID, "grinder"));
+            net.minecraft.world.damagesource.DamageSource customSource = new net.minecraft.world.damagesource.DamageSource(serverLevel.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE).getHolderOrThrow(grinderDamageKey), fakePlayer, fakePlayer);
+            
+            target.hurt(customSource, damage);
 
             // The grinder is not a valid revenge target. HurtByTargetGoal has no
             // distance limit, so without this the mob would lock onto the fake player
@@ -226,6 +271,26 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
                 tooltip.add(Component.literal("    ").append(Component.translatable(ench.unwrapKey().get().location().toLanguageKey("enchantment")).append(" " + enchants.getLevel(ench))).withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
             });
         }
+        
+        boolean hasUpgrades = false;
+        for (int i = 0; i < upgrades.getSlots(); i++) {
+            if (!upgrades.getStackInSlot(i).isEmpty()) {
+                hasUpgrades = true;
+                break;
+            }
+        }
+        
+        if (hasUpgrades) {
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.upgrades")).withStyle(net.minecraft.ChatFormatting.GRAY));
+            for (int i = 0; i < upgrades.getSlots(); i++) {
+                net.minecraft.world.item.ItemStack upgrade = upgrades.getStackInSlot(i);
+                if (!upgrade.isEmpty()) {
+                    tooltip.add(Component.literal("      - ").withStyle(net.minecraft.ChatFormatting.DARK_GRAY).append(upgrade.getHoverName().copy().withStyle(net.minecraft.ChatFormatting.GREEN)));
+                }
+            }
+        }
+        
         return true;
     }
 
@@ -238,7 +303,33 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         if (compound.contains("InstalledBlade")) {
             installedBlade = ItemStack.parseOptional(registries, compound.getCompound("InstalledBlade"));
         }
+        
+        // Migration: Move enchantments from internalWeapon to installedBlade
+        ItemEnchantments legacyEnchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        if (!legacyEnchants.isEmpty()) {
+            ItemEnchantments bladeEnchants = installedBlade.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+            
+            ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(legacyEnchants);
+            for (var ench : bladeEnchants.keySet()) {
+                int current = mutable.getLevel(ench);
+                int added = bladeEnchants.getLevel(ench);
+                mutable.set(ench, Math.max(current, added));
+            }
+            
+            EnchantmentHelper.setEnchantments(installedBlade, mutable.toImmutable());
+            
+            // Clear the internal weapon so we don't migrate again
+            internalWeapon = new ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
+        }
+        
+        if (compound.contains("Upgrades")) {
+            upgrades.deserializeNBT(registries, compound.getCompound("Upgrades"));
+        }
+        if (compound.contains("VacuumInventory")) {
+            vacuumInventory.deserializeNBT(registries, compound.getCompound("VacuumInventory"));
+        }
         attackTimer = compound.getFloat("AttackTimer");
+        xpBuffer = compound.getInt("XpBuffer");
     }
 
     @Override
@@ -246,7 +337,10 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         super.write(compound, registries, clientPacket);
         compound.put("InternalWeapon", internalWeapon.saveOptional(registries));
         compound.put("InstalledBlade", installedBlade.saveOptional(registries));
+        compound.put("Upgrades", upgrades.serializeNBT(registries));
+        compound.put("VacuumInventory", vacuumInventory.serializeNBT(registries));
         compound.putFloat("AttackTimer", attackTimer);
+        compound.putInt("XpBuffer", xpBuffer);
     }
 }
 

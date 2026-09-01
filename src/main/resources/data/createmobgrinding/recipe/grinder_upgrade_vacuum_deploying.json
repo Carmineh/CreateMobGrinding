@@ -1,0 +1,16 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "create:attribute_filter"
+    },
+    {
+      "item": "minecraft:ender_eye"
+    }
+  ],
+  "results": [
+    {
+      "id": "createmobgrinding:grinder_upgrade_vacuum"
+    }
+  ]
+}

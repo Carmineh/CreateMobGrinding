@@ -5,6 +5,8 @@
     "minecraft:skeleton",
     "minecraft:spider",
     "minecraft:creeper",
-    "minecraft:piglin"
+    "minecraft:piglin",
+    "minecraft:armadillo",
+    "minecraft:hoglin"
   ]
 }

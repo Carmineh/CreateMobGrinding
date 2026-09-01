@@ -32,6 +32,8 @@ public class ModCreativeTabs {
                         
                         output.accept(ModItems.SPAWNER_UPGRADE_NO_AI.get());
                         output.accept(ModItems.SPAWNER_UPGRADE_NO_CONDITIONS.get());
+                        output.accept(ModItems.GRINDER_UPGRADE_PROTECTION.get());
+                        output.accept(ModItems.GRINDER_UPGRADE_VACUUM.get());
                         
                         output.accept(ModItems.BASIC_SOUL_EXTRACTOR.get());
                         output.accept(ModItems.ADVANCED_SOUL_EXTRACTOR.get());

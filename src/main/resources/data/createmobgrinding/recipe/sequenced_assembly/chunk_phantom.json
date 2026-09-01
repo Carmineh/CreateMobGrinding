@@ -1,0 +1,83 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "createmobgrinding:blank_spawner_chunk"
+  },
+  "loops": 5,
+  "results": [
+    {
+      "chance": 40.0,
+      "id": "createmobgrinding:mob_spawner_chunk",
+      "components": {
+        "createmobgrinding:spawner_entity": "minecraft:phantom"
+      }
+    },
+    {
+      "chance": 60.0,
+      "id": "createmobgrinding:broken_spawner_chunk"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "createmobgrinding:unfinished_spawner_chunk"
+        },
+        {
+          "type": "createmobgrinding:strict_syringe",
+          "entity": "minecraft:phantom"
+        }
+      ],
+      "results": [
+        {
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:phantom"
+          }
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "createmobgrinding:unfinished_spawner_chunk"
+        },
+        {
+          "item": "create:experience_block"
+        }
+      ],
+      "results": [
+        {
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:phantom"
+          }
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "createmobgrinding:unfinished_spawner_chunk"
+        }
+      ],
+      "results": [
+        {
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:phantom"
+          }
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "createmobgrinding:unfinished_spawner_chunk",
+    "components": {
+      "createmobgrinding:spawner_entity": "minecraft:phantom"
+    }
+  }
+}

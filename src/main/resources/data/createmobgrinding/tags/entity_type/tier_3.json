@@ -5,6 +5,15 @@
     "minecraft:blaze",
     "minecraft:ghast",
     "minecraft:magma_cube",
-    "minecraft:wither_skeleton"
+    "minecraft:wither_skeleton",
+    "minecraft:slime",
+    "minecraft:zombified_piglin",
+    "minecraft:drowned",
+    "minecraft:cave_spider",
+    "minecraft:villager",
+    "minecraft:zombie_villager",
+    "minecraft:bogged",
+    "minecraft:shulker",
+    "minecraft:guardian"
   ]
 }

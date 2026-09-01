@@ -31,7 +31,22 @@ Please open an issue in the **[Issues Tab](../../issues)**.
 
 ---
 
+## Contributions
+
+Want to help develop the mod? We welcome contributions! 
+
+1. Check out our **[ROADMAP.md](./ROADMAP.md)** file to see a list of known bugs to fix and future features we'd love to see implemented.
+2. **Fork** this repository.
+3. Implement your changes in your forked repository.
+4. Open a **Pull Request** back to this main repository.
+
+If you have your own ideas, feel free to open an Issue tagged with `enhancement` first to discuss it!
+
+---
+
 ## Supported Languages
 🇮🇹 🇺🇸 
 
 If you want to help with translations you can find the files in: `src/main/resources/assets/createmobgrinding/lang/`, copy the base `en_us.json` file and rename it to your language code (e.g., `es_es.json` for Spanish, `fr_fr.json` for French).
+
+

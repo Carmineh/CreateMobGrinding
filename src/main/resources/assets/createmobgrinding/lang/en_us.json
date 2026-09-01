@@ -12,6 +12,8 @@
   "jade.createmobgrinding.spawner.progress": "Spawn Progress: %s%%",
   "jade.createmobgrinding.grinder.shift_for_enchants": "Shift to see enchantments",
   "jade.createmobgrinding.grinder.no_enchants": "No Enchantments",
+  "jade.createmobgrinding.mob.tier": "Mob Tier: %s",
+  "jade.createmobgrinding.mob.tier.unknown": "Mob Tier: Unknown",
   "tooltip.createmobgrinding.spawner.no_chunk": "Missing Mob Spawner Chunk",
   "tooltip.createmobgrinding.spawner.upgrades": "Installed Upgrades:",
   "jei.createmobgrinding.spawner_extraction": "Chunk Extraction",
@@ -29,6 +31,8 @@
   
   "item.createmobgrinding.spawner_upgrade_no_ai": "No-AI Upgrade",
   "item.createmobgrinding.spawner_upgrade_no_conditions": "No Conditions Upgrade",
+  "item.createmobgrinding.grinder_upgrade_protection": "Grinder Protection Upgrade",
+  "item.createmobgrinding.grinder_upgrade_vacuum": "Grinder Vacuum Upgrade",
   
   "item.createmobgrinding.basic_soul_extractor": "Basic Soul Extractor",
   "item.createmobgrinding.advanced_soul_extractor": "Advanced Soul Extractor",
@@ -82,6 +86,7 @@
   "createmobgrinding.ponder.grinder_blades.text_4": "The Brass Blade deals double the damage.",
   "createmobgrinding.ponder.grinder_blades.text_5": "The Diamond Blade deals four times the damage.",
   "createmobgrinding.ponder.grinder_blades.text_6": "The Netherite Blade is the ultimate tier, dealing massive damage!",
-  "createmobgrinding.ponder.grinder_blades.text_7": "You can also apply Enchanted Books directly to the Grinder!",
-  "createmobgrinding.ponder.grinder_blades.text_8": "Valid enchantments: Looting, Fire Aspect, and Beheading."
+  "createmobgrinding.ponder.grinder_blades.text_7": "The blades can be enchanted natively at an Anvil or Enchanting Table!",
+  "createmobgrinding.ponder.grinder_blades.text_8": "They only accept utility enchantments, rather than damage enchantments.",
+  "death.attack.createmobgrinding.grinder": "%1$s was butchered by the grinder"
 }
