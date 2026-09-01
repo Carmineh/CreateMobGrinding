@@ -3,6 +3,10 @@
   "values": [
     "minecraft:evoker",
     "minecraft:vindicator",
-    "minecraft:ravager"
+    "minecraft:ravager",
+    "minecraft:piglin_brute",
+    "minecraft:phantom",
+    "minecraft:pillager",
+    "minecraft:breeze"
   ]
 }

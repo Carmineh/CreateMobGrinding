@@ -1,0 +1,83 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "createmobgrinding:blank_spawner_chunk"
+  },
+  "loops": 5,
+  "results": [
+    {
+      "chance": 90.0,
+      "id": "createmobgrinding:mob_spawner_chunk",
+      "components": {
+        "createmobgrinding:spawner_entity": "minecraft:rabbit"
+      }
+    },
+    {
+      "chance": 10.0,
+      "id": "createmobgrinding:broken_spawner_chunk"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "createmobgrinding:unfinished_spawner_chunk"
+        },
+        {
+          "type": "createmobgrinding:strict_syringe",
+          "entity": "minecraft:rabbit"
+        }
+      ],
+      "results": [
+        {
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:rabbit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "createmobgrinding:unfinished_spawner_chunk"
+        },
+        {
+          "item": "create:experience_nugget"
+        }
+      ],
+      "results": [
+        {
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:rabbit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "createmobgrinding:unfinished_spawner_chunk"
+        }
+      ],
+      "results": [
+        {
+          "id": "createmobgrinding:unfinished_spawner_chunk",
+          "components": {
+            "createmobgrinding:spawner_entity": "minecraft:rabbit"
+          }
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "createmobgrinding:unfinished_spawner_chunk",
+    "components": {
+      "createmobgrinding:spawner_entity": "minecraft:rabbit"
+    }
+  }
+}

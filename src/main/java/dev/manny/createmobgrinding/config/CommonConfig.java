@@ -12,7 +12,6 @@ public class CommonConfig {
     public final ModConfigSpec.DoubleValue spawnTimeTier5;
     public final ModConfigSpec.DoubleValue grinderBaseDamage;
     public final ModConfigSpec.ConfigValue<List<? extends String>> spawnerBlacklist;
-    public final ModConfigSpec.ConfigValue<List<? extends String>> customTiers;
 
     public CommonConfig(ModConfigSpec.Builder builder) {
         builder.push("spawner");
@@ -40,9 +39,7 @@ public class CommonConfig {
                 .comment("List of entity types that cannot be spawned. (e.g. minecraft:warden)")
                 .defineList("spawnerBlacklist", List.of("minecraft:warden", "minecraft:ender_dragon"), obj -> obj instanceof String);
                 
-        customTiers = builder
-                .comment("List of custom tiers for mobs. Format: modid:mob_name=tier (e.g. minecraft:pig=1, alexsmobs:grizzly_bear=3)")
-                .defineList("customTiers", List.of(), obj -> obj instanceof String);
+
         builder.pop();
 
         builder.push("grinder");

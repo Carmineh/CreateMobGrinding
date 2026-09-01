@@ -21,10 +21,6 @@ import java.util.Optional;
 @EventBusSubscriber(modid = CreateMobGrinding.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class ModEvents {
 
-    @SubscribeEvent
-    public static void onCommandsRegister(net.neoforged.neoforge.event.RegisterCommandsEvent event) {
-        dev.manny.createmobgrinding.command.ModCommands.register(event.getDispatcher(), event.getBuildContext());
-    }
 
     @SubscribeEvent
     public static void onLivingDrops(LivingDropsEvent event) {
