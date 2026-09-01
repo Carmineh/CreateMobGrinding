@@ -87,5 +87,6 @@
   "createmobgrinding.ponder.grinder_blades.text_5": "The Diamond Blade deals four times the damage.",
   "createmobgrinding.ponder.grinder_blades.text_6": "The Netherite Blade is the ultimate tier, dealing massive damage!",
   "createmobgrinding.ponder.grinder_blades.text_7": "You can also apply Enchanted Books directly to the Grinder!",
-  "createmobgrinding.ponder.grinder_blades.text_8": "Valid enchantments: Looting, Fire Aspect, and Beheading."
+  "createmobgrinding.ponder.grinder_blades.text_8": "Valid enchantments: Looting, Fire Aspect, and Beheading.",
+  "death.attack.createmobgrinding.grinder": "%1$s was butchered by the grinder"
 }

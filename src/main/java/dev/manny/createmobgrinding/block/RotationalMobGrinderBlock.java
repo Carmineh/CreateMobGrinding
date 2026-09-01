@@ -51,27 +51,25 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
         if (!level.isClientSide) {
             net.minecraft.world.level.block.entity.BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof RotationalMobGrinderBlockEntity grinderBE) {
-                if (stack.getItem() instanceof net.minecraft.world.item.Item item) {
-                    if (stack.is(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get()) ||
-                        stack.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get()) ||
-                        stack.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get()) ||
-                        stack.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get()) ||
-                        stack.is(dev.manny.createmobgrinding.registry.ModItems.CREATIVE_GRINDER_BLADE.get())) {
-                        
-                        net.minecraft.world.item.ItemStack currentBlade = grinderBE.getInstalledBlade();
-                        if (!currentBlade.isEmpty() && !currentBlade.is(stack.getItem())) {
-                            net.neoforged.neoforge.items.ItemHandlerHelper.giveItemToPlayer(player, currentBlade.copy());
-                        }
-                        
-                        net.minecraft.world.item.ItemStack newBlade = stack.copy();
-                        newBlade.setCount(1);
-                        grinderBE.setInstalledBlade(newBlade);
-                        
-                        if (!player.isCreative()) {
-                            stack.shrink(1);
-                        }
-                        return net.minecraft.world.ItemInteractionResult.SUCCESS;
+                if (stack.is(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get()) ||
+                    stack.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get()) ||
+                    stack.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get()) ||
+                    stack.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get()) ||
+                    stack.is(dev.manny.createmobgrinding.registry.ModItems.CREATIVE_GRINDER_BLADE.get())) {
+                    
+                    net.minecraft.world.item.ItemStack currentBlade = grinderBE.getInstalledBlade();
+                    if (!currentBlade.isEmpty() && !currentBlade.is(stack.getItem())) {
+                        net.neoforged.neoforge.items.ItemHandlerHelper.giveItemToPlayer(player, currentBlade.copy());
                     }
+                    
+                    net.minecraft.world.item.ItemStack newBlade = stack.copy();
+                    newBlade.setCount(1);
+                    grinderBE.setInstalledBlade(newBlade);
+                    
+                    if (!player.isCreative()) {
+                        stack.shrink(1);
+                    }
+                    return net.minecraft.world.ItemInteractionResult.SUCCESS;
                 } else if (stack.is(dev.manny.createmobgrinding.registry.ModItems.GRINDER_UPGRADE_PROTECTION.get()) ||
                            stack.is(dev.manny.createmobgrinding.registry.ModItems.GRINDER_UPGRADE_VACUUM.get())) {
                     

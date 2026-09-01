@@ -89,7 +89,9 @@ public class ModEvents {
                     ResourceLocation loc = ench.unwrapKey().get().location();
                     if (loc.equals(ResourceLocation.withDefaultNamespace("looting")) ||
                         loc.equals(ResourceLocation.withDefaultNamespace("fire_aspect")) ||
-                        loc.equals(ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "beheading"))) {
+                        loc.equals(ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "beheading")) ||
+                        loc.equals(ResourceLocation.withDefaultNamespace("unbreaking")) ||
+                        loc.equals(ResourceLocation.withDefaultNamespace("mending"))) {
                         
                         int currentLvl = mutable.getLevel(ench);
                         int addedLvl = enchantsToApply.getLevel(ench);
@@ -112,7 +114,11 @@ public class ModEvents {
                     net.minecraft.world.item.enchantment.EnchantmentHelper.setEnchantments(out, mutable.toImmutable());
                     event.setOutput(out);
                     event.setCost(cost == 0 ? 1 : cost);
+                } else {
+                    event.setCanceled(true);
                 }
+            } else {
+                event.setCanceled(true);
             }
         }
     }

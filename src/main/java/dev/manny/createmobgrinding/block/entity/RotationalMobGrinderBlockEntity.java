@@ -233,7 +233,16 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
                 target.igniteForSeconds(fireAspect * 4); // igniteForSeconds in 1.21
             }
             
-            target.hurt(serverLevel.damageSources().playerAttack(fakePlayer), damage);
+           if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+            net.neoforged.neoforge.common.util.FakePlayer fakePlayer = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(serverLevel);
+            
+            // Set the item in main hand to the internal weapon so looting/fire aspect apply
+            fakePlayer.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, internalWeapon);
+            
+            net.minecraft.resources.ResourceKey<net.minecraft.world.damagesource.DamageType> grinderDamageKey = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE, net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(dev.manny.createmobgrinding.CreateMobGrinding.MOD_ID, "grinder"));
+            net.minecraft.world.damagesource.DamageSource customSource = new net.minecraft.world.damagesource.DamageSource(serverLevel.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE).getHolderOrThrow(grinderDamageKey), fakePlayer, fakePlayer);
+            
+            target.hurt(customSource, damage);
 
             // The grinder is not a valid revenge target. HurtByTargetGoal has no
             // distance limit, so without this the mob would lock onto the fake player
