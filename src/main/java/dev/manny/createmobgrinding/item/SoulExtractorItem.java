@@ -35,11 +35,7 @@ public class SoulExtractorItem extends Item {
         ResourceLocation entityType = BuiltInRegistries.ENTITY_TYPE.getKey(interactionTarget.getType());
         
         // Determine tier
-        int targetTier = 1;
-        if (interactionTarget.getType().is(ModTags.TIER_5)) targetTier = 5;
-        else if (interactionTarget.getType().is(ModTags.TIER_4)) targetTier = 4;
-        else if (interactionTarget.getType().is(ModTags.TIER_3)) targetTier = 3;
-        else if (interactionTarget.getType().is(ModTags.TIER_2)) targetTier = 2;
+        int targetTier = dev.manny.createmobgrinding.util.MobTierHelper.getMobTier(interactionTarget.getType());
 
         if (targetTier > this.maxTier) {
             if (!player.level().isClientSide) {

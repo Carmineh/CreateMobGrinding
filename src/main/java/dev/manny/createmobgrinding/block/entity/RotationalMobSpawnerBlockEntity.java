@@ -88,13 +88,7 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
         if (entityLoc == null) return 1;
         
         EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(entityLoc);
-        if (type == null) return 1;
-        
-        if (type.is(dev.manny.createmobgrinding.registry.ModTags.TIER_5)) return 5;
-        if (type.is(dev.manny.createmobgrinding.registry.ModTags.TIER_4)) return 4;
-        if (type.is(dev.manny.createmobgrinding.registry.ModTags.TIER_3)) return 3;
-        if (type.is(dev.manny.createmobgrinding.registry.ModTags.TIER_2)) return 2;
-        return 1;
+        return dev.manny.createmobgrinding.util.MobTierHelper.getMobTier(type);
     }
 
     @Override
@@ -113,14 +107,13 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
     }
 
     public double getSpawnThreshold() {
-        double base = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBaseProgress.get();
-        return switch (getTier()) {
-            case 1 -> base * 0.5;   // Many mobs (1000)
-            case 2 -> base * 0.75;  // (1500)
-            case 3 -> base * 1.0;   // (2000)
-            case 4 -> base * 2.5;   // PiÃ¹ lento ma non troppo (5000)
-            case 5 -> base * 3.5;   // (7000)
-            default -> base;
+        int tier = getTier();
+        return switch (tier) {
+            case 5 -> dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnTimeTier5.get();
+            case 4 -> dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnTimeTier4.get();
+            case 3 -> dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnTimeTier3.get();
+            case 2 -> dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnTimeTier2.get();
+            default -> dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnTimeTier1.get();
         };
     }
 

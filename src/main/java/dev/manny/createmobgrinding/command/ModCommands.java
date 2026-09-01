@@ -29,6 +29,11 @@ public class ModCommands {
                                 .then(Commands.argument("mob", ResourceArgument.resource(buildContext, Registries.ENTITY_TYPE))
                                         .executes(ModCommands::removeBlacklist)))
                 )
+                .then(Commands.literal("tier")
+                        .then(Commands.argument("mob", ResourceArgument.resource(buildContext, Registries.ENTITY_TYPE))
+                                .then(Commands.argument("tier", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 5))
+                                        .executes(ModCommands::setCustomTier)))
+                )
         );
     }
 
@@ -63,6 +68,26 @@ public class ModCommands {
         current.remove(mobStr);
         ModConfigs.COMMON.spawnerBlacklist.set(current);
         context.getSource().sendSuccess(() -> Component.literal("Removed " + mobStr + " from the spawner blacklist."), true);
+        return 1;
+    }
+
+    private static int setCustomTier(CommandContext<CommandSourceStack> context) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        var holder = ResourceArgument.getResource(context, "mob", Registries.ENTITY_TYPE);
+        ResourceLocation mobId = holder.key().location();
+        String mobStr = mobId.toString();
+        int tier = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context, "tier");
+
+        List<String> current = new ArrayList<>(ModConfigs.COMMON.customTiers.get());
+        
+        // Remove existing entry for this mob if it exists
+        current.removeIf(entry -> entry.startsWith(mobStr + "="));
+        
+        // Add new entry
+        current.add(mobStr + "=" + tier);
+        
+        ModConfigs.COMMON.customTiers.set(current);
+        context.getSource().sendSuccess(() -> Component.literal("Set tier for " + mobStr + " to " + tier), true);
+        
         return 1;
     }
 }
