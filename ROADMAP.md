@@ -11,9 +11,9 @@ If you're a developer wanting to contribute to the mod, feel free to pick any op
 ## Future Updates
 Ideas and planned features for future versions:
 
-- [ ] **Ponder Scenes:** Create complete Ponder scenes for the Rotational Mob Spawner and Rotational Mob Grinder to visually explain their mechanics in-game.
-- [ ] **Mod Compatibilities:** Add built-in support for popular mods (e.g., Alex's Mobs, Twilight Forest) via soft dependencies and additional sequenced assembly recipes.
-- [ ] **Fluid Extraction:** A new Grinder Upgrade that allows extracting fluids (like Blood or Experience) directly from mobs during the grinding process.
+- [ ] **Ars Noveau Compatibility**
+- [ ] **Advanced Fan:** A filtered fan to blacklist entity types like Item, Player, Mob.
+- [ ] **New Utility Enchants:** For both the Grinder and Weapons (like Capturing for mob eggs, etc...).
 
 ## Known Bugs
 Issues that have been reported and need fixing:
