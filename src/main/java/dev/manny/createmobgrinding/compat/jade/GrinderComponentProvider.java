@@ -17,7 +17,7 @@ public enum GrinderComponentProvider implements IBlockComponentProvider {
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
         if (accessor.getBlockEntity() instanceof RotationalMobGrinderBlockEntity grinderBE) {
-            ItemStack weapon = grinderBE.getInternalWeapon();
+            ItemStack weapon = grinderBE.getInstalledBlade();
             ItemEnchantments enchants = weapon.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
 
             if (enchants.isEmpty()) {

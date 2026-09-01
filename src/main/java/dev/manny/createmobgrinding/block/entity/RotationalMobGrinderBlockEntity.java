@@ -87,60 +87,6 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         return false;
     }
 
-    public boolean applyEnchantedBook(ItemStack book) {
-        if (!book.is(net.minecraft.world.item.Items.ENCHANTED_BOOK)) return false;
-        
-        ItemEnchantments bookEnchants = book.getOrDefault(net.minecraft.core.component.DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
-        if (bookEnchants.isEmpty()) return false;
-        
-        ItemEnchantments existingEnchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-        ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(existingEnchants);
-        boolean appliedAny = false;
-        
-        for (var ench : bookEnchants.keySet()) {
-            net.minecraft.resources.ResourceLocation loc = ench.unwrapKey().get().location();
-            if (loc.equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("looting")) ||
-                loc.equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("fire_aspect")) ||
-                loc.equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(dev.manny.createmobgrinding.CreateMobGrinding.MOD_ID, "beheading"))) {
-                
-                int current = mutable.getLevel(ench);
-                int added = bookEnchants.getLevel(ench);
-                int vanillaMax = ench.value().getMaxLevel();
-                
-                int newLevel;
-                if (current == added) newLevel = Math.min(vanillaMax, current + 1);
-                else newLevel = Math.min(vanillaMax, Math.max(current, added));
-                
-                if (newLevel > current) {
-                    mutable.set(ench, newLevel);
-                    appliedAny = true;
-                }
-            }
-        }
-        
-        if (!appliedAny) return false;
-        
-        EnchantmentHelper.setEnchantments(internalWeapon, mutable.toImmutable());
-        setChanged();
-        if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-        if (hasNetwork()) getOrCreateNetwork().updateNetwork();
-        return true;
-    }
-    
-    public ItemStack extractEnchantments() {
-        ItemEnchantments enchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-        if (enchants.isEmpty()) return ItemStack.EMPTY;
-        
-        ItemStack book = new ItemStack(net.minecraft.world.item.Items.ENCHANTED_BOOK);
-        book.set(net.minecraft.core.component.DataComponents.STORED_ENCHANTMENTS, enchants);
-        
-        internalWeapon = new ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
-        setChanged();
-        if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-        if (hasNetwork()) getOrCreateNetwork().updateNetwork();
-        
-        return book;
-    }
 
     private ItemEnchantments getCombinedEnchantments() {
         ItemEnchantments internal = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
@@ -347,6 +293,25 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         if (compound.contains("InstalledBlade")) {
             installedBlade = ItemStack.parseOptional(registries, compound.getCompound("InstalledBlade"));
         }
+        
+        // Migration: Move enchantments from internalWeapon to installedBlade
+        ItemEnchantments legacyEnchants = internalWeapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        if (!legacyEnchants.isEmpty()) {
+            ItemEnchantments bladeEnchants = installedBlade.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+            
+            ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(legacyEnchants);
+            for (var ench : bladeEnchants.keySet()) {
+                int current = mutable.getLevel(ench);
+                int added = bladeEnchants.getLevel(ench);
+                mutable.set(ench, Math.max(current, added));
+            }
+            
+            EnchantmentHelper.setEnchantments(installedBlade, mutable.toImmutable());
+            
+            // Clear the internal weapon so we don't migrate again
+            internalWeapon = new ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
+        }
+        
         if (compound.contains("Upgrades")) {
             upgrades.deserializeNBT(registries, compound.getCompound("Upgrades"));
         }

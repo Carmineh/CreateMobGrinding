@@ -51,14 +51,7 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
         if (!level.isClientSide) {
             net.minecraft.world.level.block.entity.BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof RotationalMobGrinderBlockEntity grinderBE) {
-                if (stack.is(net.minecraft.world.item.Items.ENCHANTED_BOOK)) {
-                    if (grinderBE.applyEnchantedBook(stack)) {
-                        if (!player.isCreative()) {
-                            stack.shrink(1);
-                        }
-                        return net.minecraft.world.ItemInteractionResult.SUCCESS;
-                    }
-                } else if (stack.getItem() instanceof net.minecraft.world.item.Item item) {
+                if (stack.getItem() instanceof net.minecraft.world.item.Item item) {
                     if (stack.is(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get()) ||
                         stack.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get()) ||
                         stack.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get()) ||
@@ -137,10 +130,6 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
         if (!state.is(newState.getBlock())) {
             net.minecraft.world.level.block.entity.BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof RotationalMobGrinderBlockEntity grinderBE) {
-                net.minecraft.world.item.ItemStack book = grinderBE.extractEnchantments();
-                if (!book.isEmpty()) {
-                    net.minecraft.world.level.block.Block.popResource(level, pos, book);
-                }
                 net.minecraft.world.item.ItemStack blade = grinderBE.getInstalledBlade();
                 if (!blade.isEmpty() && !blade.is(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get())) {
                     net.minecraft.world.level.block.Block.popResource(level, pos, blade.copy());
