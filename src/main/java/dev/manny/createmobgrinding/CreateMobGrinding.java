@@ -8,6 +8,7 @@ import dev.manny.createmobgrinding.registry.ModCreativeTabs;
 import dev.manny.createmobgrinding.registry.ModDataComponents;
 import dev.manny.createmobgrinding.registry.ModItemAttributes;
 import dev.manny.createmobgrinding.registry.ModItems;
+import dev.manny.createmobgrinding.registry.ModLootModifiers;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ public class CreateMobGrinding {
         ModItems.ITEMS.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
+        ModLootModifiers.LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
         ModIngredientTypes.register(modEventBus);
         ModItemAttributes.ITEM_ATTRIBUTES.register(modEventBus);
         

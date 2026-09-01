@@ -149,8 +149,12 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
                 net.minecraft.core.Direction.NORTH;
                 
         BlockPos targetPos = worldPosition.relative(facing);
-        // Vacuum area: 3x3 area in front of the blade
-        AABB vacuumZone = new AABB(targetPos).inflate(1.0);
+        // Vacuum area: 3x3 plane exactly at the target block (1 block deep)
+        AABB vacuumZone = new AABB(targetPos);
+        double inflateX = facing.getAxis() == net.minecraft.core.Direction.Axis.X ? 0 : 1.0;
+        double inflateY = facing.getAxis() == net.minecraft.core.Direction.Axis.Y ? 0 : 1.0;
+        double inflateZ = facing.getAxis() == net.minecraft.core.Direction.Axis.Z ? 0 : 1.0;
+        vacuumZone = vacuumZone.inflate(inflateX, inflateY, inflateZ);
         
         // Items
         List<net.minecraft.world.entity.item.ItemEntity> items = serverLevel.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, vacuumZone, net.minecraft.world.entity.Entity::isAlive);
@@ -232,9 +236,6 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
             if (fireAspect > 0) {
                 target.igniteForSeconds(fireAspect * 4); // igniteForSeconds in 1.21
             }
-            
-           if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
-            net.neoforged.neoforge.common.util.FakePlayer fakePlayer = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(serverLevel);
             
             // Set the item in main hand to the internal weapon so looting/fire aspect apply
             fakePlayer.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, internalWeapon);
