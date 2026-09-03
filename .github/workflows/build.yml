@@ -3,8 +3,18 @@ name: Build
 on:
   push:
     branches: [ "mc1.21.1/dev" ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/FUNDING.yml'
+      - '.gitignore'
   pull_request:
     branches: [ "mc1.21.1/dev" ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/FUNDING.yml'
+      - '.gitignore'
 
 jobs:
   build:
