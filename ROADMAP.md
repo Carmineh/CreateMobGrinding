@@ -16,6 +16,9 @@ Ideas and planned features for future versions:
 - [ ] **Advanced Fan:** A filtered fan to blacklist entity types like Item, Player, Mob.
 - [ ] **New Utility Enchants:** For both the Grinder and Weapons (like Capturing for mob eggs, etc...).
 - [ ] **Rotational Spawner Texture Revamp:** Redesign and improve the block model and texture of the Rotational Mob Spawner.
+- [ ] **Spawner Chunk Bag:** A portable bag dedicated to storing Spawner Chunks.
+  - [ ] **Inventory Size:** Internal capacity equal to a standard vanilla chest (27 slots).
+  - [ ] **Quick Swap:** Right-clicking the bag on a Rotational Spawner opens its inventory. Clicking a chunk inside instantly swaps it with the Spawner's current chunk (or sets it if empty).
 
 ## Known Bugs
 Issues that have been reported and need fixing:
