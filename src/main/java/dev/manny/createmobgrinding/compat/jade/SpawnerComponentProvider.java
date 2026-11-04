@@ -27,7 +27,7 @@ public enum SpawnerComponentProvider implements IBlockComponentProvider, IServer
             }
             if (serverData.contains("SpawnerEntity")) {
                 if (serverData.getBoolean("Blacklisted")) {
-                    tooltip.add(Component.literal("Entity: BLACKLISTED").withStyle(net.minecraft.ChatFormatting.DARK_RED, net.minecraft.ChatFormatting.BOLD));
+                    tooltip.add(Component.translatable("tooltip.createmobgrinding.entity_blacklisted").withStyle(net.minecraft.ChatFormatting.DARK_RED, net.minecraft.ChatFormatting.BOLD));
                 } else {
                     ResourceLocation entityId = ResourceLocation.parse(serverData.getString("SpawnerEntity"));
                     tooltip.add(Component.translatable("tooltip.createmobgrinding.mob_chunk.entity_type", Component.translatable(net.minecraft.Util.makeDescriptionId("entity", entityId))).withStyle(net.minecraft.ChatFormatting.GRAY));

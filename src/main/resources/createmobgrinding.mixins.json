@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.manny.createmobgrinding.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AirCurrentMixin",
+    "EncasedFanBlockEntityMixin",
+    "KineticBlockEntityMixin",
+    "SmartBlockEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -23,23 +23,38 @@ public class SoulExtractorItem extends Item {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
-        // Check health <= 10%
-        float healthPct = interactionTarget.getHealth() / interactionTarget.getMaxHealth();
-        if (healthPct > 0.1f) {
+        // Pets and named mobs are protected from extraction
+        if (interactionTarget.hasCustomName() ||
+            (interactionTarget instanceof net.minecraft.world.entity.OwnableEntity ownable && ownable.getOwnerUUID() != null)) {
             if (!player.level().isClientSide) {
-                player.displayClientMessage(Component.literal("Target has too much health to extract!").withStyle(net.minecraft.ChatFormatting.RED), true);
+                player.displayClientMessage(Component.translatable("message.createmobgrinding.extractor.protected").withStyle(net.minecraft.ChatFormatting.RED), true);
             }
             return InteractionResult.FAIL;
         }
 
         ResourceLocation entityType = BuiltInRegistries.ENTITY_TYPE.getKey(interactionTarget.getType());
-        
+        if (dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBlacklist.get().contains(entityType.toString())) {
+            if (!player.level().isClientSide) {
+                player.displayClientMessage(Component.translatable("message.createmobgrinding.mob_blacklisted").withStyle(net.minecraft.ChatFormatting.RED), true);
+            }
+            return InteractionResult.FAIL;
+        }
+
+        // Check health <= 10%
+        float healthPct = interactionTarget.getHealth() / interactionTarget.getMaxHealth();
+        if (healthPct > 0.1f) {
+            if (!player.level().isClientSide) {
+                player.displayClientMessage(Component.translatable("message.createmobgrinding.extractor.too_much_health").withStyle(net.minecraft.ChatFormatting.RED), true);
+            }
+            return InteractionResult.FAIL;
+        }
+
         // Determine tier
         int targetTier = dev.manny.createmobgrinding.util.MobTierHelper.getMobTier(interactionTarget.getType());
 
         if (targetTier > this.maxTier) {
             if (!player.level().isClientSide) {
-                player.displayClientMessage(Component.literal("This extractor is too weak for this mob!").withStyle(net.minecraft.ChatFormatting.RED), true);
+                player.displayClientMessage(Component.translatable("message.createmobgrinding.extractor.too_weak").withStyle(net.minecraft.ChatFormatting.RED), true);
             }
             return InteractionResult.FAIL;
         }

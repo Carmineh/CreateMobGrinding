@@ -7,6 +7,30 @@
     "minecraft:piglin_brute",
     "minecraft:phantom",
     "minecraft:pillager",
-    "minecraft:breeze"
+    "minecraft:breeze",
+    {
+      "id": "ars_nouveau:wilden_guardian",
+      "required": false
+    },
+    {
+      "id": "twilightforest:armored_giant",
+      "required": false
+    },
+    {
+      "id": "twilightforest:harbinger_cube",
+      "required": false
+    },
+    {
+      "id": "twilightforest:adherent",
+      "required": false
+    },
+    {
+      "id": "twilightforest:roving_cube",
+      "required": false
+    },
+    {
+      "id": "aether:valkyrie",
+      "required": false
+    }
   ]
 }

@@ -21,6 +21,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.BLANK_SPAWNER_CHUNK.get());
                         output.accept(ModItems.BROKEN_SPAWNER_CHUNK.get());
                         output.accept(ModItems.MOB_SPAWNER_CHUNK.get());
+                        output.accept(ModItems.SPAWNER_CHUNK_BAG.get());
                         output.accept(ModItems.ROTATIONAL_MOB_SPAWNER.get());
                         output.accept(ModItems.ROTATIONAL_MOB_GRINDER.get());
                         
@@ -34,6 +35,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.SPAWNER_UPGRADE_NO_CONDITIONS.get());
                         output.accept(ModItems.GRINDER_UPGRADE_PROTECTION.get());
                         output.accept(ModItems.GRINDER_UPGRADE_VACUUM.get());
+                        output.accept(ModItems.FAN_FILTER_UPGRADE.get());
                         
                         output.accept(ModItems.BASIC_SOUL_EXTRACTOR.get());
                         output.accept(ModItems.ADVANCED_SOUL_EXTRACTOR.get());

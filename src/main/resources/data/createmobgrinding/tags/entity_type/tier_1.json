@@ -8,6 +8,58 @@
     "minecraft:frog",
     "minecraft:squid",
     "minecraft:glow_squid",
-    "minecraft:rabbit"
+    "minecraft:rabbit",
+    {
+      "id": "twilightforest:boar",
+      "required": false
+    },
+    {
+      "id": "twilightforest:bighorn_sheep",
+      "required": false
+    },
+    {
+      "id": "twilightforest:deer",
+      "required": false
+    },
+    {
+      "id": "twilightforest:penguin",
+      "required": false
+    },
+    {
+      "id": "twilightforest:tiny_bird",
+      "required": false
+    },
+    {
+      "id": "twilightforest:squirrel",
+      "required": false
+    },
+    {
+      "id": "twilightforest:dwarf_rabbit",
+      "required": false
+    },
+    {
+      "id": "twilightforest:raven",
+      "required": false
+    },
+    {
+      "id": "aether:phyg",
+      "required": false
+    },
+    {
+      "id": "aether:flying_cow",
+      "required": false
+    },
+    {
+      "id": "aether:sheepuff",
+      "required": false
+    },
+    {
+      "id": "aether:aerbunny",
+      "required": false
+    },
+    {
+      "id": "aether:moa",
+      "required": false
+    }
   ]
 }

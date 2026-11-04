@@ -24,10 +24,10 @@ public class FilledSoulExtractorItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         ResourceLocation entityLoc = stack.get(ModDataComponents.SPAWNER_ENTITY.get());
         if (entityLoc != null) {
-            tooltipComponents.add(Component.literal("DNA: ").withStyle(net.minecraft.ChatFormatting.GRAY)
-                .append(Component.translatable(net.minecraft.Util.makeDescriptionId("entity", entityLoc)).withStyle(net.minecraft.ChatFormatting.AQUA)));
+            tooltipComponents.add(Component.translatable("tooltip.createmobgrinding.dna",
+                Component.translatable(net.minecraft.Util.makeDescriptionId("entity", entityLoc)).withStyle(net.minecraft.ChatFormatting.AQUA)).withStyle(net.minecraft.ChatFormatting.GRAY));
         } else {
-            tooltipComponents.add(Component.literal("DNA: Unknown").withStyle(net.minecraft.ChatFormatting.GRAY));
+            tooltipComponents.add(Component.translatable("tooltip.createmobgrinding.dna.unknown").withStyle(net.minecraft.ChatFormatting.GRAY));
         }
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }

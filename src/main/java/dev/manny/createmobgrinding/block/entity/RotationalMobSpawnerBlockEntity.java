@@ -139,7 +139,9 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
         if (!powered) {
             for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
                 net.minecraft.world.level.block.state.BlockState state = level.getBlockState(worldPosition.relative(dir));
-                if (state.getBlock() instanceof net.minecraft.world.level.block.RedstoneTorchBlock) {
+                // A lit redstone torch attached to the spawner doesn't power it in vanilla, but it still turns the spawner off.
+                if (state.getBlock() instanceof net.minecraft.world.level.block.RedstoneTorchBlock
+                        && state.getValue(net.minecraft.world.level.block.RedstoneTorchBlock.LIT)) {
                     powered = true;
                     break;
                 }
@@ -207,19 +209,9 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                     if (upgrade.is(dev.manny.createmobgrinding.registry.ModItems.SPAWNER_UPGRADE_NO_CONDITIONS.get())) noConditions = true;
                 }
 
-                if (!noConditions) {
-                    net.minecraft.core.BlockPos spawnPos = net.minecraft.core.BlockPos.containing(x, y, z);
-                    if (entity instanceof net.minecraft.world.entity.monster.Monster) {
-                        if (serverLevel.getMaxLocalRawBrightness(spawnPos) > 7) {
-                            entity.discard();
-                            return; // Too bright for monsters
-                        }
-                    } else if (entity instanceof net.minecraft.world.entity.animal.Animal) {
-                        if (serverLevel.getMaxLocalRawBrightness(spawnPos) < 9) {
-                            entity.discard();
-                            return; // Too dark for animals
-                        }
-                    }
+                if (!noConditions && getLightError(entity, serverLevel, net.minecraft.core.BlockPos.containing(x, y, z)) != null) {
+                    entity.discard();
+                    return;
                 }
 
                 mob.moveTo(x, y, z, level.random.nextFloat() * 360F, 0.0F);
@@ -238,6 +230,21 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                 serverLevel.levelEvent(2004, worldPosition, 0); // Spawn particles
             }
         }
+    }
+
+    /**
+     * Returns the translation key of the light problem preventing this entity from spawning at pos, or null if light is fine.
+     * Shared by the spawn logic and the goggle tooltip so they always agree.
+     */
+    public static String getLightError(Entity entity, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos) {
+        int light = level.getMaxLocalRawBrightness(pos);
+        if (entity instanceof net.minecraft.world.entity.monster.Monster && light > 7) {
+            return "tooltip.createmobgrinding.spawner.error.too_much_light";
+        }
+        if (entity instanceof net.minecraft.world.entity.animal.Animal && light < 9) {
+            return "tooltip.createmobgrinding.spawner.error.too_dark";
+        }
+        return null;
     }
 
     @Override
@@ -262,7 +269,7 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
         tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.stress_impact")).withStyle(net.minecraft.ChatFormatting.GRAY));
         tooltip.add(Component.literal("      " + String.format("%.1f", stress) + "x ")
             .withStyle(net.minecraft.ChatFormatting.AQUA)
-            .append(Component.literal("(Tier " + getTier() + ")").withStyle(net.minecraft.ChatFormatting.DARK_GRAY)));
+            .append(Component.translatable("tooltip.createmobgrinding.tier", getTier()).withStyle(net.minecraft.ChatFormatting.DARK_GRAY)));
         
         ItemStack chunk = inventory.getStackInSlot(0);
         if (chunk.isEmpty()) {
@@ -272,7 +279,7 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
             if (entityLoc != null) {
                 java.util.List<? extends String> blacklist = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBlacklist.get();
                 if (blacklist.contains(entityLoc.toString())) {
-                    tooltip.add(Component.literal("    ").append(Component.literal("Entity: BLACKLISTED").withStyle(net.minecraft.ChatFormatting.DARK_RED, net.minecraft.ChatFormatting.BOLD)));
+                    tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.entity_blacklisted").withStyle(net.minecraft.ChatFormatting.DARK_RED, net.minecraft.ChatFormatting.BOLD)));
                 } else {
                     tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.mob_chunk.entity_type", Component.translatable(net.minecraft.Util.makeDescriptionId("entity", entityLoc)))).withStyle(net.minecraft.ChatFormatting.GRAY));
                     
@@ -285,19 +292,11 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                         }
                     }
 
-                    if (!noConditions) {
-                        net.minecraft.world.entity.EntityType<?> type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(entityLoc);
-                        if (type != null) {
-                            net.minecraft.core.BlockPos spawnPos = worldPosition.above();
-                            if (type.getCategory() == net.minecraft.world.entity.MobCategory.MONSTER) {
-                                if (level.getMaxLocalRawBrightness(spawnPos) > 7) {
-                                    tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.error.too_much_light")).withStyle(net.minecraft.ChatFormatting.RED));
-                                }
-                            } else if (type.getCategory() == net.minecraft.world.entity.MobCategory.CREATURE) {
-                                if (level.getMaxLocalRawBrightness(spawnPos) < 9) {
-                                    tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.error.too_dark")).withStyle(net.minecraft.ChatFormatting.RED));
-                                }
-                            }
+                    Entity previewEntity = getRenderEntity();
+                    if (!noConditions && previewEntity != null) {
+                        String lightError = getLightError(previewEntity, level, worldPosition.above());
+                        if (lightError != null) {
+                            tooltip.add(Component.literal("    ").append(Component.translatable(lightError)).withStyle(net.minecraft.ChatFormatting.RED));
                         }
                     }
 
@@ -306,7 +305,7 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                     tooltip.add(Component.literal("    ").append(Component.translatable("jade.createmobgrinding.spawner.progress", percentage)).withStyle(net.minecraft.ChatFormatting.YELLOW));
                 }
             } else {
-                tooltip.add(Component.literal("    ").append(Component.literal("Invalid/Empty Chunk")).withStyle(net.minecraft.ChatFormatting.RED));
+                tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.invalid_chunk")).withStyle(net.minecraft.ChatFormatting.RED));
             }
         }
 

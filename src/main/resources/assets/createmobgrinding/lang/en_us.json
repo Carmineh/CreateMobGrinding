@@ -17,9 +17,9 @@
   "tooltip.createmobgrinding.spawner.no_chunk": "Missing Mob Spawner Chunk",
   "tooltip.createmobgrinding.spawner.upgrades": "Installed Upgrades:",
   "jei.createmobgrinding.spawner_extraction": "Chunk Extraction",
-  "jei.createmobgrinding.spawner_conversion": "Spawner Conversion",
   "config.jade.plugin_createmobgrinding.spawner_provider": "Rotational Mob Spawner Info",
   "config.jade.plugin_createmobgrinding.grinder_provider": "Rotational Mob Grinder Info",
+  "config.jade.plugin_createmobgrinding.mob_tier_provider": "Mob Tier Info",
   "enchantment.createmobgrinding.beheading": "Beheading",
   "tooltip.createmobgrinding.stress_impact": "Kinetic Stress Impact",
   
@@ -88,5 +88,40 @@
   "createmobgrinding.ponder.grinder_blades.text_6": "The Netherite Blade is the ultimate tier, dealing massive damage!",
   "createmobgrinding.ponder.grinder_blades.text_7": "The blades can be enchanted natively at an Anvil or Enchanting Table!",
   "createmobgrinding.ponder.grinder_blades.text_8": "They only accept utility enchantments, rather than damage enchantments.",
-  "death.attack.createmobgrinding.grinder": "%1$s was butchered by the grinder"
+  "death.attack.createmobgrinding.grinder": "%1$s was butchered by the grinder",
+  
+  "tooltip.createmobgrinding.tier": "(Tier %s)",
+  "tooltip.createmobgrinding.entity_blacklisted": "Entity: BLACKLISTED",
+  "tooltip.createmobgrinding.spawner.invalid_chunk": "Invalid/Empty Chunk",
+  "tooltip.createmobgrinding.spawner.error.too_much_light": "Too bright for this mob to spawn",
+  "tooltip.createmobgrinding.spawner.error.too_dark": "Too dark for this mob to spawn",
+  "tooltip.createmobgrinding.dna": "DNA: %s",
+  "tooltip.createmobgrinding.dna.unknown": "DNA: Unknown",
+  "message.createmobgrinding.mob_blacklisted": "This mob is blacklisted",
+  "message.createmobgrinding.extractor.too_much_health": "Target has too much health to extract!",
+  "message.createmobgrinding.extractor.too_weak": "This extractor is too weak for this mob!",
+  "message.createmobgrinding.extractor.protected": "You can't extract the soul of a pet or a named mob!",
+  
+  "item.createmobgrinding.spawner_chunk_bag": "Spawner Chunk Bag",
+  "container.createmobgrinding.spawner_chunk_bag": "Spawner Chunk Bag",
+  "container.createmobgrinding.spawner_chunk_bag.swap": "Spawner: %s",
+  "container.createmobgrinding.spawner_chunk_bag.empty": "Empty",
+  "container.createmobgrinding.spawner_chunk_bag.swap_hint": "Click a chunk to swap",
+  "tooltip.createmobgrinding.spawner_chunk_bag.empty": "Empty",
+  "tooltip.createmobgrinding.spawner_chunk_bag.more": "...and %s more",
+  "tooltip.createmobgrinding.spawner_chunk_bag.hint": "Use on a Rotational Mob Spawner to swap chunks, sneak to take its chunk",
+  
+  "item.createmobgrinding.fan_filter_upgrade": "Fan Filter Upgrade",
+  "fan_filter.createmobgrinding.ignore_items": "Ignore Items",
+  "fan_filter.createmobgrinding.ignore_players": "Ignore Players",
+  "fan_filter.createmobgrinding.ignore_mobs": "Ignore Mobs",
+  "fan_filter.createmobgrinding.mode_set": "Fan filter: %s",
+  "fan_filter.createmobgrinding.goggle": "Filter: %s",
+  "fan_filter.createmobgrinding.already_installed": "This fan already has a filter",
+  
+  "createmobgrinding.display_source.spawner_progress": "Spawn Progress",
+  "createmobgrinding.display_source.spawner_mob": "Spawner Mob",
+  
+  "message.createmobgrinding.spawner_chunk_bag.spawner_empty": "This spawner has no chunk",
+  "message.createmobgrinding.spawner_chunk_bag.full": "The bag is full"
 }

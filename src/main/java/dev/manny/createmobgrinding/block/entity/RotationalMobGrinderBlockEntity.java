@@ -110,6 +110,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) impact = 16.0f;
         else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) impact = 32.0f;
         else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) impact = 64.0f;
+        else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.CREATIVE_GRINDER_BLADE.get())) impact = 0.0f;
 
         // Add impact for utility enchantments
         ItemEnchantments enchants = getCombinedEnchantments();
@@ -224,7 +225,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         for (LivingEntity target : targets) {
             if (target instanceof Player && hasProtection) continue;
             
-            float baseDamage = 2.0f; // Reduced for balance
+            float baseDamage = dev.manny.createmobgrinding.config.ModConfigs.COMMON.grinderBaseDamage.get().floatValue();
             float multiplier = 1.0f;
             if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) multiplier = 2.0f;
             else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) multiplier = 4.0f;
@@ -236,10 +237,9 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
             if (fireAspect > 0) {
                 target.igniteForSeconds(fireAspect * 4); // igniteForSeconds in 1.21
             }
-            
-            // Set the item in main hand to the internal weapon so looting/fire aspect apply
-            fakePlayer.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, internalWeapon);
-            
+
+            // The fake player keeps weaponToUse (with the blade's enchantments) in hand,
+            // so looting and beheading read them when the mob dies.
             net.minecraft.resources.ResourceKey<net.minecraft.world.damagesource.DamageType> grinderDamageKey = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE, net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(dev.manny.createmobgrinding.CreateMobGrinding.MOD_ID, "grinder"));
             net.minecraft.world.damagesource.DamageSource customSource = new net.minecraft.world.damagesource.DamageSource(serverLevel.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE).getHolderOrThrow(grinderDamageKey), fakePlayer, fakePlayer);
             
@@ -257,6 +257,9 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
                 creeper.setSwellDir(-1);
             }
         }
+
+        // The Minecraft fake player is shared with other mods: don't leave our weapon in its hand.
+        fakePlayer.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
     }
 
     @Override

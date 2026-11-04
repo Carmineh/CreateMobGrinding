@@ -1,6 +1,8 @@
 package dev.manny.createmobgrinding.event;
 
 import dev.manny.createmobgrinding.CreateMobGrinding;
+import dev.manny.createmobgrinding.registry.ModItems;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -11,27 +13,36 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 
 import java.util.Optional;
+import java.util.Set;
 
-@EventBusSubscriber(modid = CreateMobGrinding.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
-public class ModEvents {
+@EventBusSubscriber(modid = CreateMobGrinding.MOD_ID)
+public class EnchantmentEvents {
 
+    // Blades have no durability, so only enchantments that affect the kill are allowed.
+    private static final Set<ResourceLocation> BLADE_ENCHANTMENTS = Set.of(
+            ResourceLocation.withDefaultNamespace("looting"),
+            ResourceLocation.withDefaultNamespace("fire_aspect"),
+            ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "beheading")
+    );
 
     @SubscribeEvent
     public static void onLivingDrops(LivingDropsEvent event) {
         if (event.getSource().getEntity() instanceof Player player) {
             ItemStack weapon = player.getMainHandItem();
-            ItemEnchantments enchants = weapon.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+            ItemEnchantments enchants = weapon.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
             if (enchants.isEmpty()) return;
 
             ResourceKey<Enchantment> beheadingKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "beheading"));
             Optional<net.minecraft.core.Holder.Reference<Enchantment>> holderOpt = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolder(beheadingKey);
-            
+
             if (holderOpt.isPresent()) {
                 int level = enchants.getLevel(holderOpt.get());
                 if (level > 0) {
@@ -60,47 +71,41 @@ public class ModEvents {
     }
 
     @SubscribeEvent
-    public static void onAnvilUpdate(net.neoforged.neoforge.event.AnvilUpdateEvent event) {
+    public static void onAnvilUpdate(AnvilUpdateEvent event) {
         ItemStack left = event.getLeft();
         ItemStack right = event.getRight();
 
-        if (left.getItem() instanceof net.minecraft.world.item.Item && 
-            (left.is(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get()) ||
-             left.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get()) ||
-             left.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get()) ||
-             left.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get()) ||
-             left.is(dev.manny.createmobgrinding.registry.ModItems.CREATIVE_GRINDER_BLADE.get()))) {
-            
+        if (left.is(ModItems.IRON_GRINDER_BLADE.get()) ||
+            left.is(ModItems.BRASS_GRINDER_BLADE.get()) ||
+            left.is(ModItems.DIAMOND_GRINDER_BLADE.get()) ||
+            left.is(ModItems.NETHERITE_GRINDER_BLADE.get()) ||
+            left.is(ModItems.CREATIVE_GRINDER_BLADE.get())) {
+
             ItemEnchantments enchantsToApply = ItemEnchantments.EMPTY;
             if (right.is(Items.ENCHANTED_BOOK)) {
-                enchantsToApply = right.getOrDefault(net.minecraft.core.component.DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
+                enchantsToApply = right.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
             } else if (right.is(left.getItem())) {
-                enchantsToApply = right.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+                enchantsToApply = right.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
             }
 
             if (!enchantsToApply.isEmpty()) {
-                ItemEnchantments existing = left.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+                ItemEnchantments existing = left.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
                 ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(existing);
-                
+
                 boolean changed = false;
                 int cost = 0;
-                
+
                 for (var ench : enchantsToApply.keySet()) {
                     ResourceLocation loc = ench.unwrapKey().get().location();
-                    if (loc.equals(ResourceLocation.withDefaultNamespace("looting")) ||
-                        loc.equals(ResourceLocation.withDefaultNamespace("fire_aspect")) ||
-                        loc.equals(ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "beheading")) ||
-                        loc.equals(ResourceLocation.withDefaultNamespace("unbreaking")) ||
-                        loc.equals(ResourceLocation.withDefaultNamespace("mending"))) {
-                        
+                    if (BLADE_ENCHANTMENTS.contains(loc)) {
                         int currentLvl = mutable.getLevel(ench);
                         int addedLvl = enchantsToApply.getLevel(ench);
                         int maxLvl = ench.value().getMaxLevel();
-                        
+
                         int newLvl;
                         if (currentLvl == addedLvl) newLvl = Math.min(maxLvl, currentLvl + 1);
                         else newLvl = Math.max(currentLvl, addedLvl);
-                        
+
                         if (newLvl > currentLvl) {
                             mutable.set(ench, newLvl);
                             changed = true;
@@ -108,10 +113,10 @@ public class ModEvents {
                         }
                     }
                 }
-                
+
                 if (changed) {
                     ItemStack out = left.copy();
-                    net.minecraft.world.item.enchantment.EnchantmentHelper.setEnchantments(out, mutable.toImmutable());
+                    EnchantmentHelper.setEnchantments(out, mutable.toImmutable());
                     event.setOutput(out);
                     event.setCost(cost == 0 ? 1 : cost);
                 } else {

@@ -57,6 +57,14 @@ public class ModItems {
     public static final Supplier<Item> GRINDER_UPGRADE_VACUUM = ITEMS.register("grinder_upgrade_vacuum", 
             () -> new Item(new Item.Properties().stacksTo(64)));
 
+    // Fan Upgrades
+    public static final Supplier<Item> FAN_FILTER_UPGRADE = ITEMS.register("fan_filter_upgrade",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+
+    public static final Supplier<Item> SPAWNER_CHUNK_BAG = ITEMS.register("spawner_chunk_bag",
+        () -> new dev.manny.createmobgrinding.item.SpawnerChunkBagItem(new Item.Properties().stacksTo(1)
+            .component(net.minecraft.core.component.DataComponents.CONTAINER, net.minecraft.world.item.component.ItemContainerContents.EMPTY)));
+
     // Soul Extractors
     public static final Supplier<Item> BASIC_SOUL_EXTRACTOR = ITEMS.register("basic_soul_extractor", 
         () -> new dev.manny.createmobgrinding.item.SoulExtractorItem(new Item.Properties().stacksTo(1), 2));

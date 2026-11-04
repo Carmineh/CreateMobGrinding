@@ -7,6 +7,122 @@
     "minecraft:creeper",
     "minecraft:piglin",
     "minecraft:armadillo",
-    "minecraft:hoglin"
+    "minecraft:hoglin",
+    {
+      "id": "ars_nouveau:starbuncle",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:drygmy",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:whirlisprig",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:alakarkinos",
+      "required": false
+    },
+    {
+      "id": "twilightforest:skeleton_druid",
+      "required": false
+    },
+    {
+      "id": "twilightforest:kobold",
+      "required": false
+    },
+    {
+      "id": "twilightforest:hostile_wolf",
+      "required": false
+    },
+    {
+      "id": "twilightforest:redcap",
+      "required": false
+    },
+    {
+      "id": "twilightforest:swarm_spider",
+      "required": false
+    },
+    {
+      "id": "twilightforest:hedge_spider",
+      "required": false
+    },
+    {
+      "id": "twilightforest:fire_beetle",
+      "required": false
+    },
+    {
+      "id": "twilightforest:slime_beetle",
+      "required": false
+    },
+    {
+      "id": "twilightforest:pinch_beetle",
+      "required": false
+    },
+    {
+      "id": "twilightforest:mosquito_swarm",
+      "required": false
+    },
+    {
+      "id": "twilightforest:maze_slime",
+      "required": false
+    },
+    {
+      "id": "twilightforest:rising_zombie",
+      "required": false
+    },
+    {
+      "id": "twilightforest:helmet_crab",
+      "required": false
+    },
+    {
+      "id": "twilightforest:winter_wolf",
+      "required": false
+    },
+    {
+      "id": "twilightforest:mist_wolf",
+      "required": false
+    },
+    {
+      "id": "twilightforest:towerwood_borer",
+      "required": false
+    },
+    {
+      "id": "twilightforest:carminite_broodling",
+      "required": false
+    },
+    {
+      "id": "aether:blue_swet",
+      "required": false
+    },
+    {
+      "id": "aether:golden_swet",
+      "required": false
+    },
+    {
+      "id": "aether:aechor_plant",
+      "required": false
+    },
+    {
+      "id": "aether:cockatrice",
+      "required": false
+    },
+    {
+      "id": "aether:zephyr",
+      "required": false
+    },
+    {
+      "id": "aether:whirlwind",
+      "required": false
+    },
+    {
+      "id": "aether:evil_whirlwind",
+      "required": false
+    },
+    {
+      "id": "aether:aerwhale",
+      "required": false
+    }
   ]
 }

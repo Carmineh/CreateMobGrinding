@@ -19,12 +19,18 @@ public class ModClientEvents {
         event.register(new net.minecraft.client.resources.model.ModelResourceLocation(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "block/rotational_mob_grinder_blade_diamond"), "standalone"));
         event.register(new net.minecraft.client.resources.model.ModelResourceLocation(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "block/rotational_mob_grinder_blade_netherite"), "standalone"));
         event.register(new net.minecraft.client.resources.model.ModelResourceLocation(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "block/rotational_mob_grinder_blade_creative"), "standalone"));
+        event.register(new net.minecraft.client.resources.model.ModelResourceLocation(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "block/rotational_mob_spawner_shaft"), "standalone"));
     }
 
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.ROTATIONAL_MOB_SPAWNER.get(), RotationalMobSpawnerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.ROTATIONAL_MOB_GRINDER.get(), RotationalMobGrinderRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerScreens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) {
+        event.register(dev.manny.createmobgrinding.registry.ModMenuTypes.SPAWNER_CHUNK_BAG.get(), SpawnerChunkBagScreen::new);
     }
 
     @SubscribeEvent

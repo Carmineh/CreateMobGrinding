@@ -42,6 +42,13 @@ public class RotationalMobSpawnerBlock extends KineticBlock implements IBE<Rotat
 
     @Override
     protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hitResult) {
+        if (stack.is(dev.manny.createmobgrinding.registry.ModItems.SPAWNER_CHUNK_BAG.get())) {
+            // Opens the bag in swap mode: clicking a chunk swaps it with this spawner's chunk
+            if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                dev.manny.createmobgrinding.item.SpawnerChunkBagItem.open(serverPlayer, hand, pos);
+            }
+            return net.minecraft.world.ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
         if (stack.is(dev.manny.createmobgrinding.registry.ModItems.MOB_SPAWNER_CHUNK.get())) {
             if (!level.isClientSide) {
                 net.minecraft.world.level.block.entity.BlockEntity be = level.getBlockEntity(pos);
@@ -52,7 +59,7 @@ public class RotationalMobSpawnerBlock extends KineticBlock implements IBE<Rotat
                     if (entityLoc != null) {
                         java.util.List<? extends String> blacklist = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBlacklist.get();
                         if (blacklist.contains(entityLoc.toString())) {
-                            player.displayClientMessage(net.minecraft.network.chat.Component.literal("Mob Blacklisted").withStyle(net.minecraft.ChatFormatting.RED), true);
+                            player.displayClientMessage(net.minecraft.network.chat.Component.translatable("message.createmobgrinding.mob_blacklisted").withStyle(net.minecraft.ChatFormatting.RED), true);
                             return net.minecraft.world.ItemInteractionResult.SUCCESS;
                         }
                     }

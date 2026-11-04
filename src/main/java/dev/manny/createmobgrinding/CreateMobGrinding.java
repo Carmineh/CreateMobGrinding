@@ -28,6 +28,11 @@ public class CreateMobGrinding {
         ModLootModifiers.LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
         ModIngredientTypes.register(modEventBus);
         ModItemAttributes.ITEM_ATTRIBUTES.register(modEventBus);
+        dev.manny.createmobgrinding.registry.ModMenuTypes.MENU_TYPES.register(modEventBus);
+        dev.manny.createmobgrinding.registry.ModDisplaySources.DISPLAY_SOURCES.register(modEventBus);
+
+        modEventBus.addListener(net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent.class,
+            event -> event.enqueueWork(dev.manny.createmobgrinding.registry.ModDisplaySources::associate));
         
         modEventBus.addListener(net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent.class, event -> {
             event.registerBlockEntity(

@@ -1,0 +1,16 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "create:attribute_filter"
+    },
+    {
+      "item": "create:propeller"
+    }
+  ],
+  "results": [
+    {
+      "id": "createmobgrinding:fan_filter_upgrade"
+    }
+  ]
+}

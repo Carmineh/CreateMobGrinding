@@ -14,6 +14,102 @@
     "minecraft:zombie_villager",
     "minecraft:bogged",
     "minecraft:shulker",
-    "minecraft:guardian"
+    "minecraft:guardian",
+    {
+      "id": "ars_nouveau:wixie",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:wilden_hunter",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:wilden_stalker",
+      "required": false
+    },
+    {
+      "id": "twilightforest:wraith",
+      "required": false
+    },
+    {
+      "id": "twilightforest:redcap_sapper",
+      "required": false
+    },
+    {
+      "id": "twilightforest:death_tome",
+      "required": false
+    },
+    {
+      "id": "twilightforest:lich_minion",
+      "required": false
+    },
+    {
+      "id": "twilightforest:minotaur",
+      "required": false
+    },
+    {
+      "id": "twilightforest:king_spider",
+      "required": false
+    },
+    {
+      "id": "twilightforest:carminite_ghastling",
+      "required": false
+    },
+    {
+      "id": "twilightforest:carminite_ghastguard",
+      "required": false
+    },
+    {
+      "id": "twilightforest:carminite_golem",
+      "required": false
+    },
+    {
+      "id": "twilightforest:blockchain_goblin",
+      "required": false
+    },
+    {
+      "id": "twilightforest:upper_goblin_knight",
+      "required": false
+    },
+    {
+      "id": "twilightforest:lower_goblin_knight",
+      "required": false
+    },
+    {
+      "id": "twilightforest:yeti",
+      "required": false
+    },
+    {
+      "id": "twilightforest:snow_guardian",
+      "required": false
+    },
+    {
+      "id": "twilightforest:stable_ice_core",
+      "required": false
+    },
+    {
+      "id": "twilightforest:unstable_ice_core",
+      "required": false
+    },
+    {
+      "id": "twilightforest:troll",
+      "required": false
+    },
+    {
+      "id": "twilightforest:giant_miner",
+      "required": false
+    },
+    {
+      "id": "aether:sentry",
+      "required": false
+    },
+    {
+      "id": "aether:mimic",
+      "required": false
+    },
+    {
+      "id": "aether:fire_minion",
+      "required": false
+    }
   ]
 }

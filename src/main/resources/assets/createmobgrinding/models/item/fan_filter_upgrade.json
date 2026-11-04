@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "createmobgrinding:item/fan_filter_upgrade"
+  }
+}

@@ -20,6 +20,37 @@ An addon for the **Create** mod that brings a kinetic way to spawn and grind mob
 - **Rotational Mob Grinder**: A spinning blade to automatically eliminate mobs and gather their loot. Upgrade the Grinder with tiered blades and enchant.
 - **Dynamic Tiering System**: Mobs are automatically grouped into 5 Tiers. Higher tier mobs require much more SU and time to spawn compared to lower-tier ones!
 - **Configurable**: Blacklist destructive mobs (like the Warden or Ender Dragon) in the NeoForge config.
+- **Spawner Chunk Bag**: Carry up to 27 Spawner Chunks. Use the bag on a Rotational Mob Spawner and click a chunk to swap it instantly.
+- **Fan Filter Upgrade**: Install it on an Encased Fan to make it ignore Items, Players or Mobs. Cycle the mode with a Wrench on the fan's front or back face, sneak + right-click with an empty hand to take it back.
+- **Display Link Support**: Show a spawner's progress (percentage or progress bar) or its mob on Display Boards, Signs and Nixie Tubes.
+
+---
+
+## Mod Compatibility
+
+Mob tiers are plain entity type tags, so any mod's mobs can be tiered:
+`createmobgrinding:tier_1` … `createmobgrinding:tier_5` (in `data/createmobgrinding/tags/entity_type/`).
+
+Built-in tiers are included for **Ars Nouveau**, **Twilight Forest** and **The Aether**. They only apply when those mods are installed.
+
+Mobs without a tier tag default to **Tier 1**. To tier another mod's mobs, add a datapack with a file like `data/createmobgrinding/tags/entity_type/tier_3.json`:
+
+```json
+{
+  "replace": false,
+  "values": [
+    { "id": "somemod:some_mob", "required": false }
+  ]
+}
+```
+
+With KubeJS you can do the same from a server script:
+
+```js
+ServerEvents.tags('entity_type', event => {
+  event.add('createmobgrinding:tier_3', 'somemod:some_mob')
+})
+```
 
 ---
 ## Issues and Bug Reports

@@ -44,8 +44,8 @@ public class CommonConfig {
 
         builder.push("grinder");
         grinderBaseDamage = builder
-                .comment("Base multiplier for grinder damage. Actual damage is speed * multiplier.")
-                .defineInRange("grinderBaseDamage", 0.1, 0.0, 100.0);
+                .comment("Damage dealt per hit by an Iron Blade. Other blades multiply it (Brass x2, Diamond x4, Netherite x8).", "Default: 2.0")
+                .defineInRange("bladeBaseDamage", 2.0, 0.0, 1000.0);
         builder.pop();
     }
 }

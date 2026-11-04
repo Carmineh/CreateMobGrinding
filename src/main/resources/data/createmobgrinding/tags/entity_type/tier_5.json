@@ -4,6 +4,54 @@
     "minecraft:wither",
     "minecraft:elder_guardian",
     "minecraft:warden",
-    "minecraft:ender_dragon"
+    "minecraft:ender_dragon",
+    {
+      "id": "ars_nouveau:wilden_boss",
+      "required": false
+    },
+    {
+      "id": "twilightforest:naga",
+      "required": false
+    },
+    {
+      "id": "twilightforest:lich",
+      "required": false
+    },
+    {
+      "id": "twilightforest:hydra",
+      "required": false
+    },
+    {
+      "id": "twilightforest:minoshroom",
+      "required": false
+    },
+    {
+      "id": "twilightforest:ur_ghast",
+      "required": false
+    },
+    {
+      "id": "twilightforest:knight_phantom",
+      "required": false
+    },
+    {
+      "id": "twilightforest:alpha_yeti",
+      "required": false
+    },
+    {
+      "id": "twilightforest:snow_queen",
+      "required": false
+    },
+    {
+      "id": "aether:slider",
+      "required": false
+    },
+    {
+      "id": "aether:valkyrie_queen",
+      "required": false
+    },
+    {
+      "id": "aether:sun_spirit",
+      "required": false
+    }
   ]
 }
