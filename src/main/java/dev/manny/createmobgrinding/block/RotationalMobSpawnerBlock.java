@@ -64,13 +64,17 @@ public class RotationalMobSpawnerBlock extends KineticBlock implements IBE<Rotat
                         }
                     }
 
-                    if (!current.isEmpty()) {
-                        net.neoforged.neoforge.items.ItemHandlerHelper.giveItemToPlayer(player, current.copy());
-                    }
-
+                    // Take the chunk from the hand before returning the old one: if they match, giveItemToPlayer
+                    // merges into the held slot and replaces its ItemStack, so a later shrink would hit a stale
+                    // reference and duplicate the chunk.
+                    net.minecraft.world.item.ItemStack previous = current.copy();
                     spawnerBE.inventory.setStackInSlot(0, stack.copyWithCount(1));
                     if (!player.isCreative()) {
                         stack.shrink(1);
+                    }
+
+                    if (!previous.isEmpty()) {
+                        net.neoforged.neoforge.items.ItemHandlerHelper.giveItemToPlayer(player, previous);
                     }
                     return net.minecraft.world.ItemInteractionResult.SUCCESS;
                 }
