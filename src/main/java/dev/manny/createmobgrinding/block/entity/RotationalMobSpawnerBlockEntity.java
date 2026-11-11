@@ -135,13 +135,9 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
         return 1.0 + extra * dev.manny.createmobgrinding.config.ModConfigs.COMMON.speedBonusPerChunk.get();
     }
 
+    // One mob per chunk: a stacked spawner works like as many separate spawners
     public int getMobsPerSpawn() {
-        int chunks = getChunkCount();
-        int mobs = 1;
-        for (int threshold : dev.manny.createmobgrinding.config.ModConfigs.COMMON.extraMobThresholds.get()) {
-            if (chunks >= threshold) mobs++;
-        }
-        return mobs;
+        return Math.max(1, getChunkCount());
     }
 
     @Override
@@ -349,8 +345,11 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                     int percentage = (int) ((spawnProgress / threshold) * 100);
                     tooltip.add(Component.literal("    ").append(Component.translatable("jade.createmobgrinding.spawner.progress", percentage)).withStyle(net.minecraft.ChatFormatting.YELLOW));
                     tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.chunks",
-                            chunk.getCount(), dev.manny.createmobgrinding.config.ModConfigs.COMMON.maxStackedChunks.get(),
-                            String.format("%.0f", (getSpeedMultiplier() - 1) * 100), getMobsPerSpawn())).withStyle(net.minecraft.ChatFormatting.GRAY));
+                            chunk.getCount(), dev.manny.createmobgrinding.config.ModConfigs.COMMON.maxStackedChunks.get(), getMobsPerSpawn())).withStyle(net.minecraft.ChatFormatting.GRAY));
+                    if (getSpeedMultiplier() > 1.0) {
+                        tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.speed_bonus",
+                                String.format("%.0f", (getSpeedMultiplier() - 1) * 100))).withStyle(net.minecraft.ChatFormatting.GRAY));
+                    }
                 }
             } else {
                 tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.invalid_chunk")).withStyle(net.minecraft.ChatFormatting.RED));

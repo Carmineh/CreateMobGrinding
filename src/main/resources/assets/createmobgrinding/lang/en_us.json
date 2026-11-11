@@ -125,7 +125,8 @@
   "message.createmobgrinding.spawner_chunk_bag.spawner_empty": "This spawner has no chunk",
   "message.createmobgrinding.spawner_chunk_bag.full": "The bag is full",
   
-  "tooltip.createmobgrinding.spawner.chunks": "Chunks: %s/%s (+%s%% speed, %s mobs per spawn)",
+  "tooltip.createmobgrinding.spawner.chunks": "Chunks: %s/%s (%s mobs per spawn)",
+  "tooltip.createmobgrinding.spawner.speed_bonus": "+%s%% spawn speed",
   "message.createmobgrinding.spawner_full": "This spawner can't hold more chunks",
   
   "createmobgrinding.display_source.grinder_kills": "Grinder Kills",
@@ -134,7 +135,7 @@
   "createmobgrinding.ponder.spawner_chunk_stacking.header": "Stacking Spawner Chunks",
   "createmobgrinding.ponder.spawner_chunk_stacking.text_1": "A spawner can hold more Spawner Chunks of the same mob.",
   "createmobgrinding.ponder.spawner_chunk_stacking.text_2": "Right-click with a matching chunk to add it, up to 8 chunks.",
-  "createmobgrinding.ponder.spawner_chunk_stacking.text_3": "Every extra chunk makes it spawn faster. With 4 and 8 chunks it spawns one more mob at a time.",
+  "createmobgrinding.ponder.spawner_chunk_stacking.text_3": "Each chunk spawns one mob per cycle: 8 chunks work like 8 spawners in a single block.",
   "createmobgrinding.ponder.spawner_chunk_stacking.text_4": "More chunks also need more Stress Units.",
   "createmobgrinding.ponder.spawner_chunk_stacking.text_5": "Use a Wrench to take all the chunks back.",
   "createmobgrinding.ponder.spawner_automation.header": "Automating the Spawner",

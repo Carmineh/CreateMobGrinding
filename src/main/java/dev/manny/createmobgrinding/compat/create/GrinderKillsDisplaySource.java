@@ -18,6 +18,12 @@ public class GrinderKillsDisplaySource extends NumericSingleLineDisplaySource {
         return Component.literal(String.valueOf(grinder.getKillCount()));
     }
 
+    // Kills can go up several times per second (Create's default is 100 ticks)
+    @Override
+    public int getPassiveRefreshTicks() {
+        return 10;
+    }
+
     @Override
     protected String getTranslationKey() {
         return "grinder_kills";

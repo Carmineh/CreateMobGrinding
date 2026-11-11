@@ -294,7 +294,7 @@ public class PonderScenes {
         scene.idle(80);
 
         scene.overlay().showText(80)
-                .text("Every extra chunk makes it spawn faster. With 4 and 8 chunks it spawns one more mob at a time.")
+                .text("Each chunk spawns one mob per cycle: 8 chunks work like 8 spawners in a single block.")
                 .attachKeyFrame()
                 .pointAt(util.vector().centerOf(spawnerPos))
                 .placeNearTarget();

@@ -125,7 +125,8 @@
   "create.item_attributes.createmobgrinding.is_broken_spawner_chunk": "È un Frammento di Spawner Distrutto",
   "create.item_attributes.createmobgrinding.is_broken_spawner_chunk.inverted": "Non è un Frammento di Spawner Distrutto",
   
-  "tooltip.createmobgrinding.spawner.chunks": "Frammenti: %s/%s (+%s%% velocità, %s mob per spawn)",
+  "tooltip.createmobgrinding.spawner.chunks": "Frammenti: %s/%s (%s mob per spawn)",
+  "tooltip.createmobgrinding.spawner.speed_bonus": "+%s%% velocità di spawn",
   "message.createmobgrinding.spawner_full": "Questo spawner non può contenere altri frammenti",
   
   "createmobgrinding.display_source.grinder_kills": "Uccisioni del Grinder",
@@ -134,7 +135,7 @@
   "createmobgrinding.ponder.spawner_chunk_stacking.header": "Impilare i Frammenti di Spawner",
   "createmobgrinding.ponder.spawner_chunk_stacking.text_1": "Uno spawner può contenere più Frammenti di Spawner dello stesso mob.",
   "createmobgrinding.ponder.spawner_chunk_stacking.text_2": "Clicca col tasto destro con un frammento uguale per aggiungerlo, fino a 8 frammenti.",
-  "createmobgrinding.ponder.spawner_chunk_stacking.text_3": "Ogni frammento in più lo rende più veloce. Con 4 e 8 frammenti fa apparire un mob in più alla volta.",
+  "createmobgrinding.ponder.spawner_chunk_stacking.text_3": "Ogni frammento fa apparire un mob per ciclo: 8 frammenti valgono come 8 spawner in un solo blocco.",
   "createmobgrinding.ponder.spawner_chunk_stacking.text_4": "Più frammenti richiedono anche più Stress Units.",
   "createmobgrinding.ponder.spawner_chunk_stacking.text_5": "Usa una Chiave Inglese per riprendere tutti i frammenti.",
   "createmobgrinding.ponder.spawner_automation.header": "Automatizzare lo Spawner",

@@ -22,6 +22,12 @@ public class SpawnerMobDisplaySource extends SingleLineDisplaySource {
         return Component.translatable(net.minecraft.Util.makeDescriptionId("entity", entity));
     }
 
+    // The mob only changes when the chunk is swapped (Create's default is 100 ticks)
+    @Override
+    public int getPassiveRefreshTicks() {
+        return 20;
+    }
+
     @Override
     protected String getTranslationKey() {
         return "spawner_mob";

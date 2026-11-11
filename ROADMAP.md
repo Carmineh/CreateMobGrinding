@@ -11,7 +11,7 @@ If you're a developer wanting to contribute to the mod, feel free to pick any op
 ## Version 1.5.0 (Planned)
 Features planned for the next update:
 
-- [x] **Stackable Spawner Chunks:** The Rotational Mob Spawner accepts up to 8 chunks of the same mob (configurable). More chunks mean faster spawns and more mobs per spawn, at a higher stress cost. Replaces the need for Speed and Quantity upgrades.
+- [x] **Stackable Spawner Chunks:** The Rotational Mob Spawner accepts up to 8 chunks of the same mob (configurable). Each chunk spawns one more mob per cycle (8 chunks work like 8 spawners), at a slightly lower stress cost than separate spawners. Replaces the need for Speed and Quantity upgrades.
 - [x] **Automation Support:** Insert and extract Spawner Chunks with Funnels and Mechanical Arms.
 - [x] **Comparator Output:** The spawner outputs its spawn progress, the grinder how full its Vacuum inventory is.
 - [x] **Config Overhaul:** Expose the hardcoded values (mob cap, stress per tier, extraction health threshold, chunk stacking...) and reorganize the config into clear sections.

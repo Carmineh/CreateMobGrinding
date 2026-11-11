@@ -30,7 +30,6 @@ public class CommonConfig {
     public final ModConfigSpec.IntValue maxStackedChunks;
     public final ModConfigSpec.DoubleValue speedBonusPerChunk;
     public final ModConfigSpec.DoubleValue stressPerExtraChunk;
-    public final ModConfigSpec.ConfigValue<List<? extends Integer>> extraMobThresholds;
 
     // Grinder
     public final ModConfigSpec.DoubleValue grinderBaseDamage;
@@ -106,20 +105,19 @@ public class CommonConfig {
                 .comment("Animals only spawn at this light level or higher (ignored with the No Conditions upgrade). Default: 9")
                 .defineInRange("animalMinLight", 9, 0, 15);
 
-        builder.comment("Stacking chunks of the same mob in one spawner makes it faster and spawn more mobs at once.")
+        builder.comment("Stacking chunks of the same mob in one spawner: each chunk spawns one mob per cycle,",
+                        "so a spawner with 8 chunks works like 8 spawners in a single block.")
                 .push("chunkStacking");
         maxStackedChunks = builder
                 .comment("How many chunks of the same mob a spawner can hold. 1 disables stacking. Default: 8")
                 .defineInRange("maxStackedChunks", 8, 1, 64);
         speedBonusPerChunk = builder
-                .comment("Spawn speed added by each chunk after the first (0.15 = +15%). Default: 0.15")
-                .defineInRange("speedBonusPerChunk", 0.15, 0.0, 10.0);
+                .comment("Extra spawn speed for each chunk after the first (0.15 = +15%), on top of the extra mobs. Default: 0.0")
+                .defineInRange("speedBonusPerChunk", 0.0, 0.0, 10.0);
         stressPerExtraChunk = builder
-                .comment("Stress added by each chunk after the first, as a fraction of the spawner's stress (0.25 = +25%). Default: 0.25")
-                .defineInRange("stressPerExtraChunk", 0.25, 0.0, 10.0);
-        extraMobThresholds = builder
-                .comment("Chunk counts at which the spawner spawns one more mob per cycle. Default: [4, 8] (1 mob, 2 from 4 chunks, 3 at 8)")
-                .defineList("extraMobThresholds", List.of(4, 8), obj -> obj instanceof Integer i && i > 1);
+                .comment("Stress added by each chunk after the first, as a fraction of the spawner's stress (0.75 = +75%).",
+                        "Below 1.0 a stacked spawner needs less stress than separate spawners. Default: 0.75 (8 chunks = x6.25)")
+                .defineInRange("stressPerExtraChunk", 0.75, 0.0, 10.0);
         builder.pop();
 
         builder.pop();
