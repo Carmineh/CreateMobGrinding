@@ -236,7 +236,6 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
             int r = level.random.nextInt(8);
             
             double x = worldPosition.getX() + dx[r] + 0.5D;
-            double y = worldPosition.getY() + 1.0D; // Always spawn above the block
             double z = worldPosition.getZ() + dz[r] + 0.5D;
 
             Entity entity = type.create(serverLevel);
@@ -250,14 +249,21 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                     if (upgrade.is(dev.manny.createmobgrinding.registry.ModItems.SPAWNER_UPGRADE_NO_CONDITIONS.get())) noConditions = true;
                 }
 
-                if (!noConditions && getLightError(entity, serverLevel, net.minecraft.core.BlockPos.containing(x, y, z)) != null) {
-                    entity.discard();
-                    return;
+                // Same height as the spawner; if that spot is blocked, try one block higher
+                float yRot = level.random.nextFloat() * 360F;
+                double y = worldPosition.getY();
+                mob.moveTo(x, y, z, yRot, 0.0F);
+                if (!serverLevel.noCollision(mob)) {
+                    y += 1.0D;
+                    mob.moveTo(x, y, z, yRot, 0.0F);
+                    if (!noConditions && !serverLevel.noCollision(mob)) {
+                        mob.discard(); // No room at either height
+                        return;
+                    }
                 }
 
-                mob.moveTo(x, y, z, level.random.nextFloat() * 360F, 0.0F);
-                if (!noConditions && !serverLevel.noCollision(mob)) {
-                    mob.discard(); // Cancel spawn if colliding
+                if (!noConditions && getLightError(entity, serverLevel, net.minecraft.core.BlockPos.containing(x, y, z)) != null) {
+                    entity.discard();
                     return;
                 }
                 
@@ -335,7 +341,8 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
 
                     Entity previewEntity = getRenderEntity();
                     if (!noConditions && previewEntity != null) {
-                        String lightError = getLightError(previewEntity, level, worldPosition.above());
+                        // Mobs spawn around the spawner at its own height
+                        String lightError = getLightError(previewEntity, level, worldPosition);
                         if (lightError != null) {
                             tooltip.add(Component.literal("    ").append(Component.translatable(lightError)).withStyle(net.minecraft.ChatFormatting.RED));
                         }
