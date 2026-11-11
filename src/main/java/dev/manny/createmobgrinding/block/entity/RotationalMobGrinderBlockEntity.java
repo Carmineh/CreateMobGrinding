@@ -26,7 +26,6 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
     private ItemStack internalWeapon = new ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
     private ItemStack installedBlade = new ItemStack(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get());
     private float attackTimer = 0;
-    private static final float ATTACK_THRESHOLD = 2000f; // Attacks in 0.39s at 256 RPM
     // The fake attacker is kept far below the world: a creeper trying to take revenge
     // fails the SwellGoal check ("target within 3 blocks") and never swells.
     private static final double FAKE_PLAYER_Y = -500.0;
@@ -45,13 +44,20 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
+            // Comparators read how full the vacuum inventory is
+            if (level != null && !level.isClientSide) level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
         }
     };
     
     private int xpBuffer = 0;
+    private long killCount = 0;
 
     public RotationalMobGrinderBlockEntity(BlockPos pos, BlockState state) {
         super(dev.manny.createmobgrinding.registry.ModBlockEntities.ROTATIONAL_MOB_GRINDER.get(), pos, state);
+    }
+
+    public long getKillCount() {
+        return killCount;
     }
 
     public ItemStack getInternalWeapon() {
@@ -106,17 +112,18 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
 
     @Override
     public float calculateStressApplied() {
-        float impact = 8.0f; // Base impact for Iron blade
-        if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) impact = 16.0f;
-        else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) impact = 32.0f;
-        else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) impact = 64.0f;
+        var config = dev.manny.createmobgrinding.config.ModConfigs.COMMON;
+        float impact = config.ironBladeStress.get().floatValue();
+        if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) impact = config.brassBladeStress.get().floatValue();
+        else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) impact = config.diamondBladeStress.get().floatValue();
+        else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) impact = config.netheriteBladeStress.get().floatValue();
         else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.CREATIVE_GRINDER_BLADE.get())) impact = 0.0f;
 
         // Add impact for utility enchantments
         ItemEnchantments enchants = getCombinedEnchantments();
         if (!enchants.isEmpty()) {
             int totalLevels = enchants.keySet().stream().mapToInt(enchants::getLevel).sum();
-            impact += totalLevels * 4.0f; // Increase stress based on enchantments
+            impact += totalLevels * config.stressPerEnchantmentLevel.get().floatValue();
         }
         this.lastStressApplied = impact;
         return impact;
@@ -137,8 +144,9 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
 
         attackTimer += speed;
 
-        if (attackTimer >= ATTACK_THRESHOLD) {
-            attackTimer -= ATTACK_THRESHOLD;
+        float attackInterval = dev.manny.createmobgrinding.config.ModConfigs.COMMON.attackInterval.get().floatValue();
+        if (attackTimer >= attackInterval) {
+            attackTimer -= attackInterval;
             performAttack();
         }
     }
@@ -227,9 +235,9 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
             
             float baseDamage = dev.manny.createmobgrinding.config.ModConfigs.COMMON.grinderBaseDamage.get().floatValue();
             float multiplier = 1.0f;
-            if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) multiplier = 2.0f;
-            else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) multiplier = 4.0f;
-            else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) multiplier = 8.0f;
+            if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) multiplier = dev.manny.createmobgrinding.config.ModConfigs.COMMON.brassDamageMultiplier.get().floatValue();
+            else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) multiplier = dev.manny.createmobgrinding.config.ModConfigs.COMMON.diamondDamageMultiplier.get().floatValue();
+            else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) multiplier = dev.manny.createmobgrinding.config.ModConfigs.COMMON.netheriteDamageMultiplier.get().floatValue();
             else if (installedBlade.is(dev.manny.createmobgrinding.registry.ModItems.CREATIVE_GRINDER_BLADE.get())) multiplier = 9999.0f;
             
             float damage = baseDamage * multiplier;
@@ -244,6 +252,11 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
             net.minecraft.world.damagesource.DamageSource customSource = new net.minecraft.world.damagesource.DamageSource(serverLevel.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE).getHolderOrThrow(grinderDamageKey), fakePlayer, fakePlayer);
             
             target.hurt(customSource, damage);
+            if (target.isDeadOrDying()) {
+                killCount++;
+                setChanged();
+                sendData();
+            }
 
             // The grinder is not a valid revenge target. HurtByTargetGoal has no
             // distance limit, so without this the mob would lock onto the fake player
@@ -333,6 +346,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         }
         attackTimer = compound.getFloat("AttackTimer");
         xpBuffer = compound.getInt("XpBuffer");
+        killCount = compound.getLong("KillCount");
     }
 
     @Override
@@ -344,6 +358,7 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         compound.put("VacuumInventory", vacuumInventory.serializeNBT(registries));
         compound.putFloat("AttackTimer", attackTimer);
         compound.putInt("XpBuffer", xpBuffer);
+        compound.putLong("KillCount", killCount);
     }
 }
 

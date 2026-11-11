@@ -47,6 +47,17 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
     }
 
     @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos) {
+        return level.getBlockEntity(pos) instanceof RotationalMobGrinderBlockEntity grinderBE
+                ? net.neoforged.neoforge.items.ItemHandlerHelper.calcRedstoneFromInventory(grinderBE.vacuumInventory) : 0;
+    }
+
+    @Override
     protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hitResult) {
         if (!level.isClientSide) {
             net.minecraft.world.level.block.entity.BlockEntity be = level.getBlockEntity(pos);
