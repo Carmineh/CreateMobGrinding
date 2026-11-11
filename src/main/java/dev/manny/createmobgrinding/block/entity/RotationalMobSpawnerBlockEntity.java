@@ -263,31 +263,30 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
         }
     }
 
-    // The 8 blocks around the spawner, excluding its own column
-    private static final int[][] SPAWN_OFFSETS = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+    private static final int SPAWN_ATTEMPTS = 8;
 
     /**
-     * Moves the mob to a free spot around the spawner: the 8 surrounding blocks in random order,
-     * each at the spawner's height first and then one block higher. With the No Conditions upgrade
-     * a blocked mob still spawns, one block higher on a random side.
+     * Moves the mob to a free spot like a vanilla spawner: a random position within spawnRange blocks
+     * horizontally and from one block below to one block above the spawner. A spawner doesn't need a
+     * valid floor, only room for the mob. With the No Conditions upgrade a mob that found no room
+     * spawns on top of the spawner instead.
      */
     private boolean placeMob(Mob mob, ServerLevel serverLevel, boolean noConditions) {
-        float yRot = serverLevel.random.nextFloat() * 360F;
-        List<int[]> offsets = new java.util.ArrayList<>(List.of(SPAWN_OFFSETS));
-        net.minecraft.Util.shuffle(offsets, serverLevel.random);
+        var random = serverLevel.random;
+        int range = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnRange.get();
+        float yRot = random.nextFloat() * 360F;
 
-        for (int[] offset : offsets) {
-            double x = worldPosition.getX() + offset[0] + 0.5D;
-            double z = worldPosition.getZ() + offset[1] + 0.5D;
-            for (int dy = 0; dy <= 1; dy++) {
-                mob.moveTo(x, worldPosition.getY() + dy, z, yRot, 0.0F);
-                if (serverLevel.noCollision(mob)) return true;
-            }
+        for (int attempt = 0; attempt < SPAWN_ATTEMPTS; attempt++) {
+            // Same distribution as vanilla: denser near the spawner, thinning out towards the edge
+            double x = worldPosition.getX() + (random.nextDouble() - random.nextDouble()) * range + 0.5D;
+            double y = worldPosition.getY() + random.nextInt(3) - 1;
+            double z = worldPosition.getZ() + (random.nextDouble() - random.nextDouble()) * range + 0.5D;
+            mob.moveTo(x, y, z, yRot, 0.0F);
+            if (serverLevel.noCollision(mob)) return true;
         }
 
         if (noConditions) {
-            int[] offset = offsets.get(0);
-            mob.moveTo(worldPosition.getX() + offset[0] + 0.5D, worldPosition.getY() + 1.0D, worldPosition.getZ() + offset[1] + 0.5D, yRot, 0.0F);
+            mob.moveTo(worldPosition.getX() + 0.5D, worldPosition.getY() + 1.0D, worldPosition.getZ() + 0.5D, yRot, 0.0F);
             return true;
         }
         return false;

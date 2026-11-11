@@ -21,6 +21,7 @@ public class CommonConfig {
     public final ModConfigSpec.DoubleValue stressMultiplierTier3;
     public final ModConfigSpec.DoubleValue stressMultiplierTier4;
     public final ModConfigSpec.DoubleValue stressMultiplierTier5;
+    public final ModConfigSpec.IntValue spawnRange;
     public final ModConfigSpec.IntValue maxNearbyMobs;
     public final ModConfigSpec.IntValue mobCapRadius;
     public final ModConfigSpec.IntValue monsterMaxLight;
@@ -92,6 +93,10 @@ public class CommonConfig {
         stressMultiplierTier5 = builder.comment("Stress multiplier for Tier 5 mobs. Default: 12.0")
                 .defineInRange("stressMultiplierTier5", 12.0, 0.0, 1000.0);
 
+        spawnRange = builder
+                .comment("Mobs spawn at a random spot up to this many blocks away from the spawner, horizontally,",
+                        "and from one block below to one block above it, like a vanilla spawner. Default: 4")
+                .defineInRange("spawnRange", 4, 1, 16);
         maxNearbyMobs = builder
                 .comment("The spawner pauses while this many mobs of its type are around it. Default: 16")
                 .defineInRange("maxNearbyMobs", 16, 1, 256);
