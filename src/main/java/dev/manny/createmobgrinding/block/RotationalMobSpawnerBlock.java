@@ -41,6 +41,16 @@ public class RotationalMobSpawnerBlock extends KineticBlock implements IBE<Rotat
     }
 
     @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos) {
+        return level.getBlockEntity(pos) instanceof RotationalMobSpawnerBlockEntity spawnerBE ? spawnerBE.getComparatorSignal() : 0;
+    }
+
+    @Override
     protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hitResult) {
         if (stack.is(dev.manny.createmobgrinding.registry.ModItems.SPAWNER_CHUNK_BAG.get())) {
             // Opens the bag in swap mode: clicking a chunk swaps it with this spawner's chunk
@@ -62,6 +72,19 @@ public class RotationalMobSpawnerBlock extends KineticBlock implements IBE<Rotat
                             player.displayClientMessage(net.minecraft.network.chat.Component.translatable("message.createmobgrinding.mob_blacklisted").withStyle(net.minecraft.ChatFormatting.RED), true);
                             return net.minecraft.world.ItemInteractionResult.SUCCESS;
                         }
+                    }
+
+                    // Same mob: add one chunk to the stack instead of swapping
+                    if (!current.isEmpty() && net.minecraft.world.item.ItemStack.isSameItemSameComponents(current, stack)) {
+                        if (current.getCount() >= spawnerBE.inventory.getSlotLimit(0)) {
+                            player.displayClientMessage(net.minecraft.network.chat.Component.translatable("message.createmobgrinding.spawner_full").withStyle(net.minecraft.ChatFormatting.RED), true);
+                            return net.minecraft.world.ItemInteractionResult.SUCCESS;
+                        }
+                        spawnerBE.inventory.setStackInSlot(0, current.copyWithCount(current.getCount() + 1));
+                        if (!player.isCreative()) {
+                            stack.shrink(1);
+                        }
+                        return net.minecraft.world.ItemInteractionResult.SUCCESS;
                     }
 
                     // Take the chunk from the hand before returning the old one: if they match, giveItemToPlayer

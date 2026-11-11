@@ -19,10 +19,14 @@ An addon for the **Create** mod that brings a kinetic way to spawn and grind mob
 - **Rotational Mob Spawner**: A kinetic machine that consumes Stress Units (SU) to spawn mobs with specific conditions. Upgrade to make the spawner powerful.
 - **Rotational Mob Grinder**: A spinning blade to automatically eliminate mobs and gather their loot. Upgrade the Grinder with tiered blades and enchant.
 - **Dynamic Tiering System**: Mobs are automatically grouped into 5 Tiers. Higher tier mobs require much more SU and time to spawn compared to lower-tier ones!
-- **Configurable**: Blacklist destructive mobs (like the Warden or Ender Dragon) in the NeoForge config.
+- **Configurable**: Spawn times, stress, mob caps, blade damage, chunk stacking, trades and more can be tuned in the NeoForge config. Blacklist destructive mobs (like the Warden or Ender Dragon).
+- **Wandering Trader**: Occasionally sells a Scrap Spawner Chunk for 32 Emeralds.
 - **Spawner Chunk Bag**: Carry up to 27 Spawner Chunks. Use the bag on a Rotational Mob Spawner and click a chunk to swap it instantly.
 - **Fan Filter Upgrade**: Install it on an Encased Fan to make it ignore Items, Players or Mobs. Cycle the mode with a Wrench on the fan's front or back face, sneak + right-click with an empty hand to take it back.
-- **Display Link Support**: Show a spawner's progress (percentage or progress bar) or its mob on Display Boards, Signs and Nixie Tubes.
+- **Display Link Support**: Show a spawner's progress (percentage or progress bar) or its mob, and a grinder's kill counter, on Display Boards, Signs and Nixie Tubes.
+- **Chunk Stacking**: Put up to 8 Spawner Chunks of the same mob in one spawner: each chunk spawns one more mob per cycle, like 8 spawners in a single block, at a slightly lower stress cost.
+- **Vacuum Filter**: The Vacuum Upgrade unlocks a Create filter slot on top of the grinder: collected items that don't match it are voided, Experience Nuggets are always kept.
+- **Automation**: Funnels, Hoppers and Mechanical Arms can insert and extract Spawner Chunks. Comparators read the spawner's progress and how full the grinder's vacuum inventory is.
 
 ---
 

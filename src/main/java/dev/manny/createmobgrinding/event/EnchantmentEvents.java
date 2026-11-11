@@ -46,10 +46,9 @@ public class EnchantmentEvents {
             if (holderOpt.isPresent()) {
                 int level = enchants.getLevel(holderOpt.get());
                 if (level > 0) {
-                    double chance = 0.0;
-                    if (level == 1) chance = 0.10;
-                    else if (level == 2) chance = 0.25;
-                    else if (level >= 3) chance = 0.40;
+                    // One chance per level; levels above the list use the last value
+                    java.util.List<? extends Double> chances = dev.manny.createmobgrinding.config.ModConfigs.COMMON.beheadingChances.get();
+                    double chance = chances.isEmpty() ? 0.0 : chances.get(Math.min(level, chances.size()) - 1);
 
                     if (player.getRandom().nextDouble() <= chance) {
                         LivingEntity target = event.getEntity();

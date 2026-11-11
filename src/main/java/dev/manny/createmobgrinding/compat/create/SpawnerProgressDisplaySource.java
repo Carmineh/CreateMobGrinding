@@ -25,6 +25,12 @@ public class SpawnerProgressDisplaySource extends PercentOrProgressBarDisplaySou
         return context.sourceConfig().getInt("Mode") != 0;
     }
 
+    // Progress changes every tick: refresh often so the bar moves smoothly (Create's default is 100 ticks)
+    @Override
+    public int getPassiveRefreshTicks() {
+        return 5;
+    }
+
     @Override
     protected String getTranslationKey() {
         return "spawner_progress";

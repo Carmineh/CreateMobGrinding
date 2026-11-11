@@ -24,8 +24,8 @@ public class SoulExtractorItem extends Item {
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
         // Pets and named mobs are protected from extraction
-        if (interactionTarget.hasCustomName() ||
-            (interactionTarget instanceof net.minecraft.world.entity.OwnableEntity ownable && ownable.getOwnerUUID() != null)) {
+        if (dev.manny.createmobgrinding.config.ModConfigs.COMMON.protectPetsAndNamedMobs.get() && (interactionTarget.hasCustomName() ||
+            (interactionTarget instanceof net.minecraft.world.entity.OwnableEntity ownable && ownable.getOwnerUUID() != null))) {
             if (!player.level().isClientSide) {
                 player.displayClientMessage(Component.translatable("message.createmobgrinding.extractor.protected").withStyle(net.minecraft.ChatFormatting.RED), true);
             }
@@ -40,9 +40,9 @@ public class SoulExtractorItem extends Item {
             return InteractionResult.FAIL;
         }
 
-        // Check health <= 10%
+        // Check health against the configured threshold
         float healthPct = interactionTarget.getHealth() / interactionTarget.getMaxHealth();
-        if (healthPct > 0.1f) {
+        if (healthPct > dev.manny.createmobgrinding.config.ModConfigs.COMMON.extractionHealthThreshold.get()) {
             if (!player.level().isClientSide) {
                 player.displayClientMessage(Component.translatable("message.createmobgrinding.extractor.too_much_health").withStyle(net.minecraft.ChatFormatting.RED), true);
             }

@@ -23,7 +23,9 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
             // Point the grinder AWAY from the player (direction they are looking)
             return this.defaultBlockState().setValue(FACING, dir);
         }
-        return this.defaultBlockState().setValue(FACING, preferred);
+        // "preferred" is the side with a shaft pointing at us. Our shaft is on the back (FACING's opposite),
+        // so face away from it to connect, with the blades on the other side.
+        return this.defaultBlockState().setValue(FACING, preferred.getOpposite());
     }
 
     @Override
@@ -44,6 +46,17 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
     @Override
     public BlockEntityType<? extends RotationalMobGrinderBlockEntity> getBlockEntityType() {
         return ModBlockEntities.ROTATIONAL_MOB_GRINDER.get();
+    }
+
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos) {
+        return level.getBlockEntity(pos) instanceof RotationalMobGrinderBlockEntity grinderBE
+                ? net.neoforged.neoforge.items.ItemHandlerHelper.calcRedstoneFromInventory(grinderBE.vacuumInventory) : 0;
     }
 
     @Override

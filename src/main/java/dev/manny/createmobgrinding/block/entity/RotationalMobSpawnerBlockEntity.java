@@ -30,6 +30,18 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
             setChanged();
             updateSpeed = true;
             if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+            updateComparator();
+        }
+
+        // Chunks of the same mob stack up to the configured limit (funnels and arms respect it too)
+        @Override
+        public int getSlotLimit(int slot) {
+            return dev.manny.createmobgrinding.config.ModConfigs.COMMON.maxStackedChunks.get();
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return stack.is(dev.manny.createmobgrinding.registry.ModItems.MOB_SPAWNER_CHUNK.get());
         }
     };
 
@@ -42,6 +54,7 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
     };
 
     private float spawnProgress = 0;
+    private int lastComparatorSignal = 0;
     public boolean disabledByRedstone = false;
     public float visualSpin = 0f;
     public float oVisualSpin = 0f;
@@ -55,6 +68,24 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
 
     public float getSpawnProgress() {
         return spawnProgress;
+    }
+
+    /**
+     * Comparator output: 0 without a chunk, otherwise 1-15 following the progress towards the next spawn.
+     */
+    public int getComparatorSignal() {
+        if (inventory.getStackInSlot(0).isEmpty()) return 0;
+        double fraction = Math.min(1.0, spawnProgress / getSpawnThreshold());
+        return 1 + (int) (fraction * 14);
+    }
+
+    private void updateComparator() {
+        if (level == null || level.isClientSide) return;
+        int signal = getComparatorSignal();
+        if (signal != lastComparatorSignal) {
+            lastComparatorSignal = signal;
+            level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
+        }
     }
 
     public Entity getRenderEntity() {
@@ -91,30 +122,36 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
         return dev.manny.createmobgrinding.util.MobTierHelper.getMobTier(type);
     }
 
+    /**
+     * Chunks that count towards the stacking bonuses. A stack bigger than the limit (the config was lowered)
+     * still works, but only up to the limit.
+     */
+    public int getChunkCount() {
+        return Math.min(inventory.getStackInSlot(0).getCount(), dev.manny.createmobgrinding.config.ModConfigs.COMMON.maxStackedChunks.get());
+    }
+
+    public double getSpeedMultiplier() {
+        int extra = Math.max(0, getChunkCount() - 1);
+        return 1.0 + extra * dev.manny.createmobgrinding.config.ModConfigs.COMMON.speedBonusPerChunk.get();
+    }
+
+    // One mob per chunk: a stacked spawner works like as many separate spawners
+    public int getMobsPerSpawn() {
+        return Math.max(1, getChunkCount());
+    }
+
     @Override
     public float calculateStressApplied() {
-        float baseImpact = 32.0f; // Base impact for spawner
-        float calculated = switch (getTier()) {
-            case 1 -> baseImpact * 1.0f;  // 32 SU
-            case 2 -> baseImpact * 1.5f;  // 48 SU
-            case 3 -> baseImpact * 2.0f;  // 64 SU
-            case 4 -> baseImpact * 6.0f;  // 192 SU (Quite large)
-            case 5 -> baseImpact * 12.0f; // 384 SU (Quite large)
-            default -> baseImpact;
-        };
+        var config = dev.manny.createmobgrinding.config.ModConfigs.COMMON;
+        int extraChunks = Math.max(0, getChunkCount() - 1);
+        float calculated = (float) (config.spawnerBaseStress.get() * config.getStressMultiplier(getTier())
+                * (1.0 + extraChunks * config.stressPerExtraChunk.get()));
         this.lastStressApplied = calculated;
         return calculated;
     }
 
     public double getSpawnThreshold() {
-        int tier = getTier();
-        return switch (tier) {
-            case 5 -> dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnTimeTier5.get();
-            case 4 -> dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnTimeTier4.get();
-            case 3 -> dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnTimeTier3.get();
-            case 2 -> dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnTimeTier2.get();
-            default -> dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnTimeTier1.get();
-        };
+        return dev.manny.createmobgrinding.config.ModConfigs.COMMON.getSpawnTime(getTier());
     }
 
     @Override
@@ -168,14 +205,17 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
         List<? extends String> blacklist = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnerBlacklist.get();
         if (blacklist.contains(entityLoc.toString())) return;
 
-        spawnProgress += speed;
+        spawnProgress += (float) (speed * getSpeedMultiplier());
 
         double threshold = getSpawnThreshold();
 
         if (spawnProgress >= threshold) {
             spawnProgress -= threshold;
-            spawnMob(entityLoc);
+            for (int i = getMobsPerSpawn(); i > 0; i--) {
+                spawnMob(entityLoc);
+            }
         }
+        updateComparator();
     }
 
     private void spawnMob(ResourceLocation entityLoc) {
@@ -184,8 +224,9 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
             ServerLevel serverLevel = (ServerLevel) level;
             
             // Basic area check to prevent too many entities
-            long count = serverLevel.getEntities(type, new AABB(worldPosition).inflate(4), Entity::isAlive).size();
-            if (count >= 16) {
+            var config = dev.manny.createmobgrinding.config.ModConfigs.COMMON;
+            long count = serverLevel.getEntities(type, new AABB(worldPosition).inflate(config.mobCapRadius.get()), Entity::isAlive).size();
+            if (count >= config.maxNearbyMobs.get()) {
                 return; // Cap reached
             }
 
@@ -238,10 +279,10 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
      */
     public static String getLightError(Entity entity, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos) {
         int light = level.getMaxLocalRawBrightness(pos);
-        if (entity instanceof net.minecraft.world.entity.monster.Monster && light > 7) {
+        if (entity instanceof net.minecraft.world.entity.monster.Monster && light > dev.manny.createmobgrinding.config.ModConfigs.COMMON.monsterMaxLight.get()) {
             return "tooltip.createmobgrinding.spawner.error.too_much_light";
         }
-        if (entity instanceof net.minecraft.world.entity.animal.Animal && light < 9) {
+        if (entity instanceof net.minecraft.world.entity.animal.Animal && light < dev.manny.createmobgrinding.config.ModConfigs.COMMON.animalMinLight.get()) {
             return "tooltip.createmobgrinding.spawner.error.too_dark";
         }
         return null;
@@ -303,6 +344,12 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                     double threshold = getSpawnThreshold();
                     int percentage = (int) ((spawnProgress / threshold) * 100);
                     tooltip.add(Component.literal("    ").append(Component.translatable("jade.createmobgrinding.spawner.progress", percentage)).withStyle(net.minecraft.ChatFormatting.YELLOW));
+                    tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.chunks",
+                            chunk.getCount(), dev.manny.createmobgrinding.config.ModConfigs.COMMON.maxStackedChunks.get(), getMobsPerSpawn())).withStyle(net.minecraft.ChatFormatting.GRAY));
+                    if (getSpeedMultiplier() > 1.0) {
+                        tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.speed_bonus",
+                                String.format("%.0f", (getSpeedMultiplier() - 1) * 100))).withStyle(net.minecraft.ChatFormatting.GRAY));
+                    }
                 }
             } else {
                 tooltip.add(Component.literal("    ").append(Component.translatable("tooltip.createmobgrinding.spawner.invalid_chunk")).withStyle(net.minecraft.ChatFormatting.RED));

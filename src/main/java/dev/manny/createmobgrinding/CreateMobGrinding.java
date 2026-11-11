@@ -30,6 +30,7 @@ public class CreateMobGrinding {
         ModItemAttributes.ITEM_ATTRIBUTES.register(modEventBus);
         dev.manny.createmobgrinding.registry.ModMenuTypes.MENU_TYPES.register(modEventBus);
         dev.manny.createmobgrinding.registry.ModDisplaySources.DISPLAY_SOURCES.register(modEventBus);
+        dev.manny.createmobgrinding.registry.ModArmInteractionPoints.ARM_INTERACTION_POINTS.register(modEventBus);
 
         modEventBus.addListener(net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent.class,
             event -> event.enqueueWork(dev.manny.createmobgrinding.registry.ModDisplaySources::associate));
@@ -39,6 +40,12 @@ public class CreateMobGrinding {
                 net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK,
                 ModBlockEntities.ROTATIONAL_MOB_GRINDER.get(),
                 (be, side) -> be.vacuumInventory
+            );
+            // Funnels, hoppers and Mechanical Arms can insert and extract the spawner's chunks
+            event.registerBlockEntity(
+                net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK,
+                ModBlockEntities.ROTATIONAL_MOB_SPAWNER.get(),
+                (be, side) -> be.inventory
             );
         });
     }

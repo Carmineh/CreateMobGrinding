@@ -21,6 +21,8 @@ public class RotationalMobGrinderRenderer extends KineticBlockEntityRenderer<Rot
 
     @Override
     protected void renderSafe(RotationalMobGrinderBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+        // Vacuum filter slot (Create renders it only for its own SmartBlockEntityRenderer subclasses)
+        com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringRenderer.renderOnBlockEntity(be, partialTicks, ms, buffer, light, overlay);
 
 
         String modelName = "block/rotational_mob_grinder_blade";

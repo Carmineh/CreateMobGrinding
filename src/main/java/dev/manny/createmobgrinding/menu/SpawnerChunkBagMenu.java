@@ -142,9 +142,28 @@ public class SpawnerChunkBagMenu extends AbstractContainerMenu {
             return;
         }
 
-        ItemStack previous = spawnerBE.inventory.getStackInSlot(0).copy();
-        spawnerBE.inventory.setStackInSlot(0, chosen.copyWithCount(1));
-        chosen.shrink(1);
+        ItemStack current = spawnerBE.inventory.getStackInSlot(0);
+        int limit = spawnerBE.inventory.getSlotLimit(0);
+
+        // Same mob: top up the spawner's stack from the bag
+        if (!current.isEmpty() && ItemStack.isSameItemSameComponents(current, chosen)) {
+            int moved = Math.min(chosen.getCount(), limit - current.getCount());
+            if (moved <= 0) {
+                player.displayClientMessage(Component.translatable("message.createmobgrinding.spawner_full").withStyle(ChatFormatting.RED), true);
+                return;
+            }
+            spawnerBE.inventory.setStackInSlot(0, current.copyWithCount(current.getCount() + moved));
+            chosen.shrink(moved);
+            container.setChanged();
+            player.level().playSound(null, spawnerPos, SoundEvents.SOUL_ESCAPE.value(), SoundSource.BLOCKS, 0.8F, 1.2F);
+            return;
+        }
+
+        // Different mob: the whole stack goes back to the bag and as many chosen chunks as fit go in
+        ItemStack previous = current.copy();
+        int moved = Math.min(chosen.getCount(), limit);
+        spawnerBE.inventory.setStackInSlot(0, chosen.copyWithCount(moved));
+        chosen.shrink(moved);
 
         if (!previous.isEmpty()) {
             // Put the old chunk where the new one was when possible, so the swap feels instant

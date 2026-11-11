@@ -109,7 +109,7 @@
   "container.createmobgrinding.spawner_chunk_bag.swap_hint": "Click a chunk to swap",
   "tooltip.createmobgrinding.spawner_chunk_bag.empty": "Empty",
   "tooltip.createmobgrinding.spawner_chunk_bag.more": "...and %s more",
-  "tooltip.createmobgrinding.spawner_chunk_bag.hint": "Use on a Rotational Mob Spawner to swap chunks, sneak to take its chunk",
+  "tooltip.createmobgrinding.spawner_chunk_bag.hint": "Use on a Rotational Mob Spawner to swap or add chunks, sneak to take them back",
   
   "item.createmobgrinding.fan_filter_upgrade": "Fan Filter Upgrade",
   "fan_filter.createmobgrinding.ignore_items": "Ignore Items",
@@ -123,5 +123,40 @@
   "createmobgrinding.display_source.spawner_mob": "Spawner Mob",
   
   "message.createmobgrinding.spawner_chunk_bag.spawner_empty": "This spawner has no chunk",
-  "message.createmobgrinding.spawner_chunk_bag.full": "The bag is full"
+  "message.createmobgrinding.spawner_chunk_bag.full": "The bag is full",
+  
+  "tooltip.createmobgrinding.spawner.chunks": "Chunks: %s/%s (%s mobs per spawn)",
+  "tooltip.createmobgrinding.spawner.speed_bonus": "+%s%% spawn speed",
+  "message.createmobgrinding.spawner_full": "This spawner can't hold more chunks",
+  
+  "createmobgrinding.display_source.grinder_kills": "Grinder Kills",
+  "jade.createmobgrinding.grinder.kills": "Kills: %s",
+  
+  "createmobgrinding.ponder.spawner_chunk_stacking.header": "Stacking Spawner Chunks",
+  "createmobgrinding.ponder.spawner_chunk_stacking.text_1": "A spawner can hold more Spawner Chunks of the same mob.",
+  "createmobgrinding.ponder.spawner_chunk_stacking.text_2": "Right-click with a matching chunk to add it, up to 8 chunks.",
+  "createmobgrinding.ponder.spawner_chunk_stacking.text_3": "Each chunk spawns one mob per cycle: 8 chunks work like 8 spawners in a single block.",
+  "createmobgrinding.ponder.spawner_chunk_stacking.text_4": "More chunks also need more Stress Units.",
+  "createmobgrinding.ponder.spawner_chunk_stacking.text_5": "Use a Wrench to take all the chunks back.",
+  "createmobgrinding.ponder.spawner_automation.header": "Automating the Spawner",
+  "createmobgrinding.ponder.spawner_automation.text_1": "Funnels, Hoppers and Mechanical Arms can insert and extract Spawner Chunks.",
+  "createmobgrinding.ponder.spawner_automation.text_2": "Only chunks of the mob already inside are accepted, up to the stacking limit.",
+  "createmobgrinding.ponder.spawner_automation.text_3": "A Comparator reads the progress towards the next spawn.",
+  "createmobgrinding.ponder.spawner_automation.text_4": "A Display Link can show the spawn progress or the spawner's mob.",
+  "createmobgrinding.ponder.spawner_chunk_bag.header": "Using the Spawner Chunk Bag",
+  "createmobgrinding.ponder.spawner_chunk_bag.text_1": "The Spawner Chunk Bag holds up to 27 stacks of Spawner Chunks.",
+  "createmobgrinding.ponder.spawner_chunk_bag.text_2": "Use it on a spawner and click a chunk: it replaces the spawner's chunks, or is added to them if it's the same mob.",
+  "createmobgrinding.ponder.spawner_chunk_bag.text_3": "Sneak and use it to put the spawner's chunks back in the bag.",
+  "createmobgrinding.ponder.fan_filter_upgrade.header": "Filtering an Encased Fan",
+  "createmobgrinding.ponder.fan_filter_upgrade.text_1": "Right-click an Encased Fan with a Fan Filter Upgrade to install it.",
+  "createmobgrinding.ponder.fan_filter_upgrade.text_2": "The fan then ignores Items, Players or Mobs: they are not pushed or processed.",
+  "createmobgrinding.ponder.fan_filter_upgrade.text_3": "Use a Wrench on the front or back of the fan to change what it ignores.",
+  "createmobgrinding.ponder.fan_filter_upgrade.text_4": "Sneak and right-click with an empty hand to take the upgrade back.",
+  "createmobgrinding.ponder.grinder_monitoring.header": "Monitoring the Grinder",
+  "createmobgrinding.ponder.grinder_monitoring.text_1": "With the Vacuum Upgrade, the grinder collects drops and experience into its inventory.",
+  "createmobgrinding.ponder.grinder_monitoring.text_2": "Funnels and Hoppers can pull the collected items out.",
+  "createmobgrinding.ponder.grinder_monitoring.text_3": "A Comparator reads how full the vacuum inventory is.",
+  "createmobgrinding.ponder.grinder_monitoring.text_5": "The Vacuum Upgrade also unlocks a filter slot on top: collected items that don't match the filter are voided. Experience Nuggets are always kept.",
+  "createmobgrinding.grinder.vacuum_filter": "Vacuum Filter",
+  "createmobgrinding.ponder.grinder_monitoring.text_4": "The grinder counts its kills: show them with a Display Link."
 }
