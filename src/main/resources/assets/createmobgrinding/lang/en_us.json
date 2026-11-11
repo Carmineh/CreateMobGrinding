@@ -156,5 +156,7 @@
   "createmobgrinding.ponder.grinder_monitoring.text_1": "With the Vacuum Upgrade, the grinder collects drops and experience into its inventory.",
   "createmobgrinding.ponder.grinder_monitoring.text_2": "Funnels and Hoppers can pull the collected items out.",
   "createmobgrinding.ponder.grinder_monitoring.text_3": "A Comparator reads how full the vacuum inventory is.",
+  "createmobgrinding.ponder.grinder_monitoring.text_5": "The Vacuum Upgrade also unlocks a filter slot on top: collected items that don't match the filter are voided. Experience Nuggets are always kept.",
+  "createmobgrinding.grinder.vacuum_filter": "Vacuum Filter",
   "createmobgrinding.ponder.grinder_monitoring.text_4": "The grinder counts its kills: show them with a Display Link."
 }

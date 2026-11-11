@@ -25,6 +25,7 @@ An addon for the **Create** mod that brings a kinetic way to spawn and grind mob
 - **Fan Filter Upgrade**: Install it on an Encased Fan to make it ignore Items, Players or Mobs. Cycle the mode with a Wrench on the fan's front or back face, sneak + right-click with an empty hand to take it back.
 - **Display Link Support**: Show a spawner's progress (percentage or progress bar) or its mob, and a grinder's kill counter, on Display Boards, Signs and Nixie Tubes.
 - **Chunk Stacking**: Put up to 8 Spawner Chunks of the same mob in one spawner: each chunk spawns one more mob per cycle, like 8 spawners in a single block, at a slightly lower stress cost.
+- **Vacuum Filter**: The Vacuum Upgrade unlocks a Create filter slot on top of the grinder: collected items that don't match it are voided, Experience Nuggets are always kept.
 - **Automation**: Funnels, Hoppers and Mechanical Arms can insert and extract Spawner Chunks. Comparators read the spawner's progress and how full the grinder's vacuum inventory is.
 
 ---

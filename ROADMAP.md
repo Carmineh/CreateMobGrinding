@@ -16,6 +16,7 @@ Features planned for the next update:
 - [x] **Comparator Output:** The spawner outputs its spawn progress, the grinder how full its Vacuum inventory is.
 - [x] **Config Overhaul:** Expose the hardcoded values (mob cap, stress per tier, extraction health threshold, chunk stacking...) and reorganize the config into clear sections.
 - [x] **Ponder Scenes:** Ponders for the Chunk Bag, Fan Filter Upgrade, Display Link support and all the upgrades.
+- [x] **Vacuum Filter:** The Vacuum Upgrade unlocks a Create filter slot on top of the grinder. Collected items that don't match the filter (List Filter whitelist/blacklist, Attribute Filter or a single item) are voided instead of stored. Experience Nuggets are always kept.
 - [x] **Grinder Display Link:** Show the grinder's kill counter on Display Boards.
 - [x] **Wandering Trader Trade:** The Wandering Trader can sell a Broken Spawner Chunk for 32 Emeralds (single use).
 - [ ] **1.20.1 Port:** Port the mod to Minecraft 1.20.1 (Forge) on a new `mc1.20.1/dev` branch. Last step of the update.

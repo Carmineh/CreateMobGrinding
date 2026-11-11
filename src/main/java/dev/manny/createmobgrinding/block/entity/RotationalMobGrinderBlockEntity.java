@@ -52,8 +52,38 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
     private int xpBuffer = 0;
     private long killCount = 0;
 
+    // Create filter slot unlocked by the Vacuum Upgrade: collected items that don't pass it are voided
+    public com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour vacuumFilter;
+
     public RotationalMobGrinderBlockEntity(BlockPos pos, BlockState state) {
         super(dev.manny.createmobgrinding.registry.ModBlockEntities.ROTATIONAL_MOB_GRINDER.get(), pos, state);
+    }
+
+    @Override
+    public void addBehaviours(List<com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour> behaviours) {
+        super.addBehaviours(behaviours);
+        vacuumFilter = new com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour(this,
+                new com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform((state, side) -> side == getFilterSide(state)))
+                .onlyActiveWhen(this::hasVacuumUpgrade);
+        vacuumFilter.setLabel(Component.translatable("createmobgrinding.grinder.vacuum_filter"));
+        behaviours.add(vacuumFilter);
+    }
+
+    /**
+     * The filter slot sits on top of the grinder. When the grinder points up or down, the top is taken
+     * by the blades or the shaft, so it moves to the north side.
+     */
+    public static net.minecraft.core.Direction getFilterSide(BlockState state) {
+        if (state.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING)
+                && state.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING).getAxis().isVertical()) {
+            return net.minecraft.core.Direction.NORTH;
+        }
+        return net.minecraft.core.Direction.UP;
+    }
+
+    private static boolean isExperienceNugget(ItemStack stack) {
+        return net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem())
+                .equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("create", "experience_nugget"));
     }
 
     public long getKillCount() {
@@ -169,6 +199,11 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         List<net.minecraft.world.entity.item.ItemEntity> items = serverLevel.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, vacuumZone, net.minecraft.world.entity.Entity::isAlive);
         for (net.minecraft.world.entity.item.ItemEntity itemEntity : items) {
             ItemStack stack = itemEntity.getItem();
+            // Experience Nuggets always pass, so the farm keeps giving XP whatever the filter
+            if (!isExperienceNugget(stack) && !vacuumFilter.test(stack)) {
+                itemEntity.discard();
+                continue;
+            }
             ItemStack remainder = net.neoforged.neoforge.items.ItemHandlerHelper.insertItemStacked(vacuumInventory, stack, false);
             if (remainder.isEmpty()) {
                 itemEntity.discard();

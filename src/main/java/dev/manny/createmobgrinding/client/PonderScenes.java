@@ -492,5 +492,15 @@ public class PonderScenes {
                 .pointAt(util.vector().topOf(grinderPos))
                 .placeNearTarget();
         scene.idle(80);
+
+        scene.overlay().showControls(util.vector().topOf(grinderPos), Pointing.DOWN, 50)
+                .rightClick().withItem(createItem("filter"));
+        scene.idle(10);
+        scene.overlay().showText(90)
+                .text("The Vacuum Upgrade also unlocks a filter slot on top: collected items that don't match the filter are voided. Experience Nuggets are always kept.")
+                .attachKeyFrame()
+                .pointAt(util.vector().topOf(grinderPos))
+                .placeNearTarget();
+        scene.idle(100);
     }
 }

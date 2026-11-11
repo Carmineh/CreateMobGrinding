@@ -23,7 +23,9 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
             // Point the grinder AWAY from the player (direction they are looking)
             return this.defaultBlockState().setValue(FACING, dir);
         }
-        return this.defaultBlockState().setValue(FACING, preferred);
+        // "preferred" is the side with a shaft pointing at us. Our shaft is on the back (FACING's opposite),
+        // so face away from it to connect, with the blades on the other side.
+        return this.defaultBlockState().setValue(FACING, preferred.getOpposite());
     }
 
     @Override

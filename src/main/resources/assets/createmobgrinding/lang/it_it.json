@@ -156,5 +156,7 @@
   "createmobgrinding.ponder.grinder_monitoring.text_1": "Con l'Upgrade Aspirazione, il grinder raccoglie drop ed esperienza nel suo inventario.",
   "createmobgrinding.ponder.grinder_monitoring.text_2": "Imbuti e Tramogge possono estrarre gli oggetti raccolti.",
   "createmobgrinding.ponder.grinder_monitoring.text_3": "Un Comparatore legge quanto è pieno l'inventario di aspirazione.",
+  "createmobgrinding.ponder.grinder_monitoring.text_5": "L'Upgrade Aspirazione sblocca anche uno slot filtro in alto: gli oggetti raccolti che non passano il filtro vengono eliminati. Le Pepite di Esperienza vengono sempre tenute.",
+  "createmobgrinding.grinder.vacuum_filter": "Filtro di Aspirazione",
   "createmobgrinding.ponder.grinder_monitoring.text_4": "Il grinder conta le sue uccisioni: mostrale con un Display Link."
 }
