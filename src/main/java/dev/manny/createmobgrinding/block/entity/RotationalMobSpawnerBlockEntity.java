@@ -230,14 +230,6 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                 return; // Cap reached
             }
 
-            // 3x3 around the spawner, excluding the center column
-            int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};
-            int[] dz = {-1, 0, 1, -1, 1, -1, 0, 1};
-            int r = level.random.nextInt(8);
-            
-            double x = worldPosition.getX() + dx[r] + 0.5D;
-            double z = worldPosition.getZ() + dz[r] + 0.5D;
-
             Entity entity = type.create(serverLevel);
             if (entity instanceof Mob mob) {
                 boolean noAi = false;
@@ -249,20 +241,12 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                     if (upgrade.is(dev.manny.createmobgrinding.registry.ModItems.SPAWNER_UPGRADE_NO_CONDITIONS.get())) noConditions = true;
                 }
 
-                // Same height as the spawner; if that spot is blocked, try one block higher
-                float yRot = level.random.nextFloat() * 360F;
-                double y = worldPosition.getY();
-                mob.moveTo(x, y, z, yRot, 0.0F);
-                if (!serverLevel.noCollision(mob)) {
-                    y += 1.0D;
-                    mob.moveTo(x, y, z, yRot, 0.0F);
-                    if (!noConditions && !serverLevel.noCollision(mob)) {
-                        mob.discard(); // No room at either height
-                        return;
-                    }
+                if (!placeMob(mob, serverLevel, noConditions)) {
+                    mob.discard(); // No free spot around the spawner
+                    return;
                 }
 
-                if (!noConditions && getLightError(entity, serverLevel, net.minecraft.core.BlockPos.containing(x, y, z)) != null) {
+                if (!noConditions && getLightError(entity, serverLevel, mob.blockPosition()) != null) {
                     entity.discard();
                     return;
                 }
@@ -277,6 +261,36 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                 serverLevel.levelEvent(2004, worldPosition, 0); // Spawn particles
             }
         }
+    }
+
+    // The 8 blocks around the spawner, excluding its own column
+    private static final int[][] SPAWN_OFFSETS = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+
+    /**
+     * Moves the mob to a free spot around the spawner: the 8 surrounding blocks in random order,
+     * each at the spawner's height first and then one block higher. With the No Conditions upgrade
+     * a blocked mob still spawns, one block higher on a random side.
+     */
+    private boolean placeMob(Mob mob, ServerLevel serverLevel, boolean noConditions) {
+        float yRot = serverLevel.random.nextFloat() * 360F;
+        List<int[]> offsets = new java.util.ArrayList<>(List.of(SPAWN_OFFSETS));
+        net.minecraft.Util.shuffle(offsets, serverLevel.random);
+
+        for (int[] offset : offsets) {
+            double x = worldPosition.getX() + offset[0] + 0.5D;
+            double z = worldPosition.getZ() + offset[1] + 0.5D;
+            for (int dy = 0; dy <= 1; dy++) {
+                mob.moveTo(x, worldPosition.getY() + dy, z, yRot, 0.0F);
+                if (serverLevel.noCollision(mob)) return true;
+            }
+        }
+
+        if (noConditions) {
+            int[] offset = offsets.get(0);
+            mob.moveTo(worldPosition.getX() + offset[0] + 0.5D, worldPosition.getY() + 1.0D, worldPosition.getZ() + offset[1] + 0.5D, yRot, 0.0F);
+            return true;
+        }
+        return false;
     }
 
     /**
