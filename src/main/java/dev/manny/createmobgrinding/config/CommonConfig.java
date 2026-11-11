@@ -124,7 +124,7 @@ public class CommonConfig {
 
         builder.comment("Rotational Mob Grinder").push("grinder");
         grinderBaseDamage = builder
-                .comment("Damage dealt per hit by an Iron Blade. Other blades multiply it. Default: 2.0")
+                .comment("Damage dealt per hit by an Iron Blade. Other blades multiply it. Grinder damage ignores armor. Default: 2.0")
                 .defineInRange("bladeBaseDamage", 2.0, 0.0, 1000.0);
         attackInterval = builder
                 .comment("Progress points between two hits; the grinder gains one point per RPM each tick.",
@@ -134,8 +134,9 @@ public class CommonConfig {
                 .defineInRange("brassDamageMultiplier", 2.0, 0.0, 1000.0);
         diamondDamageMultiplier = builder.comment("Damage multiplier of the Diamond Blade. Default: 4.0")
                 .defineInRange("diamondDamageMultiplier", 4.0, 0.0, 1000.0);
-        netheriteDamageMultiplier = builder.comment("Damage multiplier of the Netherite Blade. Default: 8.0")
-                .defineInRange("netheriteDamageMultiplier", 8.0, 0.0, 1000.0);
+        // Renamed in 1.5.1 (was netheriteDamageMultiplier) so the new default reaches existing configs
+        netheriteDamageMultiplier = builder.comment("Damage multiplier of the Netherite Blade. Default: 12.0")
+                .defineInRange("netheriteBladeDamageMultiplier", 12.0, 0.0, 1000.0);
         ironBladeStress = builder.comment("Stress impact with the Iron Blade. Default: 8.0")
                 .defineInRange("ironBladeStress", 8.0, 0.0, 10000.0);
         brassBladeStress = builder.comment("Stress impact with the Brass Blade. Default: 16.0")
