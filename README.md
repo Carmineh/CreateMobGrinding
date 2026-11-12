@@ -64,7 +64,22 @@ Please open an issue in the **[Issues Tab](../../issues)**.
 
 **Important:** Please ensure you select and fill out the provided Issue Template. Bug reports that don't follow the template may take much longer to resolve.
 
----
+
+## Want to contribute?
+
+Create: Mob Grinding is an open-source project, and contributions are always welcome!
+
+You don't need to be an experienced Minecraft mod developer to help.
+
+**Looking for something to work on?**
+
+- [Good First Issues](https://github.com/Carmineh/CreateMobGrinding/labels/good%20first%20issue) – Perfect for first-time contributors.
+- [Help Wanted](https://github.com/Carmineh/CreateMobGrinding/labels/help%20wanted) – Features and improvements that need your help.
+- [Open Issues](https://github.com/Carmineh/CreateMobGrinding/issues) – Bugs, suggestions and ongoing discussions.
+
+Feel free to ask questions before starting work. Contributions of all kinds are welcome, including code, translations, documentation and testing!
+
+See **Contributions** for development setup and contribution guidelines.
 
 ## Contributions
 
