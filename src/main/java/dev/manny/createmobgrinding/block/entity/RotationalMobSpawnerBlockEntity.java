@@ -230,15 +230,6 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                 return; // Cap reached
             }
 
-            // 3x3 around the spawner, excluding the center column
-            int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};
-            int[] dz = {-1, 0, 1, -1, 1, -1, 0, 1};
-            int r = level.random.nextInt(8);
-            
-            double x = worldPosition.getX() + dx[r] + 0.5D;
-            double y = worldPosition.getY() + 1.0D; // Always spawn above the block
-            double z = worldPosition.getZ() + dz[r] + 0.5D;
-
             Entity entity = type.create(serverLevel);
             if (entity instanceof Mob mob) {
                 boolean noAi = false;
@@ -250,14 +241,13 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                     if (upgrade.is(dev.manny.createmobgrinding.registry.ModItems.SPAWNER_UPGRADE_NO_CONDITIONS.get())) noConditions = true;
                 }
 
-                if (!noConditions && getLightError(entity, serverLevel, net.minecraft.core.BlockPos.containing(x, y, z)) != null) {
-                    entity.discard();
+                if (!placeMob(mob, serverLevel, noConditions)) {
+                    mob.discard(); // No free spot around the spawner
                     return;
                 }
 
-                mob.moveTo(x, y, z, level.random.nextFloat() * 360F, 0.0F);
-                if (!noConditions && !serverLevel.noCollision(mob)) {
-                    mob.discard(); // Cancel spawn if colliding
+                if (!noConditions && getLightError(entity, serverLevel, mob.blockPosition()) != null) {
+                    entity.discard();
                     return;
                 }
                 
@@ -271,6 +261,35 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                 serverLevel.levelEvent(2004, worldPosition, 0); // Spawn particles
             }
         }
+    }
+
+    private static final int SPAWN_ATTEMPTS = 8;
+
+    /**
+     * Moves the mob to a free spot like a vanilla spawner: a random position within spawnRange blocks
+     * horizontally and from one block below to one block above the spawner. A spawner doesn't need a
+     * valid floor, only room for the mob. With the No Conditions upgrade a mob that found no room
+     * spawns on top of the spawner instead.
+     */
+    private boolean placeMob(Mob mob, ServerLevel serverLevel, boolean noConditions) {
+        var random = serverLevel.random;
+        int range = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnRange.get();
+        float yRot = random.nextFloat() * 360F;
+
+        for (int attempt = 0; attempt < SPAWN_ATTEMPTS; attempt++) {
+            // Same distribution as vanilla: denser near the spawner, thinning out towards the edge
+            double x = worldPosition.getX() + (random.nextDouble() - random.nextDouble()) * range + 0.5D;
+            double y = worldPosition.getY() + random.nextInt(3) - 1;
+            double z = worldPosition.getZ() + (random.nextDouble() - random.nextDouble()) * range + 0.5D;
+            mob.moveTo(x, y, z, yRot, 0.0F);
+            if (serverLevel.noCollision(mob)) return true;
+        }
+
+        if (noConditions) {
+            mob.moveTo(worldPosition.getX() + 0.5D, worldPosition.getY() + 1.0D, worldPosition.getZ() + 0.5D, yRot, 0.0F);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -335,7 +354,8 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
 
                     Entity previewEntity = getRenderEntity();
                     if (!noConditions && previewEntity != null) {
-                        String lightError = getLightError(previewEntity, level, worldPosition.above());
+                        // Mobs spawn around the spawner at its own height
+                        String lightError = getLightError(previewEntity, level, worldPosition);
                         if (lightError != null) {
                             tooltip.add(Component.literal("    ").append(Component.translatable(lightError)).withStyle(net.minecraft.ChatFormatting.RED));
                         }
