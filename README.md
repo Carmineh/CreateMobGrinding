@@ -95,7 +95,7 @@ If you have your own ideas, feel free to open an Issue tagged with `enhancement`
 ---
 
 ## Supported Languages
-🇮🇹 🇺🇸 
+🇮🇹 🇺🇸 🇪🇸 
 
 If you want to help with translations you can find the files in: `src/main/resources/assets/createmobgrinding/lang/`, copy the base `en_us.json` file and rename it to your language code (e.g., `es_es.json` for Spanish, `fr_fr.json` for French).
 
