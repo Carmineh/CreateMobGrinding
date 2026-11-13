@@ -125,16 +125,7 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
-    @Override
-    public net.minecraft.world.InteractionResult onSneakWrenched(BlockState state, net.minecraft.world.item.context.UseOnContext context) {
-        net.minecraft.world.level.Level level = context.getLevel();
-        net.minecraft.core.BlockPos pos = context.getClickedPos();
-        if (!level.isClientSide) {
-            level.destroyBlock(pos, false);
-            net.minecraft.world.level.block.Block.popResource(level, pos, new net.minecraft.world.item.ItemStack(dev.manny.createmobgrinding.registry.ModBlocks.ROTATIONAL_MOB_GRINDER.get().asItem()));
-        }
-        return net.minecraft.world.InteractionResult.SUCCESS;
-    }
+    // Sneak + Wrench uses Create's default: drops go to the inventory (via the loot table), and to the ground if it's full
 
     @Override
     public void onRemove(BlockState state, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos, BlockState newState, boolean isMoving) {
