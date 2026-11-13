@@ -242,12 +242,7 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
                 }
 
                 if (!placeMob(mob, serverLevel, noConditions)) {
-                    mob.discard(); // No free spot around the spawner
-                    return;
-                }
-
-                if (!noConditions && getLightError(entity, serverLevel, mob.blockPosition()) != null) {
-                    entity.discard();
+                    mob.discard(); // No free spot with the right light in the spawn area
                     return;
                 }
                 
@@ -263,30 +258,40 @@ public class RotationalMobSpawnerBlockEntity extends KineticBlockEntity {
         }
     }
 
-    private static final int SPAWN_ATTEMPTS = 8;
+    /**
+     * The spawn area shown by the wrench indicator: spawnRadius blocks around the spawner horizontally,
+     * from one block below to one block above it. Shared with the indicator so both always match.
+     */
+    public static net.minecraft.world.phys.AABB getSpawnArea(BlockPos pos) {
+        int radius = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnRadius.get();
+        return new net.minecraft.world.phys.AABB(pos).inflate(radius, 1, radius);
+    }
 
     /**
-     * Moves the mob to a free spot like a vanilla spawner: a random position within spawnRange blocks
-     * horizontally and from one block below to one block above the spawner. A spawner doesn't need a
-     * valid floor, only room for the mob. With the No Conditions upgrade a mob that found no room
-     * spawns on top of the spawner instead.
+     * Moves the mob to a spot in the spawn area, trying every block of it in random order.
+     * The spawner's own column is skipped (it holds the spawner and its shafts). A spot is used only if the
+     * mob fits there; light is checked too unless the No Conditions upgrade is installed, which never lets
+     * mobs spawn inside blocks.
      */
     private boolean placeMob(Mob mob, ServerLevel serverLevel, boolean noConditions) {
-        var random = serverLevel.random;
-        int range = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnRange.get();
-        float yRot = random.nextFloat() * 360F;
+        int radius = dev.manny.createmobgrinding.config.ModConfigs.COMMON.spawnRadius.get();
+        float yRot = serverLevel.random.nextFloat() * 360F;
 
-        for (int attempt = 0; attempt < SPAWN_ATTEMPTS; attempt++) {
-            // Same distribution as vanilla: denser near the spawner, thinning out towards the edge
-            double x = worldPosition.getX() + (random.nextDouble() - random.nextDouble()) * range + 0.5D;
-            double y = worldPosition.getY() + random.nextInt(3) - 1;
-            double z = worldPosition.getZ() + (random.nextDouble() - random.nextDouble()) * range + 0.5D;
-            mob.moveTo(x, y, z, yRot, 0.0F);
-            if (serverLevel.noCollision(mob)) return true;
+        List<BlockPos> spots = new java.util.ArrayList<>();
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                if (dx == 0 && dz == 0) continue;
+                for (int dy = -1; dy <= 1; dy++) {
+                    spots.add(worldPosition.offset(dx, dy, dz));
+                }
+            }
         }
+        net.minecraft.Util.shuffle(spots, serverLevel.random);
 
-        if (noConditions) {
-            mob.moveTo(worldPosition.getX() + 0.5D, worldPosition.getY() + 1.0D, worldPosition.getZ() + 0.5D, yRot, 0.0F);
+        for (BlockPos spot : spots) {
+            mob.moveTo(spot.getX() + 0.5D, spot.getY(), spot.getZ() + 0.5D, yRot, 0.0F);
+            if (!serverLevel.noCollision(mob)) continue;
+            if (!noConditions && getLightError(mob, serverLevel, spot) != null) continue;
             return true;
         }
         return false;

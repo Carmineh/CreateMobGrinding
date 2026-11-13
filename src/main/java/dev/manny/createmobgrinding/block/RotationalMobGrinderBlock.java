@@ -125,27 +125,14 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
-    @Override
-    public net.minecraft.world.InteractionResult onSneakWrenched(BlockState state, net.minecraft.world.item.context.UseOnContext context) {
-        net.minecraft.world.level.Level level = context.getLevel();
-        net.minecraft.core.BlockPos pos = context.getClickedPos();
-        if (!level.isClientSide) {
-            level.destroyBlock(pos, false);
-            net.minecraft.world.level.block.Block.popResource(level, pos, new net.minecraft.world.item.ItemStack(dev.manny.createmobgrinding.registry.ModBlocks.ROTATIONAL_MOB_GRINDER.get().asItem()));
-        }
-        return net.minecraft.world.InteractionResult.SUCCESS;
-    }
+    // Sneak + Wrench uses Create's default: drops go to the inventory (via the loot table), and to the ground if it's full
 
     @Override
     public void onRemove(BlockState state, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             net.minecraft.world.level.block.entity.BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof RotationalMobGrinderBlockEntity grinderBE) {
-                net.minecraft.world.item.ItemStack blade = grinderBE.getInstalledBlade();
-                if (!blade.isEmpty() && !blade.is(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get())) {
-                    net.minecraft.world.level.block.Block.popResource(level, pos, blade.copy());
-                }
-                
+                // The installed blade isn't dropped: it stays on the grinder item (loot table copies it)
                 for (int i = 0; i < grinderBE.upgrades.getSlots(); i++) {
                     net.minecraft.world.item.ItemStack upgrade = grinderBE.upgrades.getStackInSlot(i);
                     if (!upgrade.isEmpty()) {

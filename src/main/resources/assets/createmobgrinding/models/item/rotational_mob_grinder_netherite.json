@@ -1,0 +1,6 @@
+{
+  "parent": "createmobgrinding:item/rotational_mob_grinder",
+  "textures": {
+    "3": "createmobgrinding:block/blade_netherite"
+  }
+}

@@ -158,5 +158,7 @@
   "createmobgrinding.ponder.grinder_monitoring.text_3": "Un Comparatore legge quanto è pieno l'inventario di aspirazione.",
   "createmobgrinding.ponder.grinder_monitoring.text_5": "L'Upgrade Aspirazione sblocca anche uno slot filtro in alto: gli oggetti raccolti che non passano il filtro vengono eliminati. Le Pepite di Esperienza vengono sempre tenute.",
   "createmobgrinding.grinder.vacuum_filter": "Filtro di Aspirazione",
-  "createmobgrinding.ponder.grinder_monitoring.text_4": "Il grinder conta le sue uccisioni: mostrale con un Display Link."
+  "createmobgrinding.ponder.grinder_monitoring.text_4": "Il grinder conta le sue uccisioni: mostrale con un Display Link.",
+  "tooltip.createmobgrinding.grinder.blade": "Lama: %s",
+  "tooltip.createmobgrinding.grinder.hold_shift": "Tieni premuto [Shift] per vedere gli incantesimi"
 }

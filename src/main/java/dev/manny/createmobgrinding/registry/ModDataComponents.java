@@ -17,5 +17,23 @@ public class ModDataComponents {
                     .networkSynchronized(ResourceLocation.STREAM_CODEC)
                     .build()
     );
+
+    // Blade installed in a Rotational Mob Grinder, kept on the item when the grinder is broken.
+    // Components must be immutable, so the blade is wrapped in ItemContainerContents (like shulker boxes).
+    public static final Supplier<DataComponentType<net.minecraft.world.item.component.ItemContainerContents>> INSTALLED_BLADE = COMPONENTS.register("installed_blade",
+            () -> DataComponentType.<net.minecraft.world.item.component.ItemContainerContents>builder()
+                    .persistent(net.minecraft.world.item.component.ItemContainerContents.CODEC)
+                    .networkSynchronized(net.minecraft.world.item.component.ItemContainerContents.STREAM_CODEC)
+                    .build()
+    );
+
+    public static net.minecraft.world.item.ItemStack getInstalledBlade(net.minecraft.world.item.ItemStack grinder) {
+        net.minecraft.world.item.component.ItemContainerContents contents = grinder.get(INSTALLED_BLADE.get());
+        return contents == null ? net.minecraft.world.item.ItemStack.EMPTY : contents.copyOne();
+    }
+
+    public static net.minecraft.world.item.component.ItemContainerContents bladeContents(net.minecraft.world.item.ItemStack blade) {
+        return net.minecraft.world.item.component.ItemContainerContents.fromItems(java.util.List.of(blade.copy()));
+    }
 }
 
