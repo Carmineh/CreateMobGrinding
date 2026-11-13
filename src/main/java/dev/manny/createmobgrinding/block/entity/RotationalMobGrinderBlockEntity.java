@@ -111,16 +111,18 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
     protected void collectImplicitComponents(net.minecraft.core.component.DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
         if (!installedBlade.isEmpty()) {
-            components.set(dev.manny.createmobgrinding.registry.ModDataComponents.INSTALLED_BLADE.get(), installedBlade.copy());
+            components.set(dev.manny.createmobgrinding.registry.ModDataComponents.INSTALLED_BLADE.get(),
+                    dev.manny.createmobgrinding.registry.ModDataComponents.bladeContents(installedBlade));
         }
     }
 
     @Override
     protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
-        ItemStack blade = componentInput.get(dev.manny.createmobgrinding.registry.ModDataComponents.INSTALLED_BLADE.get());
-        if (blade != null && !blade.isEmpty()) {
-            installedBlade = blade.copy();
+        net.minecraft.world.item.component.ItemContainerContents contents = componentInput.get(dev.manny.createmobgrinding.registry.ModDataComponents.INSTALLED_BLADE.get());
+        if (contents != null) {
+            ItemStack blade = contents.copyOne();
+            if (!blade.isEmpty()) installedBlade = blade;
         }
     }
 

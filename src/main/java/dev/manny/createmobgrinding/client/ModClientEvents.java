@@ -45,8 +45,8 @@ public class ModClientEvents {
                 dev.manny.createmobgrinding.registry.ModItems.ROTATIONAL_MOB_GRINDER.get(),
                 net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(CreateMobGrinding.MOD_ID, "blade_tier"),
                 (stack, level, entity, seed) -> {
-                    net.minecraft.world.item.ItemStack blade = stack.get(dev.manny.createmobgrinding.registry.ModDataComponents.INSTALLED_BLADE.get());
-                    if (blade == null) return 0.0F;
+                    net.minecraft.world.item.ItemStack blade = dev.manny.createmobgrinding.registry.ModDataComponents.getInstalledBlade(stack);
+                    if (blade.isEmpty()) return 0.0F;
                     if (blade.is(dev.manny.createmobgrinding.registry.ModItems.BRASS_GRINDER_BLADE.get())) return 0.25F;
                     if (blade.is(dev.manny.createmobgrinding.registry.ModItems.DIAMOND_GRINDER_BLADE.get())) return 0.5F;
                     if (blade.is(dev.manny.createmobgrinding.registry.ModItems.NETHERITE_GRINDER_BLADE.get())) return 0.75F;

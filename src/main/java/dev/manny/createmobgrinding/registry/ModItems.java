@@ -29,8 +29,8 @@ public class ModItems {
             // Shows the blade kept from a broken grinder
             @Override
             public void appendHoverText(net.minecraft.world.item.ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
-                net.minecraft.world.item.ItemStack blade = stack.get(ModDataComponents.INSTALLED_BLADE.get());
-                if (blade != null && !blade.isEmpty()) {
+                net.minecraft.world.item.ItemStack blade = ModDataComponents.getInstalledBlade(stack);
+                if (!blade.isEmpty()) {
                     tooltip.add(net.minecraft.network.chat.Component.translatable("tooltip.createmobgrinding.grinder.blade", blade.getHoverName())
                             .withStyle(net.minecraft.ChatFormatting.GRAY));
                 }
