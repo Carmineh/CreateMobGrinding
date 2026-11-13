@@ -110,6 +110,10 @@
     {
       "id": "aether:fire_minion",
       "required": false
+    },
+    {
+      "id": "guardvillagers:guard",
+      "required": false
     }
   ]
 }
