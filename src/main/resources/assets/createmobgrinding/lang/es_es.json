@@ -159,5 +159,6 @@
   "createmobgrinding.ponder.grinder_monitoring.text_5": "La mejora de aspiración también desbloquea una ranura de filtro en la parte superior: los objetos recogidos que no coincidan con el filtro se descartan. Las pepitas de experiencia se conservan siempre.",
   "createmobgrinding.grinder.vacuum_filter": "Filtro de aspiración",
   "createmobgrinding.ponder.grinder_monitoring.text_4": "La trituradora cuenta sus bajas: muéstralas con un enlace de pantalla.",
-  "tooltip.createmobgrinding.grinder.blade": "Cuchilla: %s"
+  "tooltip.createmobgrinding.grinder.blade": "Cuchilla: %s",
+  "tooltip.createmobgrinding.grinder.hold_shift": "Mantén [Shift] para ver los encantamientos"
 }

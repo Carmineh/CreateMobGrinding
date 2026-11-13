@@ -159,5 +159,6 @@
   "createmobgrinding.ponder.grinder_monitoring.text_5": "The Vacuum Upgrade also unlocks a filter slot on top: collected items that don't match the filter are voided. Experience Nuggets are always kept.",
   "createmobgrinding.grinder.vacuum_filter": "Vacuum Filter",
   "createmobgrinding.ponder.grinder_monitoring.text_4": "The grinder counts its kills: show them with a Display Link.",
-  "tooltip.createmobgrinding.grinder.blade": "Blade: %s"
+  "tooltip.createmobgrinding.grinder.blade": "Blade: %s",
+  "tooltip.createmobgrinding.grinder.hold_shift": "Hold [Shift] to see the enchantments"
 }

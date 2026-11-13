@@ -26,13 +26,27 @@ public class ModItems {
 
     public static final Supplier<Item> ROTATIONAL_MOB_GRINDER = ITEMS.register("rotational_mob_grinder",
         () -> new net.minecraft.world.item.BlockItem(ModBlocks.ROTATIONAL_MOB_GRINDER.get(), new Item.Properties()) {
-            // Shows the blade kept from a broken grinder
+            // Shows the blade kept from a broken grinder, and its enchantments while Shift is held
             @Override
             public void appendHoverText(net.minecraft.world.item.ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
                 net.minecraft.world.item.ItemStack blade = ModDataComponents.getInstalledBlade(stack);
                 if (!blade.isEmpty()) {
                     tooltip.add(net.minecraft.network.chat.Component.translatable("tooltip.createmobgrinding.grinder.blade", blade.getHoverName())
                             .withStyle(net.minecraft.ChatFormatting.GRAY));
+
+                    net.minecraft.world.item.enchantment.ItemEnchantments enchants = blade.getOrDefault(
+                            net.minecraft.core.component.DataComponents.ENCHANTMENTS, net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
+                    if (!enchants.isEmpty()) {
+                        if (net.minecraft.client.gui.screens.Screen.hasShiftDown()) {
+                            for (var entry : enchants.entrySet()) {
+                                tooltip.add(net.minecraft.network.chat.Component.literal("  ")
+                                        .append(net.minecraft.world.item.enchantment.Enchantment.getFullname(entry.getKey(), entry.getIntValue())));
+                            }
+                        } else {
+                            tooltip.add(net.minecraft.network.chat.Component.translatable("tooltip.createmobgrinding.grinder.hold_shift")
+                                    .withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+                        }
+                    }
                 }
                 super.appendHoverText(stack, context, tooltip, flag);
             }
