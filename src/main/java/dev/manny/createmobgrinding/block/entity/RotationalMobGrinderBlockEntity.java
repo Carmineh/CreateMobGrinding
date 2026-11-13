@@ -104,7 +104,26 @@ public class RotationalMobGrinderBlockEntity extends KineticBlockEntity {
         sendData();
         if (hasNetwork()) getOrCreateNetwork().updateNetwork();
     }
-    
+
+    // The installed blade travels with the grinder item: copied to it when broken (see the loot table)
+    // and restored when placed, so a placed grinder doesn't get a free Iron Blade every time.
+    @Override
+    protected void collectImplicitComponents(net.minecraft.core.component.DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        if (!installedBlade.isEmpty()) {
+            components.set(dev.manny.createmobgrinding.registry.ModDataComponents.INSTALLED_BLADE.get(), installedBlade.copy());
+        }
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        ItemStack blade = componentInput.get(dev.manny.createmobgrinding.registry.ModDataComponents.INSTALLED_BLADE.get());
+        if (blade != null && !blade.isEmpty()) {
+            installedBlade = blade.copy();
+        }
+    }
+
     public boolean hasProtectionUpgrade() {
         for (int i = 0; i < upgrades.getSlots(); i++) {
             if (upgrades.getStackInSlot(i).is(dev.manny.createmobgrinding.registry.ModItems.GRINDER_UPGRADE_PROTECTION.get())) {

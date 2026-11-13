@@ -25,7 +25,18 @@ public class ModItems {
         () -> new net.minecraft.world.item.BlockItem(ModBlocks.ROTATIONAL_MOB_SPAWNER.get(), new Item.Properties()));
 
     public static final Supplier<Item> ROTATIONAL_MOB_GRINDER = ITEMS.register("rotational_mob_grinder",
-        () -> new net.minecraft.world.item.BlockItem(ModBlocks.ROTATIONAL_MOB_GRINDER.get(), new Item.Properties()));
+        () -> new net.minecraft.world.item.BlockItem(ModBlocks.ROTATIONAL_MOB_GRINDER.get(), new Item.Properties()) {
+            // Shows the blade kept from a broken grinder
+            @Override
+            public void appendHoverText(net.minecraft.world.item.ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
+                net.minecraft.world.item.ItemStack blade = stack.get(ModDataComponents.INSTALLED_BLADE.get());
+                if (blade != null && !blade.isEmpty()) {
+                    tooltip.add(net.minecraft.network.chat.Component.translatable("tooltip.createmobgrinding.grinder.blade", blade.getHoverName())
+                            .withStyle(net.minecraft.ChatFormatting.GRAY));
+                }
+                super.appendHoverText(stack, context, tooltip, flag);
+            }
+        });
 
     // Grinder Blades
     public static final Supplier<Item> IRON_GRINDER_BLADE = ITEMS.register("iron_grinder_blade", 

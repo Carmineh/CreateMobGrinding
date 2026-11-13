@@ -17,5 +17,13 @@ public class ModDataComponents {
                     .networkSynchronized(ResourceLocation.STREAM_CODEC)
                     .build()
     );
+
+    // Blade installed in a Rotational Mob Grinder, kept on the item when the grinder is broken
+    public static final Supplier<DataComponentType<net.minecraft.world.item.ItemStack>> INSTALLED_BLADE = COMPONENTS.register("installed_blade",
+            () -> DataComponentType.<net.minecraft.world.item.ItemStack>builder()
+                    .persistent(net.minecraft.world.item.ItemStack.CODEC)
+                    .networkSynchronized(net.minecraft.world.item.ItemStack.STREAM_CODEC)
+                    .build()
+    );
 }
 

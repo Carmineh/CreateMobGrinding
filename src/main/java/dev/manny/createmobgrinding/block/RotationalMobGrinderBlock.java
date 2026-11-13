@@ -141,11 +141,7 @@ public class RotationalMobGrinderBlock extends DirectionalKineticBlock implement
         if (!state.is(newState.getBlock())) {
             net.minecraft.world.level.block.entity.BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof RotationalMobGrinderBlockEntity grinderBE) {
-                net.minecraft.world.item.ItemStack blade = grinderBE.getInstalledBlade();
-                if (!blade.isEmpty() && !blade.is(dev.manny.createmobgrinding.registry.ModItems.IRON_GRINDER_BLADE.get())) {
-                    net.minecraft.world.level.block.Block.popResource(level, pos, blade.copy());
-                }
-                
+                // The installed blade isn't dropped: it stays on the grinder item (loot table copies it)
                 for (int i = 0; i < grinderBE.upgrades.getSlots(); i++) {
                     net.minecraft.world.item.ItemStack upgrade = grinderBE.upgrades.getStackInSlot(i);
                     if (!upgrade.isEmpty()) {
